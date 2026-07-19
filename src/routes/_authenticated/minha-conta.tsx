@@ -33,6 +33,7 @@ function MinhaContaPage() {
   const [bio, setBio] = useState((p as any)?.bio ?? "");
   const [city, setCity] = useState((p as any)?.city ?? "");
   const [state, setState] = useState((p as any)?.state ?? "");
+  const [cpf, setCpf] = useState(formatCpf((p as any)?.cpf ?? ""));
   const [saving, setSaving] = useState(false);
 
   const [pwd, setPwd] = useState("");
