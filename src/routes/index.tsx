@@ -119,54 +119,54 @@ function LandingPage() {
 
       <main id="main">
         {/* Hero */}
-        <header className="relative overflow-hidden px-6 py-24 lg:py-32">
+        <header className="relative overflow-hidden px-4 py-16 sm:px-6 sm:py-24 lg:py-32">
           <div
             aria-hidden="true"
             className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_50%_0%,rgba(79,70,229,0.18),transparent_55%)]"
           />
           <div
             aria-hidden="true"
-            className="absolute left-1/2 top-1/3 -z-10 h-96 w-96 -translate-x-1/2 rounded-full bg-amber-500/10 blur-[120px]"
+            className="absolute left-1/2 top-1/3 -z-10 h-72 w-72 -translate-x-1/2 rounded-full bg-amber-500/10 blur-[120px] sm:h-96 sm:w-96"
           />
           <div className="mx-auto flex max-w-5xl flex-col items-center text-center animate-fade-in">
-            <div className="mb-8 inline-flex items-center gap-2 rounded-full border border-indigo-500/20 bg-indigo-500/10 px-3 py-1 text-sm font-medium text-indigo-300">
-              <span aria-hidden="true" className="flex size-2 rounded-full bg-indigo-400 animate-pulse" />
-              Novo: Programa de Prêmios Nexus
+            <div className="mb-6 inline-flex max-w-full items-center gap-2 rounded-full border border-indigo-500/20 bg-indigo-500/10 px-3 py-1 text-xs font-medium text-indigo-300 sm:mb-8 sm:text-sm">
+              <span aria-hidden="true" className="flex size-2 shrink-0 rounded-full bg-indigo-400 animate-pulse" />
+              <span className="truncate">Novo: Programa de Prêmios Nexus</span>
             </div>
-            <h1 className="mb-6 bg-gradient-to-b from-white to-slate-400 bg-clip-text text-5xl font-extrabold tracking-tight text-transparent lg:text-7xl">
-              Sua assinatura que <br />
+            <h1 className="mb-5 bg-gradient-to-b from-white to-slate-400 bg-clip-text text-4xl font-extrabold tracking-tight text-transparent sm:mb-6 sm:text-5xl md:text-6xl lg:text-7xl">
+              Sua assinatura que{" "}
               <span className="text-amber-400">gera conquistas</span>
             </h1>
-            <p className="mb-10 max-w-2xl text-lg text-slate-300">
+            <p className="mb-8 max-w-2xl text-base text-slate-300 sm:mb-10 sm:text-lg">
               Assine a Nexus, indique seus amigos e acumule pontos que podem ser trocados por prêmios exclusivos.
               A plataforma onde sua lealdade é recompensada.
             </p>
-            <div className="flex flex-col gap-4 sm:flex-row">
+            <div className="flex w-full flex-col gap-3 sm:w-auto sm:flex-row sm:gap-4">
               <Link
                 to="/auth"
                 search={{ mode: "signup" }}
-                className="inline-flex items-center justify-center gap-2 rounded-xl bg-indigo-600 px-8 py-4 font-bold text-white shadow-lg shadow-indigo-600/30 transition hover:bg-indigo-500 hover:scale-[1.02] active:scale-95"
+                className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-indigo-600 px-6 py-3.5 text-sm font-bold text-white shadow-lg shadow-indigo-600/30 transition hover:bg-indigo-500 hover:scale-[1.02] active:scale-95 sm:px-8 sm:text-base"
               >
                 Começar agora <ArrowRight className="size-4" aria-hidden="true" />
               </Link>
               <Link
                 to="/"
                 hash="premios"
-                className="inline-flex items-center justify-center rounded-xl border border-slate-800 bg-slate-900 px-8 py-4 font-bold text-white transition hover:bg-slate-800 active:scale-95"
+                className="inline-flex min-h-12 items-center justify-center rounded-xl border border-slate-800 bg-slate-900 px-6 py-3.5 text-sm font-bold text-white transition hover:bg-slate-800 active:scale-95 sm:px-8 sm:text-base"
               >
                 Ver prêmios
               </Link>
             </div>
 
             {/* Trust strip */}
-            <div className="mt-14 grid w-full max-w-3xl grid-cols-3 gap-6 border-t border-slate-800 pt-8">
+            <div className="mt-10 grid w-full max-w-3xl grid-cols-1 gap-4 border-t border-slate-800 pt-6 sm:mt-14 sm:grid-cols-3 sm:gap-6 sm:pt-8">
               {[
                 { icon: ShieldCheck, label: "Pagamento seguro" },
                 { icon: Zap, label: "Ativação imediata" },
                 { icon: Trophy, label: "Prêmios reais" },
               ].map((t) => (
-                <div key={t.label} className="flex items-center justify-center gap-2 text-sm text-slate-400">
-                  <t.icon className="size-4 text-indigo-400" aria-hidden="true" />
+                <div key={t.label} className="flex items-center justify-center gap-2 text-xs text-slate-400 sm:text-sm">
+                  <t.icon className="size-4 shrink-0 text-indigo-400" aria-hidden="true" />
                   <span>{t.label}</span>
                 </div>
               ))}
