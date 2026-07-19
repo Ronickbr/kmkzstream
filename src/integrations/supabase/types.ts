@@ -516,7 +516,6 @@ export type Database = {
     Functions: {
       admin_analytics: { Args: never; Returns: Json }
       admin_stats: { Args: never; Returns: Json }
-      award_share_points: { Args: never; Returns: Json }
       check_and_award_achievements: { Args: never; Returns: Json }
       expire_old_points: { Args: never; Returns: number }
       generate_referral_code: { Args: never; Returns: string }
