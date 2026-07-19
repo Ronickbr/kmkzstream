@@ -23,7 +23,7 @@ export const getMyOverview = createServerFn({ method: "GET" })
         .order("created_at", { ascending: false }),
       supabase
         .from("reward_redemptions")
-        .select("id, status, points_spent, created_at, reward:rewards(name)")
+        .select("id, status, points_spent, created_at, tracking_code, shipping_recipient, shipping_address, shipping_city, shipping_state, shipping_zip, reward:rewards(name, kind, subscription_months)")
         .eq("user_id", userId)
         .order("created_at", { ascending: false }),
       supabase.rpc("has_role", { _user_id: userId, _role: "admin" }),
