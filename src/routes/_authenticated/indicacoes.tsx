@@ -58,12 +58,12 @@ function IndicacoesPage() {
         <div className="rounded-3xl bg-gradient-to-br from-surface-900 to-surface-900/90 p-8 text-white">
           <p className="text-xs font-bold uppercase tracking-widest text-white/60">Seu código único</p>
           <div className="mt-4 flex flex-wrap items-center gap-4">
-            <div className="rounded-2xl bg-white/10 px-6 py-3 font-mono text-2xl font-bold tracking-widest">
+            <div className="rounded-2xl bg-card/10 px-6 py-3 font-mono text-2xl font-bold tracking-widest">
               {referralCode}
             </div>
             <button
               onClick={() => copy(referralCode)}
-              className="inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-sm font-bold text-surface-900 hover:bg-white/90"
+              className="inline-flex items-center gap-2 rounded-full bg-card px-4 py-2 text-sm font-bold text-surface-900 hover:bg-card/90"
             >
               {copied ? <Check className="size-4" /> : <Copy className="size-4" />}
               Copiar código
@@ -76,7 +76,7 @@ function IndicacoesPage() {
               <input
                 readOnly
                 value={referralLink}
-                className="flex-1 rounded-xl bg-white/10 px-4 py-2.5 text-sm text-white"
+                className="flex-1 rounded-xl bg-card/10 px-4 py-2.5 text-sm text-white"
               />
               <button
                 onClick={() => copy(referralLink)}
@@ -86,7 +86,7 @@ function IndicacoesPage() {
               </button>
               <button
                 onClick={share}
-                className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/20 px-4 py-2 text-sm font-bold hover:bg-white/10"
+                className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/20 px-4 py-2 text-sm font-bold hover:bg-card/10"
               >
                 <Share2 className="size-4" /> Compartilhar
               </button>
@@ -95,21 +95,21 @@ function IndicacoesPage() {
         </div>
 
         <div className="mt-8 grid gap-4 md:grid-cols-3">
-          <div className="rounded-3xl border border-surface-200 bg-white p-6">
+          <div className="rounded-3xl border border-surface-200 bg-card p-6">
             <p className="text-xs font-bold uppercase tracking-widest text-surface-900/60">Total</p>
             <p className="mt-2 text-3xl font-bold">{data.referrals.length}</p>
           </div>
-          <div className="rounded-3xl border border-surface-200 bg-white p-6">
+          <div className="rounded-3xl border border-surface-200 bg-card p-6">
             <p className="text-xs font-bold uppercase tracking-widest text-surface-900/60">Confirmadas</p>
             <p className="mt-2 text-3xl font-bold text-emerald-600">{confirmed.length}</p>
           </div>
-          <div className="rounded-3xl border border-surface-200 bg-white p-6">
+          <div className="rounded-3xl border border-surface-200 bg-card p-6">
             <p className="text-xs font-bold uppercase tracking-widest text-surface-900/60">Pontos ganhos</p>
             <p className="mt-2 text-3xl font-bold text-brand">{formatPoints(totalPoints)}</p>
           </div>
         </div>
 
-        <section className="mt-8 rounded-3xl border border-surface-200 bg-white p-6">
+        <section className="mt-8 rounded-3xl border border-surface-200 bg-card p-6">
           <h2 className="font-display text-lg font-bold">Histórico</h2>
           {data.referrals.length === 0 ? (
             <div className="mt-6 flex flex-col items-center py-12 text-center">

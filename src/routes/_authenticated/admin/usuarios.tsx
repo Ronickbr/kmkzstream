@@ -29,7 +29,7 @@ function AdminUsersPage() {
   return (
     <div role="main" id="main" className="mx-auto max-w-7xl px-6 py-10">
       <h1 className="font-display text-3xl font-bold">Usuários</h1>
-      <div className="mt-8 overflow-x-auto rounded-3xl border border-surface-200 bg-white">
+      <div className="mt-8 overflow-x-auto rounded-3xl border border-surface-200 bg-card">
         <table className="w-full text-sm">
           <thead className="bg-surface-50 text-xs font-bold uppercase tracking-wider text-surface-900/60">
             <tr>

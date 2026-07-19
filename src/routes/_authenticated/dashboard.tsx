@@ -57,13 +57,13 @@ function DashboardPage() {
             </p>
             <Link
               to="/premios"
-              className="mt-6 inline-flex items-center rounded-full bg-white px-4 py-2 text-sm font-bold text-brand hover:bg-white/90"
+              className="mt-6 inline-flex items-center rounded-full bg-card px-4 py-2 text-sm font-bold text-brand hover:bg-card/90"
             >
               Ver catálogo de prêmios
             </Link>
           </div>
 
-          <div className="rounded-3xl border border-surface-200 bg-white p-6">
+          <div className="rounded-3xl border border-surface-200 bg-card p-6">
             <div className="flex items-center gap-2 text-surface-900/60">
               <Users className="size-4" />
               <span className="text-xs font-bold uppercase tracking-widest">Indicações</span>
@@ -74,7 +74,7 @@ function DashboardPage() {
             </p>
           </div>
 
-          <div className="rounded-3xl border border-surface-200 bg-white p-6">
+          <div className="rounded-3xl border border-surface-200 bg-card p-6">
             <div className="flex items-center gap-2 text-surface-900/60">
               <Gift className="size-4" />
               <span className="text-xs font-bold uppercase tracking-widest">Resgates</span>
@@ -85,7 +85,7 @@ function DashboardPage() {
             </p>
           </div>
 
-          <div className="rounded-3xl border border-surface-200 bg-white p-6 md:col-span-2">
+          <div className="rounded-3xl border border-surface-200 bg-card p-6 md:col-span-2">
             <div className="mb-3 flex items-center gap-2 text-surface-900/60">
               <CreditCard className="size-4" />
               <span className="text-xs font-bold uppercase tracking-widest">Assinatura</span>
@@ -124,7 +124,7 @@ function DashboardPage() {
 
         {/* Atividade recente */}
         <section className="mt-10 grid gap-6 lg:grid-cols-2">
-          <div className="rounded-3xl border border-surface-200 bg-white p-6">
+          <div className="rounded-3xl border border-surface-200 bg-card p-6">
             <h2 className="font-display text-lg font-bold">Indicações recentes</h2>
             {data.referrals.length === 0 ? (
               <p className="mt-4 text-sm text-surface-900/60">
@@ -154,7 +154,7 @@ function DashboardPage() {
             )}
           </div>
 
-          <div className="rounded-3xl border border-surface-200 bg-white p-6">
+          <div className="rounded-3xl border border-surface-200 bg-card p-6">
             <h2 className="font-display text-lg font-bold">Resgates recentes</h2>
             {data.redemptions.length === 0 ? (
               <p className="mt-4 text-sm text-surface-900/60">Você ainda não resgatou nenhum prêmio.</p>

@@ -46,7 +46,7 @@ function AdminPlansPage() {
           const active = e.active ?? p.active;
           const dirty = Object.keys(e).length > 0;
           return (
-            <div key={p.id} className="rounded-2xl border border-surface-200 bg-white p-6">
+            <div key={p.id} className="rounded-2xl border border-surface-200 bg-card p-6">
               <div className="mb-4 flex items-center justify-between">
                 <div>
                   <h3 className="font-display text-lg font-bold">{p.name}</h3>

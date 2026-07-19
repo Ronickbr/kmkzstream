@@ -27,7 +27,7 @@ export function AppNav({ isAdmin }: { isAdmin: boolean }) {
   return (
     <>
     <a href="#main" className="skip-link">Pular para o conteúdo</a>
-    <nav aria-label="Navegação principal" className="sticky top-0 z-50 border-b border-surface-200 bg-white/80 backdrop-blur-md">
+    <nav aria-label="Navegação principal" className="sticky top-0 z-50 border-b border-surface-200 bg-card/80 backdrop-blur-md">
 
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-6">
         <Link to="/dashboard" aria-label="Nexus — painel" className="flex items-center gap-2">

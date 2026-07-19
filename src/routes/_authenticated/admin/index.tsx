@@ -29,7 +29,7 @@ function AdminHome() {
 
       <div className="mt-8 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         {cards.map((c) => (
-          <div key={c.label} className="rounded-3xl border border-surface-200 bg-white p-6">
+          <div key={c.label} className="rounded-3xl border border-surface-200 bg-card p-6">
             <div className={`flex items-center gap-2 ${c.tone}`}>
               <c.icon className="size-4" />
               <span className="text-xs font-bold uppercase tracking-widest">{c.label}</span>

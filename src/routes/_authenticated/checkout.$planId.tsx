@@ -111,7 +111,7 @@ function CheckoutPage() {
         </div>
 
         <div className="mt-8 grid gap-8 lg:grid-cols-[1fr_360px]">
-          <section className="rounded-3xl border border-surface-200 bg-white p-6 sm:p-8">
+          <section className="rounded-3xl border border-surface-200 bg-card p-6 sm:p-8">
             {step === 1 && <StepReview plan={plan} />}
             {step === 2 && (
               <StepPayment method={method} setMethod={setMethod} card={card} setCard={setCard} />
@@ -173,7 +173,7 @@ function CheckoutPage() {
                 </div>
               )}
 
-              <div className="my-5 h-px bg-white/10" />
+              <div className="my-5 h-px bg-card/10" />
               <dl className="space-y-2 text-sm">
                 <div className="flex justify-between text-white/70">
                   <dt>Subtotal</dt>
@@ -184,7 +184,7 @@ function CheckoutPage() {
                   <dd>Grátis</dd>
                 </div>
               </dl>
-              <div className="my-5 h-px bg-white/10" />
+              <div className="my-5 h-px bg-card/10" />
               <div className="flex items-baseline justify-between">
                 <span className="text-sm text-white/70">Total</span>
                 <span className="font-display text-3xl font-bold">{formatCurrencyBRL(plan.price_cents)}</span>
@@ -194,7 +194,7 @@ function CheckoutPage() {
               </p>
             </div>
 
-            <ul className="space-y-2 rounded-2xl border border-surface-200 bg-white p-5 text-xs text-surface-900/70">
+            <ul className="space-y-2 rounded-2xl border border-surface-200 bg-card p-5 text-xs text-surface-900/70">
               <li className="flex items-center gap-2">
                 <ShieldCheck className="size-4 text-brand" aria-hidden="true" />
                 Pagamento 100% seguro
@@ -351,7 +351,7 @@ function StepPayment({
               placeholder="0000 0000 0000 0000"
               value={card.number}
               onChange={(e) => setCard({ ...card, number: formatCardNumber(e.target.value) })}
-              className="w-full rounded-xl border border-surface-200 bg-white px-4 py-3 text-sm focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/20"
+              className="w-full rounded-xl border border-surface-200 bg-card px-4 py-3 text-sm focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/20"
               aria-required="true"
             />
           </div>
@@ -365,7 +365,7 @@ function StepPayment({
               placeholder="Como está no cartão"
               value={card.name}
               onChange={(e) => setCard({ ...card, name: e.target.value.toUpperCase() })}
-              className="w-full rounded-xl border border-surface-200 bg-white px-4 py-3 text-sm uppercase focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/20"
+              className="w-full rounded-xl border border-surface-200 bg-card px-4 py-3 text-sm uppercase focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/20"
               aria-required="true"
             />
           </div>
@@ -380,7 +380,7 @@ function StepPayment({
               placeholder="MM/AA"
               value={card.exp}
               onChange={(e) => setCard({ ...card, exp: formatExp(e.target.value) })}
-              className="w-full rounded-xl border border-surface-200 bg-white px-4 py-3 text-sm focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/20"
+              className="w-full rounded-xl border border-surface-200 bg-card px-4 py-3 text-sm focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/20"
               aria-required="true"
             />
           </div>
@@ -396,7 +396,7 @@ function StepPayment({
               maxLength={4}
               value={card.cvc}
               onChange={(e) => setCard({ ...card, cvc: e.target.value.replace(/\D/g, "").slice(0, 4) })}
-              className="w-full rounded-xl border border-surface-200 bg-white px-4 py-3 text-sm focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/20"
+              className="w-full rounded-xl border border-surface-200 bg-card px-4 py-3 text-sm focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/20"
               aria-required="true"
             />
           </div>

@@ -106,7 +106,7 @@ function PremiosPage() {
             const disabled = !affordable || !inStock || busy === r.id;
             const isDevice = r.kind === "device";
             return (
-              <div key={r.id} className="flex flex-col rounded-3xl border border-surface-200 bg-white p-6">
+              <div key={r.id} className="flex flex-col rounded-3xl border border-surface-200 bg-card p-6">
                 <div className="mb-4 flex aspect-video items-center justify-center rounded-2xl bg-gradient-to-br from-brand/10 to-accent/10">
                   {r.image_url ? (
                     <img src={r.image_url} alt={r.name} className="h-full w-full rounded-2xl object-cover" />
@@ -157,11 +157,11 @@ function PremiosPage() {
           <h2 className="font-display text-xl font-bold">Meus resgates</h2>
           <p className="mt-1 text-sm text-surface-900/70">Acompanhe o status de cada troca.</p>
           {overview.redemptions.length === 0 ? (
-            <div className="mt-4 rounded-2xl border border-dashed border-surface-200 bg-white p-8 text-center text-sm text-surface-900/60">
+            <div className="mt-4 rounded-2xl border border-dashed border-surface-200 bg-card p-8 text-center text-sm text-surface-900/60">
               Você ainda não fez nenhum resgate. Escolha um prêmio acima para começar.
             </div>
           ) : (
-            <ul className="mt-4 divide-y divide-surface-200 overflow-hidden rounded-2xl border border-surface-200 bg-white">
+            <ul className="mt-4 divide-y divide-surface-200 overflow-hidden rounded-2xl border border-surface-200 bg-card">
               {overview.redemptions.map((r) => {
                 const rw = r.reward as { name: string; kind?: string; subscription_months?: number | null } | null;
                 const isDev = rw?.kind === "device";

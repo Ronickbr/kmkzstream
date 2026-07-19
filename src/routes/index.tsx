@@ -307,7 +307,7 @@ function LandingPage() {
             <Link
               to="/auth"
               search={{ mode: "signup" }}
-              className="relative z-10 inline-block rounded-2xl bg-white px-10 py-5 text-sm font-black uppercase tracking-wide text-indigo-900 shadow-xl transition hover:bg-slate-100 active:scale-95"
+              className="relative z-10 inline-block rounded-2xl bg-card px-10 py-5 text-sm font-black uppercase tracking-wide text-indigo-900 shadow-xl transition hover:bg-slate-100 active:scale-95"
             >
               Quero me tornar assinante
             </Link>
