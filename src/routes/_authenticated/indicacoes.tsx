@@ -144,7 +144,7 @@ function IndicacoesPage() {
           >
             Link de indicação
           </label>
-          <div className="mt-3 grid gap-2 sm:grid-cols-[minmax(0,1fr)_auto_auto]">
+          <div className="mt-3 grid gap-2 sm:grid-cols-[minmax(0,1fr)_auto_auto_auto]">
             <div className="relative min-w-0">
               <Link2
                 aria-hidden="true"
@@ -163,18 +163,26 @@ function IndicacoesPage() {
               type="button"
               onClick={() => copy(referralLink, "link")}
               aria-label={copiedLink ? "Link copiado" : "Copiar link"}
-              className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-primary px-4 py-2 text-sm font-bold text-primary-foreground transition hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-card"
+              className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-primary px-4 py-2 text-sm font-bold text-primary-foreground transition hover:opacity-90"
             >
               {copiedLink ? <Check className="size-4" aria-hidden="true" /> : <Copy className="size-4" aria-hidden="true" />}
-              {copiedLink ? "Copiado" : "Copiar link"}
+              {copiedLink ? "Copiado" : "Copiar"}
+            </button>
+            <button
+              type="button"
+              onClick={shareWhatsApp}
+              aria-label="Compartilhar no WhatsApp"
+              className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-emerald-500 px-4 py-2 text-sm font-bold text-white shadow-[0_0_20px_rgba(16,185,129,0.35)] transition hover:bg-emerald-400"
+            >
+              <MessageCircle className="size-4" aria-hidden="true" /> WhatsApp
             </button>
             <button
               type="button"
               onClick={share}
-              aria-label="Compartilhar link de indicação"
-              className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-border/60 bg-background/40 px-4 py-2 text-sm font-bold text-foreground transition hover:bg-background/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-card"
+              aria-label="Compartilhar link"
+              className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-border/60 bg-background/40 px-4 py-2 text-sm font-bold text-foreground transition hover:bg-background/60"
             >
-              <Share2 className="size-4" aria-hidden="true" /> Compartilhar
+              <Share2 className="size-4" aria-hidden="true" /> Mais
             </button>
           </div>
           <p className="mt-3 text-xs text-muted-foreground">
