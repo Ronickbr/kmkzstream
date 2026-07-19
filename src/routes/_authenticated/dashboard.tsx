@@ -10,6 +10,8 @@ import { toast } from "sonner";
 import { Sparkles, Users, Gift, CreditCard, CalendarCheck, History, TrendingUp, TrendingDown, Trophy } from "lucide-react";
 import { getVipLevel } from "@/lib/vip";
 import { celebrate } from "@/lib/confetti";
+import { WelcomeTour } from "@/components/welcome-tour";
+import { useState, useEffect } from "react";
 
 const overviewQO = queryOptions({ queryKey: ["me", "overview"], queryFn: () => getMyOverview() });
 const historyQO = queryOptions({ queryKey: ["me", "points-history"], queryFn: () => getMyPointsHistory() });
