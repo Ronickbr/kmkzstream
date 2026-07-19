@@ -25,7 +25,7 @@ export const Route = createFileRoute("/planos")({
 function PlanosPage() {
   const { data: plans } = useSuspenseQuery(plansQO);
   return (
-    <div className="min-h-screen bg-surface-50">
+    <div className="min-h-dvh bg-surface-50">
       <SiteNav />
       <div className="mx-auto max-w-7xl px-6 py-16">
         <div className="mb-12 text-center">
