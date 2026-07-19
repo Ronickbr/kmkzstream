@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useSuspenseQuery, queryOptions } from "@tanstack/react-query";
 import { AppNav } from "@/components/app-nav";
 import { getMyOverview } from "@/lib/user.functions";
-import { formatDate, formatPoints } from "@/lib/format";
+import { formatDateBR, formatPoints } from "@/lib/format";
 import { Copy, Share2, Users, Check } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -146,7 +146,7 @@ function IndicacoesPage() {
                       )}
                     </td>
                     <td className="text-right font-mono">{r.points_awarded ?? 0}</td>
-                    <td className="text-right text-surface-900/60">{formatDate(r.confirmed_at ?? r.created_at)}</td>
+                    <td className="text-right text-surface-900/60">{formatDateBR(r.confirmed_at ?? r.created_at)}</td>
                   </tr>
                 ))}
               </tbody>

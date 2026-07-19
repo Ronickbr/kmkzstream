@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useSuspenseQuery, queryOptions } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { adminListRedemptions, adminUpdateRedemption } from "@/lib/admin.functions";
-import { formatDate } from "@/lib/format";
+import { formatDateBR } from "@/lib/format";
 import { toast } from "sonner";
 
 const redQO = queryOptions({ queryKey: ["admin", "redemptions"], queryFn: () => adminListRedemptions() });
@@ -60,7 +60,7 @@ function AdminRedemptionsPage() {
                     {r.status}
                   </span>
                 </td>
-                <td className="px-4 py-3 text-surface-900/60">{formatDate(r.created_at)}</td>
+                <td className="px-4 py-3 text-surface-900/60">{formatDateBR(r.created_at)}</td>
                 <td className="px-4 py-3 text-right">
                   {r.status === "pending" && (
                     <div className="flex justify-end gap-1">

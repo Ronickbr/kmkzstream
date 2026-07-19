@@ -4,7 +4,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { AppNav } from "@/components/app-nav";
 import { getMyOverview } from "@/lib/user.functions";
 import { cancelMySubscription } from "@/lib/subscriptions.functions";
-import { formatCurrencyBRL, formatDate, formatPoints, PLAN_PERIOD_LABEL } from "@/lib/format";
+import { formatCurrencyBRL, formatDateBR, formatPoints, PLAN_PERIOD_LABEL } from "@/lib/format";
 import { toast } from "sonner";
 import { Sparkles, Users, Gift, CreditCard } from "lucide-react";
 
@@ -104,7 +104,7 @@ function DashboardPage() {
                   {formatCurrencyBRL(activeSub.plan.price_cents)} · {PLAN_PERIOD_LABEL[activeSub.plan.period]}
                 </p>
                 <p className="mt-2 text-xs text-surface-900/60">
-                  Renova em {formatDate(activeSub.ends_at)}
+                  Renova em {formatDateBR(activeSub.ends_at)}
                 </p>
                 <button
                   onClick={handleCancel}
@@ -148,7 +148,7 @@ function DashboardPage() {
                           PENDENTE
                         </span>
                       )}
-                      <span className="text-xs text-surface-900/40">{formatDate(r.created_at)}</span>
+                      <span className="text-xs text-surface-900/40">{formatDateBR(r.created_at)}</span>
                     </div>
                   </li>
                 ))}
