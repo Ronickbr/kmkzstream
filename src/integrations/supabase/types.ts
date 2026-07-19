@@ -21,10 +21,13 @@ export type Database = {
           duration_days: number
           features: Json
           id: string
+          is_popular: boolean
           name: string
           period: Database["public"]["Enums"]["plan_period"]
           price_cents: number
+          quality: string
           referral_points: number
+          screen_limit: number
           sort_order: number
           updated_at: string
         }
@@ -34,10 +37,13 @@ export type Database = {
           duration_days: number
           features?: Json
           id?: string
+          is_popular?: boolean
           name: string
           period: Database["public"]["Enums"]["plan_period"]
           price_cents: number
+          quality?: string
           referral_points?: number
+          screen_limit?: number
           sort_order?: number
           updated_at?: string
         }
@@ -47,10 +53,13 @@ export type Database = {
           duration_days?: number
           features?: Json
           id?: string
+          is_popular?: boolean
           name?: string
           period?: Database["public"]["Enums"]["plan_period"]
           price_cents?: number
+          quality?: string
           referral_points?: number
+          screen_limit?: number
           sort_order?: number
           updated_at?: string
         }
@@ -392,6 +401,7 @@ export type Database = {
         }
         Returns: boolean
       }
+      leaderboard: { Args: { _period?: string }; Returns: Json }
       redeem_reward:
         | { Args: { _reward_id: string }; Returns: string }
         | { Args: { _reward_id: string; _shipping?: Json }; Returns: string }
