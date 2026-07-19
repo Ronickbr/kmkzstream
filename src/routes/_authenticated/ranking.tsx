@@ -38,7 +38,7 @@ function RankingPage() {
           Os fãs mais engajados do <span className="bg-gradient-brand bg-clip-text text-transparent">KMKZ</span>
         </h1>
         <p className="mt-2 text-sm text-muted-foreground">
-          Suba de nível VIP acumulando pontos por login diário, indicações e conquistas.
+          Suba de nível VIP acumulando pontos por indicações e conquistas.
         </p>
       </header>
 
