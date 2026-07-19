@@ -18,7 +18,7 @@ export const Route = createFileRoute("/_authenticated/admin/pontos")({
   component: PointRulesPage,
 });
 
-const RESERVED = new Set(["daily_login", "share", "referral_confirmed", "reward_redeemed"]);
+const RESERVED = new Set(["share", "referral_confirmed", "reward_redeemed"]);
 
 type Draft = { id: string; name: string; points: number; daily_limit: number | null; active: boolean; isNew?: boolean };
 
