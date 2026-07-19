@@ -66,7 +66,7 @@ export function SiteFooter() {
         <div className="flex gap-6 text-sm font-medium text-surface-900/60">
           <a href="#" className="hover:text-brand">Termos</a>
           <a href="#" className="hover:text-brand">Privacidade</a>
-          <a href="#" className="hover:text-brand">Suporte</a>
+          <Link to="/suporte" className="hover:text-brand">Suporte</Link>
         </div>
       </div>
     </footer>
