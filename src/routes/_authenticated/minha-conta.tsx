@@ -22,6 +22,13 @@ function formatPhone(v: string) {
   return d.replace(/(\d{2})(\d{5})(\d{0,4})/, "($1) $2-$3");
 }
 
+function formatCpf(v: string) {
+  const d = v.replace(/\D/g, "").slice(0, 11);
+  return d.replace(/(\d{3})(\d{0,3})(\d{0,3})(\d{0,2})/, (_, a, b, c, e) =>
+    [a, b && `.${b}`, c && `.${c}`, e && `-${e}`].filter(Boolean).join("")
+  );
+}
+
 function MinhaContaPage() {
   const { data, refetch } = useSuspenseQuery(overviewQO);
   const updateFn = useServerFn(updateMyProfile);
@@ -33,6 +40,7 @@ function MinhaContaPage() {
   const [bio, setBio] = useState((p as any)?.bio ?? "");
   const [city, setCity] = useState((p as any)?.city ?? "");
   const [state, setState] = useState((p as any)?.state ?? "");
+  const [cpf, setCpf] = useState(formatCpf((p as any)?.cpf ?? ""));
   const [saving, setSaving] = useState(false);
 
   const [pwd, setPwd] = useState("");
@@ -52,6 +60,7 @@ function MinhaContaPage() {
         bio: bio || null,
         city: city || null,
         state: state || null,
+        cpf: cpf ? cpf.replace(/\D/g, "") : null,
       }});
       toast.success("Perfil atualizado");
       refetch();
@@ -170,6 +179,10 @@ function MinhaContaPage() {
               <option value="">—</option>
               {BR_STATES.map(s => <option key={s} value={s}>{s}</option>)}
             </select>
+          </Field>
+
+          <Field label="CPF" icon={<ShieldCheck className="h-3.5 w-3.5" />} hint="Usado para prevenir fraudes e cadastros duplicados">
+            <input type="text" value={cpf} onChange={(e)=>setCpf(formatCpf(e.target.value))} placeholder="000.000.000-00" inputMode="numeric" className={inputCls} />
           </Field>
 
           <div className="sm:col-span-2">
