@@ -24,6 +24,7 @@ import { Route as AuthenticatedCheckoutPlanIdRouteImport } from './routes/_authe
 import { Route as AuthenticatedAdminUsuariosRouteImport } from './routes/_authenticated/admin/usuarios'
 import { Route as AuthenticatedAdminResgatesRouteImport } from './routes/_authenticated/admin/resgates'
 import { Route as AuthenticatedAdminPremiosRouteImport } from './routes/_authenticated/admin/premios'
+import { Route as AuthenticatedAdminPontosRouteImport } from './routes/_authenticated/admin/pontos'
 import { Route as AuthenticatedAdminPlanosRouteImport } from './routes/_authenticated/admin/planos'
 import { Route as AuthenticatedAdminCrescimentoRouteImport } from './routes/_authenticated/admin/crescimento'
 
@@ -105,6 +106,12 @@ const AuthenticatedAdminPremiosRoute =
     path: '/premios',
     getParentRoute: () => AuthenticatedAdminRouteRoute,
   } as any)
+const AuthenticatedAdminPontosRoute =
+  AuthenticatedAdminPontosRouteImport.update({
+    id: '/pontos',
+    path: '/pontos',
+    getParentRoute: () => AuthenticatedAdminRouteRoute,
+  } as any)
 const AuthenticatedAdminPlanosRoute =
   AuthenticatedAdminPlanosRouteImport.update({
     id: '/planos',
@@ -130,6 +137,7 @@ export interface FileRoutesByFullPath {
   '/suporte': typeof AuthenticatedSuporteRoute
   '/admin/crescimento': typeof AuthenticatedAdminCrescimentoRoute
   '/admin/planos': typeof AuthenticatedAdminPlanosRoute
+  '/admin/pontos': typeof AuthenticatedAdminPontosRoute
   '/admin/premios': typeof AuthenticatedAdminPremiosRoute
   '/admin/resgates': typeof AuthenticatedAdminResgatesRoute
   '/admin/usuarios': typeof AuthenticatedAdminUsuariosRoute
@@ -147,6 +155,7 @@ export interface FileRoutesByTo {
   '/suporte': typeof AuthenticatedSuporteRoute
   '/admin/crescimento': typeof AuthenticatedAdminCrescimentoRoute
   '/admin/planos': typeof AuthenticatedAdminPlanosRoute
+  '/admin/pontos': typeof AuthenticatedAdminPontosRoute
   '/admin/premios': typeof AuthenticatedAdminPremiosRoute
   '/admin/resgates': typeof AuthenticatedAdminResgatesRoute
   '/admin/usuarios': typeof AuthenticatedAdminUsuariosRoute
@@ -167,6 +176,7 @@ export interface FileRoutesById {
   '/_authenticated/suporte': typeof AuthenticatedSuporteRoute
   '/_authenticated/admin/crescimento': typeof AuthenticatedAdminCrescimentoRoute
   '/_authenticated/admin/planos': typeof AuthenticatedAdminPlanosRoute
+  '/_authenticated/admin/pontos': typeof AuthenticatedAdminPontosRoute
   '/_authenticated/admin/premios': typeof AuthenticatedAdminPremiosRoute
   '/_authenticated/admin/resgates': typeof AuthenticatedAdminResgatesRoute
   '/_authenticated/admin/usuarios': typeof AuthenticatedAdminUsuariosRoute
@@ -187,6 +197,7 @@ export interface FileRouteTypes {
     | '/suporte'
     | '/admin/crescimento'
     | '/admin/planos'
+    | '/admin/pontos'
     | '/admin/premios'
     | '/admin/resgates'
     | '/admin/usuarios'
@@ -204,6 +215,7 @@ export interface FileRouteTypes {
     | '/suporte'
     | '/admin/crescimento'
     | '/admin/planos'
+    | '/admin/pontos'
     | '/admin/premios'
     | '/admin/resgates'
     | '/admin/usuarios'
@@ -223,6 +235,7 @@ export interface FileRouteTypes {
     | '/_authenticated/suporte'
     | '/_authenticated/admin/crescimento'
     | '/_authenticated/admin/planos'
+    | '/_authenticated/admin/pontos'
     | '/_authenticated/admin/premios'
     | '/_authenticated/admin/resgates'
     | '/_authenticated/admin/usuarios'
@@ -343,6 +356,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminPremiosRouteImport
       parentRoute: typeof AuthenticatedAdminRouteRoute
     }
+    '/_authenticated/admin/pontos': {
+      id: '/_authenticated/admin/pontos'
+      path: '/pontos'
+      fullPath: '/admin/pontos'
+      preLoaderRoute: typeof AuthenticatedAdminPontosRouteImport
+      parentRoute: typeof AuthenticatedAdminRouteRoute
+    }
     '/_authenticated/admin/planos': {
       id: '/_authenticated/admin/planos'
       path: '/planos'
@@ -363,6 +383,7 @@ declare module '@tanstack/react-router' {
 interface AuthenticatedAdminRouteRouteChildren {
   AuthenticatedAdminCrescimentoRoute: typeof AuthenticatedAdminCrescimentoRoute
   AuthenticatedAdminPlanosRoute: typeof AuthenticatedAdminPlanosRoute
+  AuthenticatedAdminPontosRoute: typeof AuthenticatedAdminPontosRoute
   AuthenticatedAdminPremiosRoute: typeof AuthenticatedAdminPremiosRoute
   AuthenticatedAdminResgatesRoute: typeof AuthenticatedAdminResgatesRoute
   AuthenticatedAdminUsuariosRoute: typeof AuthenticatedAdminUsuariosRoute
@@ -373,6 +394,7 @@ const AuthenticatedAdminRouteRouteChildren: AuthenticatedAdminRouteRouteChildren
   {
     AuthenticatedAdminCrescimentoRoute: AuthenticatedAdminCrescimentoRoute,
     AuthenticatedAdminPlanosRoute: AuthenticatedAdminPlanosRoute,
+    AuthenticatedAdminPontosRoute: AuthenticatedAdminPontosRoute,
     AuthenticatedAdminPremiosRoute: AuthenticatedAdminPremiosRoute,
     AuthenticatedAdminResgatesRoute: AuthenticatedAdminResgatesRoute,
     AuthenticatedAdminUsuariosRoute: AuthenticatedAdminUsuariosRoute,
