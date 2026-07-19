@@ -84,11 +84,25 @@ function DashboardPage() {
                 <p className="mt-3 font-display text-5xl font-black leading-none sm:text-6xl">
                   {formatPoints(data.points)}
                 </p>
+                <div className="mt-3 inline-flex items-center gap-1.5 rounded-full bg-white/15 px-3 py-1 text-xs font-bold backdrop-blur">
+                  <Trophy className="size-3.5" aria-hidden="true" /> {vip.emoji} {vip.name} VIP
+                </div>
               </div>
               <span className="grid size-11 place-items-center rounded-2xl bg-white/15 backdrop-blur">
                 <Sparkles className="size-5" aria-hidden="true" />
               </span>
             </div>
+            {vip.next && (
+              <div className="relative mt-4">
+                <div className="flex items-center justify-between text-[10px] font-bold uppercase tracking-widest text-white/70">
+                  <span>Próximo nível</span>
+                  <span>{vip.next - data.points} pts</span>
+                </div>
+                <div className="mt-1.5 h-1.5 overflow-hidden rounded-full bg-white/15">
+                  <div className="h-full bg-accent transition-all" style={{ width: `${progress}%` }} />
+                </div>
+              </div>
+            )}
             <p className="relative mt-6 max-w-sm text-sm leading-relaxed text-white/80">
               Continue indicando amigos para acumular mais pontos e resgatar prêmios exclusivos.
             </p>
