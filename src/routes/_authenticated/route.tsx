@@ -39,7 +39,7 @@ function AuthenticatedLayout() {
       <a href="#main" className="skip-link">Pular para o conteúdo</a>
       <AppSidebar isAdmin={data.isAdmin} />
       <SidebarInset className="bg-surface-50">
-        <header className="sticky top-0 z-40 flex h-14 items-center justify-between gap-2 border-b border-surface-200 bg-white/80 px-4 backdrop-blur-md">
+        <header className="sticky top-0 z-40 flex h-14 items-center justify-between gap-2 border-b border-surface-200 bg-card/80 px-4 backdrop-blur-md">
           <div className="flex items-center gap-2">
             <SidebarTrigger aria-label="Alternar menu lateral" />
             <span className="text-sm font-medium text-surface-900/70">

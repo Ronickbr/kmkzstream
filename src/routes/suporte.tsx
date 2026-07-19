@@ -130,7 +130,7 @@ function SupportPage() {
       <SiteNav />
       <main id="main" role="main">
         {/* Hero */}
-        <section className="border-b border-surface-200 bg-white">
+        <section className="border-b border-surface-200 bg-card">
           <div className="mx-auto max-w-5xl px-6 py-16 text-center">
             <div className="mx-auto inline-flex items-center gap-2 rounded-full border border-surface-200 bg-surface-50 px-4 py-1.5 text-xs font-semibold text-surface-900/70">
               <LifeBuoy className="size-3.5 text-brand" aria-hidden="true" />
@@ -143,7 +143,7 @@ function SupportPage() {
               Respostas rápidas sobre assinaturas, indicações, prêmios e mais. Ou fale com a nossa equipe.
             </p>
 
-            <div className="mx-auto mt-8 flex max-w-2xl items-center gap-2 rounded-2xl border border-surface-200 bg-white p-2 shadow-sm focus-within:border-brand focus-within:ring-2 focus-within:ring-brand/20">
+            <div className="mx-auto mt-8 flex max-w-2xl items-center gap-2 rounded-2xl border border-surface-200 bg-card p-2 shadow-sm focus-within:border-brand focus-within:ring-2 focus-within:ring-brand/20">
               <Search className="ml-2 size-5 text-surface-900/40" aria-hidden="true" />
               <label htmlFor="support-search" className="sr-only">
                 Buscar na central de ajuda
@@ -192,7 +192,7 @@ function SupportPage() {
 
               <ul className="mt-6 space-y-3">
                 {filtered.length === 0 && (
-                  <li className="rounded-2xl border border-dashed border-surface-200 bg-white p-8 text-center text-sm text-surface-900/60">
+                  <li className="rounded-2xl border border-dashed border-surface-200 bg-card p-8 text-center text-sm text-surface-900/60">
                     Nenhum resultado. Tente outra palavra ou nos envie uma mensagem.
                   </li>
                 )}
@@ -200,7 +200,7 @@ function SupportPage() {
                   const id = `faq-${i}`;
                   const isOpen = open === id;
                   return (
-                    <li key={id} className="overflow-hidden rounded-2xl border border-surface-200 bg-white">
+                    <li key={id} className="overflow-hidden rounded-2xl border border-surface-200 bg-card">
                       <button
                         type="button"
                         onClick={() => setOpen(isOpen ? null : id)}
@@ -230,7 +230,7 @@ function SupportPage() {
             {/* Contact */}
             <aside className="space-y-4">
               <ContactCard />
-              <div className="rounded-3xl border border-surface-200 bg-white p-6">
+              <div className="rounded-3xl border border-surface-200 bg-card p-6">
                 <div className="flex items-center gap-2">
                   <MessageCircle className="size-5 text-brand" aria-hidden="true" />
                   <h3 className="font-bold">Fale por chat</h3>
@@ -246,7 +246,7 @@ function SupportPage() {
                   Abrir chat
                 </button>
               </div>
-              <div className="rounded-3xl border border-surface-200 bg-white p-6">
+              <div className="rounded-3xl border border-surface-200 bg-card p-6">
                 <div className="flex items-center gap-2">
                   <Mail className="size-5 text-accent" aria-hidden="true" />
                   <h3 className="font-bold">Email direto</h3>
@@ -295,7 +295,7 @@ function CategoryChip({
       className={`flex flex-col items-center gap-2 rounded-2xl border p-4 text-xs font-semibold transition ${
         active
           ? "border-surface-900 bg-surface-900 text-white"
-          : "border-surface-200 bg-white text-surface-900/70 hover:border-surface-300"
+          : "border-surface-200 bg-card text-surface-900/70 hover:border-surface-300"
       }`}
     >
       <Icon className={`size-5 ${active ? "text-white" : color}`} aria-hidden="true" />
@@ -330,7 +330,7 @@ function ContactCard() {
   };
 
   return (
-    <form onSubmit={submit} className="rounded-3xl border border-surface-200 bg-white p-6" aria-labelledby="contact-heading">
+    <form onSubmit={submit} className="rounded-3xl border border-surface-200 bg-card p-6" aria-labelledby="contact-heading">
       <h3 id="contact-heading" className="font-display text-lg font-bold">
         Envie uma mensagem
       </h3>
@@ -357,7 +357,7 @@ function ContactCard() {
             value={form.message}
             onChange={(e) => setForm({ ...form, message: e.target.value })}
             aria-required="true"
-            className="w-full resize-none rounded-xl border border-surface-200 bg-white px-3 py-2 text-sm focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/20"
+            className="w-full resize-none rounded-xl border border-surface-200 bg-card px-3 py-2 text-sm focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/20"
           />
         </div>
       </div>
@@ -402,7 +402,7 @@ function Field({
         onChange={(e) => onChange(e.target.value)}
         autoComplete={autoComplete}
         aria-required="true"
-        className="w-full rounded-xl border border-surface-200 bg-white px-3 py-2 text-sm focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/20"
+        className="w-full rounded-xl border border-surface-200 bg-card px-3 py-2 text-sm focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/20"
       />
     </div>
   );

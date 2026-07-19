@@ -39,7 +39,7 @@ function PlanosPage() {
             return (
               <div
                 key={p.id}
-                className={`relative rounded-3xl bg-white p-8 transition ${
+                className={`relative rounded-3xl bg-card p-8 transition ${
                   popular ? "border-2 border-brand shadow-2xl shadow-brand/10" : "group border border-surface-200 hover:border-brand/30 hover:shadow-xl"
                 }`}
               >

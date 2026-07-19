@@ -67,7 +67,7 @@ function AdminRewardsPage() {
       </div>
 
       {draft && (
-        <div className="mb-6 rounded-2xl border-2 border-brand bg-white p-6">
+        <div className="mb-6 rounded-2xl border-2 border-brand bg-card p-6">
           <h3 className="mb-4 font-display text-lg font-bold">{draft.id ? "Editar prêmio" : "Novo prêmio"}</h3>
           <div className="grid gap-3 md:grid-cols-2">
             <input
@@ -125,7 +125,7 @@ function AdminRewardsPage() {
 
       <div className="grid gap-3">
         {rewards.map((r: any) => (
-          <div key={r.id} className="flex items-center justify-between rounded-2xl border border-surface-200 bg-white p-4">
+          <div key={r.id} className="flex items-center justify-between rounded-2xl border border-surface-200 bg-card p-4">
             <div>
               <div className="flex items-center gap-2">
                 <p className="font-bold">{r.name}</p>

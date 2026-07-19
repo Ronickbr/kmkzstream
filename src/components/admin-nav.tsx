@@ -11,7 +11,7 @@ const items = [
 export function AdminNav() {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   return (
-    <nav aria-label="Navegação do admin" className="border-b border-surface-200 bg-white">
+    <nav aria-label="Navegação do admin" className="border-b border-surface-200 bg-card">
       <div className="mx-auto flex max-w-7xl gap-1 overflow-x-auto px-6 py-3">
         {items.map((it) => {
           const active = it.exact ? pathname === it.to : pathname.startsWith(it.to);

@@ -14,7 +14,7 @@ export function SiteNav() {
   return (
     <>
       <a href="#main" className="skip-link">Pular para o conteúdo</a>
-      <nav aria-label="Navegação principal" className="sticky top-0 z-50 border-b border-surface-200 bg-white/80 backdrop-blur-md">
+      <nav aria-label="Navegação principal" className="sticky top-0 z-50 border-b border-surface-200 bg-card/80 backdrop-blur-md">
         <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-6">
           <Link to="/" aria-label="Nexus — página inicial" className="flex items-center gap-2">
             <span aria-hidden="true" className="size-8 rounded-lg bg-brand" />
@@ -56,7 +56,7 @@ export function SiteNav() {
 
 export function SiteFooter() {
   return (
-    <footer className="border-t border-surface-200 bg-white py-12">
+    <footer className="border-t border-surface-200 bg-card py-12">
       <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-8 px-6 md:flex-row">
         <div className="flex items-center gap-2">
           <div className="size-6 rounded-md bg-brand" />
