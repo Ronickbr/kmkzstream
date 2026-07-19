@@ -38,24 +38,27 @@ function AuthenticatedLayout() {
     <SidebarProvider>
       <a href="#main" className="skip-link">Pular para o conteúdo</a>
       <AppSidebar isAdmin={data.isAdmin} />
-      <SidebarInset className="bg-surface-50">
-        <header className="sticky top-0 z-40 flex h-14 items-center justify-between gap-2 border-b border-surface-200 bg-card/80 px-4 backdrop-blur-md">
-          <div className="flex items-center gap-2">
-            <SidebarTrigger aria-label="Alternar menu lateral" />
-            <span className="text-sm font-medium text-surface-900/70">
-              {data.isAdmin ? "Painel Nexus" : "Sua conta"}
+      <SidebarInset className="bg-transparent">
+        <header className="sticky top-0 z-40 flex h-14 items-center justify-between gap-2 border-b border-border/70 bg-background/70 px-4 backdrop-blur-xl supports-[backdrop-filter]:bg-background/50">
+          <div className="flex min-w-0 items-center gap-2">
+            <SidebarTrigger aria-label="Alternar menu lateral" className="text-muted-foreground hover:text-foreground" />
+            <span className="hidden h-4 w-px bg-border sm:block" aria-hidden="true" />
+            <span className="truncate text-sm font-medium text-muted-foreground">
+              {data.isAdmin ? "Painel Nexus · Administração" : "Área do usuário"}
             </span>
           </div>
           <button
             onClick={handleSignOut}
             aria-label="Sair da conta"
-            className="inline-flex min-h-9 items-center gap-2 rounded-full border border-surface-200 px-3 py-1.5 text-sm font-medium hover:bg-surface-100"
+            className="inline-flex min-h-9 items-center gap-2 rounded-full border border-border/80 bg-card/60 px-3 py-1.5 text-sm font-medium text-foreground/90 transition hover:border-brand/50 hover:bg-card hover:text-foreground"
           >
             <LogOut className="size-4" aria-hidden="true" />
             <span className="hidden sm:inline">Sair</span>
           </button>
         </header>
-        <Outlet />
+        <div className="animate-rise-in">
+          <Outlet />
+        </div>
       </SidebarInset>
     </SidebarProvider>
   );
