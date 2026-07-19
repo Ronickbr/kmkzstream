@@ -4,7 +4,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { getMyOverview } from "@/lib/user.functions";
 import { awardSharePoints } from "@/lib/points.functions";
 import { formatDateBR, formatPoints } from "@/lib/format";
-import { Copy, Share2, Users, Check, Link2, Gift, Clock, CheckCircle2, TrendingUp } from "lucide-react";
+import { Copy, Share2, Users, Check, Link2, Gift, Clock, CheckCircle2, TrendingUp, MessageCircle } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 
