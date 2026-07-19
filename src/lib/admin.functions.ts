@@ -227,3 +227,20 @@ export const adminDeletePointRule = createServerFn({ method: "POST" })
     if (error) throw new Error(error.message);
     return { ok: true };
   });
+
+export const getAdminAnalytics = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    const { supabase, userId } = context;
+    await assertAdmin(supabase, userId);
+    const { data, error } = await supabase.rpc("admin_analytics");
+    if (error) throw new Error(error.message);
+    return data as {
+      plan_distribution: { name: string; period: string; count: number }[];
+      top_users: { display_name: string; total_points: number; referrals: number }[];
+      referral_funnel: { total: number; pending: number; confirmed: number; conversion_rate: number };
+      redemption_funnel: { pending: number; fulfilled: number; cancelled: number; points_spent: number };
+      daily_signups: { day: string; signups: number }[];
+      active_users_30d: number;
+    };
+  });

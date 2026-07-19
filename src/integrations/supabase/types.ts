@@ -505,6 +505,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      admin_analytics: { Args: never; Returns: Json }
       admin_stats: { Args: never; Returns: Json }
       award_share_points: { Args: never; Returns: Json }
       check_and_award_achievements: { Args: never; Returns: Json }
