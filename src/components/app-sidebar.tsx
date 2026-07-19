@@ -11,6 +11,7 @@ import {
   Ticket,
   BarChart3,
   Sparkles,
+  Trophy,
 } from "lucide-react";
 import {
   Sidebar,
@@ -29,6 +30,7 @@ const userItems = [
   { to: "/dashboard", label: "Painel", icon: LayoutDashboard },
   { to: "/indicacoes", label: "Indicações", icon: Users },
   { to: "/premios", label: "Prêmios", icon: Gift },
+  { to: "/conquistas", label: "Conquistas", icon: Trophy },
   { to: "/ranking", label: "Ranking VIP", icon: Sparkles },
   { to: "/planos", label: "Planos", icon: CreditCard },
   { to: "/suporte", label: "Suporte", icon: LifeBuoy },

@@ -4,6 +4,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { getMyOverview } from "@/lib/user.functions";
 import { cancelMySubscription } from "@/lib/subscriptions.functions";
 import { getMyPointsHistory, claimDailyLogin } from "@/lib/points.functions";
+import { checkAchievements } from "@/lib/achievements.functions";
 import { formatCurrencyBRL, formatDateBR, formatPoints, PLAN_PERIOD_LABEL } from "@/lib/format";
 import { toast } from "sonner";
 import { Sparkles, Users, Gift, CreditCard, CalendarCheck, History, TrendingUp, TrendingDown, Trophy } from "lucide-react";
@@ -27,6 +28,7 @@ function DashboardPage() {
   const { data: history } = useSuspenseQuery(historyQO);
   const cancelFn = useServerFn(cancelMySubscription);
   const claimFn = useServerFn(claimDailyLogin);
+  const checkFn = useServerFn(checkAchievements);
   const qc = useQueryClient();
 
   const activeSub = data.subscription?.status === "active" ? data.subscription : null;
@@ -45,10 +47,18 @@ function DashboardPage() {
 
   const handleClaimDaily = async () => {
     try {
-      const res = await claimFn();
-      toast.success(`+${res.points} pts pelo login diário!`);
+      const res = await claimFn() as { points: number; streak?: number; bonus?: number };
+      const bonusText = res.bonus ? ` (+${res.bonus} bônus 🔥 ${res.streak} dias!)` : res.streak ? ` • Sequência: ${res.streak}` : "";
+      toast.success(`+${res.points} pts pelo login diário!${bonusText}`);
       celebrate();
       qc.invalidateQueries({ queryKey: ["me"] });
+      // Check achievements silently after daily login
+      try {
+        const ach = await checkFn();
+        for (const u of ach.unlocked ?? []) {
+          toast.success(`🏆 Conquista: ${u.name}${u.points ? ` (+${u.points} pts)` : ""}`);
+        }
+      } catch { /* silent */ }
     } catch (e: any) {
       toast.error(e?.message ?? "Erro");
     }

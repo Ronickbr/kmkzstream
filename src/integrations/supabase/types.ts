@@ -14,6 +14,45 @@ export type Database = {
   }
   public: {
     Tables: {
+      achievements: {
+        Row: {
+          active: boolean
+          category: string
+          created_at: string
+          criteria: Json
+          description: string
+          icon: string
+          id: string
+          name: string
+          points_reward: number
+          sort_order: number
+        }
+        Insert: {
+          active?: boolean
+          category?: string
+          created_at?: string
+          criteria: Json
+          description: string
+          icon?: string
+          id: string
+          name: string
+          points_reward?: number
+          sort_order?: number
+        }
+        Update: {
+          active?: boolean
+          category?: string
+          created_at?: string
+          criteria?: Json
+          description?: string
+          icon?: string
+          id?: string
+          name?: string
+          points_reward?: number
+          sort_order?: number
+        }
+        Relationships: []
+      }
       plans: {
         Row: {
           active: boolean
@@ -345,18 +384,56 @@ export type Database = {
           },
         ]
       }
+      user_achievements: {
+        Row: {
+          achievement_id: string
+          id: string
+          unlocked_at: string
+          user_id: string
+        }
+        Insert: {
+          achievement_id: string
+          id?: string
+          unlocked_at?: string
+          user_id: string
+        }
+        Update: {
+          achievement_id?: string
+          id?: string
+          unlocked_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_achievements_achievement_id_fkey"
+            columns: ["achievement_id"]
+            isOneToOne: false
+            referencedRelation: "achievements"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_points: {
         Row: {
+          current_streak: number
+          last_login_date: string | null
+          longest_streak: number
           total_points: number
           updated_at: string
           user_id: string
         }
         Insert: {
+          current_streak?: number
+          last_login_date?: string | null
+          longest_streak?: number
           total_points?: number
           updated_at?: string
           user_id: string
         }
         Update: {
+          current_streak?: number
+          last_login_date?: string | null
+          longest_streak?: number
           total_points?: number
           updated_at?: string
           user_id?: string
@@ -391,6 +468,7 @@ export type Database = {
     Functions: {
       admin_stats: { Args: never; Returns: Json }
       award_share_points: { Args: never; Returns: Json }
+      check_and_award_achievements: { Args: never; Returns: Json }
       claim_daily_login: { Args: never; Returns: Json }
       generate_referral_code: { Args: never; Returns: string }
       growth_metrics: { Args: never; Returns: Json }
