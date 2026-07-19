@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { listActivePlans, listActiveRewards } from "@/lib/plans.functions";
 import { formatCurrencyBRL, formatPoints, PLAN_ECONOMY_LABEL, PLAN_PERIOD_SHORT } from "@/lib/format";
-import { ArrowRight, Check, Gift, UserPlus, Sparkles, ShieldCheck, Zap, Trophy } from "lucide-react";
+import { ArrowRight, Check, Gift, UserPlus, Sparkles, ShieldCheck, Zap, Trophy, Menu, X } from "lucide-react";
 
 const plansQO = queryOptions({ queryKey: ["public", "plans"], queryFn: () => listActivePlans() });
 const rewardsQO = queryOptions({ queryKey: ["public", "rewards"], queryFn: () => listActiveRewards() });
