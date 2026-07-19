@@ -11,6 +11,7 @@ import {
   Ticket,
   BarChart3,
   Sparkles,
+  Trophy,
 } from "lucide-react";
 import {
   Sidebar,
