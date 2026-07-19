@@ -1,16 +1,22 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useSuspenseQuery, queryOptions } from "@tanstack/react-query";
+import { useSuspenseQuery, queryOptions, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { getMyOverview } from "@/lib/user.functions";
 import { cancelMySubscription } from "@/lib/subscriptions.functions";
+import { getMyPointsHistory, claimDailyLogin } from "@/lib/points.functions";
 import { formatCurrencyBRL, formatDateBR, formatPoints, PLAN_PERIOD_LABEL } from "@/lib/format";
 import { toast } from "sonner";
-import { Sparkles, Users, Gift, CreditCard } from "lucide-react";
+import { Sparkles, Users, Gift, CreditCard, CalendarCheck, History, TrendingUp, TrendingDown } from "lucide-react";
 
 const overviewQO = queryOptions({ queryKey: ["me", "overview"], queryFn: () => getMyOverview() });
+const historyQO = queryOptions({ queryKey: ["me", "points-history"], queryFn: () => getMyPointsHistory() });
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
-  loader: ({ context }) => context.queryClient.ensureQueryData(overviewQO),
+  loader: ({ context }) =>
+    Promise.all([
+      context.queryClient.ensureQueryData(overviewQO),
+      context.queryClient.ensureQueryData(historyQO),
+    ]),
   component: DashboardPage,
 });
 
