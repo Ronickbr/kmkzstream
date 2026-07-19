@@ -60,6 +60,7 @@ function MinhaContaPage() {
         bio: bio || null,
         city: city || null,
         state: state || null,
+        cpf: cpf ? cpf.replace(/\D/g, "") : null,
       }});
       toast.success("Perfil atualizado");
       refetch();
