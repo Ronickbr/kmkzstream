@@ -10,6 +10,7 @@ import {
   Package,
   Ticket,
   BarChart3,
+  Sparkles,
 } from "lucide-react";
 import {
   Sidebar,
