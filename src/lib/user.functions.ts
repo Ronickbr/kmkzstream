@@ -4,10 +4,10 @@ import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 export const getMyOverview = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
-    const { supabase, userId } = context;
+    const { supabase, userId, claims } = context;
 
     const [profileRes, pointsRes, subRes, refRes, redRes, isAdminRes] = await Promise.all([
-      supabase.from("profiles").select("id, display_name, avatar_url, referral_code").eq("id", userId).maybeSingle(),
+      supabase.from("profiles").select("id, display_name, avatar_url, referral_code, whatsapp, phone, bio, city, state, created_at").eq("id", userId).maybeSingle(),
       supabase.from("user_points").select("total_points").eq("user_id", userId).maybeSingle(),
       supabase
         .from("subscriptions")
@@ -31,6 +31,7 @@ export const getMyOverview = createServerFn({ method: "GET" })
 
     return {
       profile: profileRes.data,
+      email: (claims as any)?.email ?? null,
       points: pointsRes.data?.total_points ?? 0,
       subscription: subRes.data,
       referrals: refRes.data ?? [],
@@ -41,12 +42,28 @@ export const getMyOverview = createServerFn({ method: "GET" })
 
 export const updateMyProfile = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((data: { display_name: string; avatar_url?: string | null }) => data)
+  .inputValidator((data: {
+    display_name: string;
+    avatar_url?: string | null;
+    whatsapp?: string | null;
+    phone?: string | null;
+    bio?: string | null;
+    city?: string | null;
+    state?: string | null;
+  }) => data)
   .handler(async ({ data, context }) => {
     const { supabase, userId } = context;
     const { error } = await supabase
       .from("profiles")
-      .update({ display_name: data.display_name, avatar_url: data.avatar_url ?? null })
+      .update({
+        display_name: data.display_name,
+        avatar_url: data.avatar_url ?? null,
+        whatsapp: data.whatsapp ?? null,
+        phone: data.phone ?? null,
+        bio: data.bio ?? null,
+        city: data.city ?? null,
+        state: data.state ?? null,
+      })
       .eq("id", userId);
     if (error) throw new Error(error.message);
     return { ok: true };
