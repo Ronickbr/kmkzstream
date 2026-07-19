@@ -87,6 +87,15 @@
   --surface-100: #0f172a;
   --surface-200: #1e293b;
   --surface-900: #f8fafc;
+
+  --sidebar: #0f172a;
+  --sidebar-foreground: #e2e8f0;
+  --sidebar-primary: #4f46e5;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #1e293b;
+  --sidebar-accent-foreground: #f8fafc;
+  --sidebar-border: #1e293b;
+  --sidebar-ring: #6366f1;
 }
 
 .dark {
