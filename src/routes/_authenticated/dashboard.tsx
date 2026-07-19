@@ -80,6 +80,7 @@ function DashboardPage() {
 
   return (
     <div className="min-h-dvh">
+      <WelcomeTour open={tourOpen} onClose={() => setTourOpen(false)} />
       <div role="main" id="main" className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:py-12">
         <header className="mb-8 sm:mb-10">
           <p className="eyebrow">Painel</p>
