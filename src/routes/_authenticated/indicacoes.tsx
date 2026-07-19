@@ -1,12 +1,11 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useSuspenseQuery, queryOptions, useQueryClient } from "@tanstack/react-query";
-import { useServerFn } from "@tanstack/react-start";
+import { useSuspenseQuery, queryOptions } from "@tanstack/react-query";
 import { getMyOverview } from "@/lib/user.functions";
-import { awardSharePoints } from "@/lib/points.functions";
 import { formatDateBR, formatPoints } from "@/lib/format";
 import { Copy, Share2, Users, Check, Link2, Gift, Clock, CheckCircle2, TrendingUp, MessageCircle } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
+
 
 const overviewQO = queryOptions({ queryKey: ["me", "overview"], queryFn: () => getMyOverview() });
 
@@ -19,8 +18,6 @@ function IndicacoesPage() {
   const { data } = useSuspenseQuery(overviewQO);
   const [copiedCode, setCopiedCode] = useState(false);
   const [copiedLink, setCopiedLink] = useState(false);
-  const awardShare = useServerFn(awardSharePoints);
-  const qc = useQueryClient();
 
   const referralCode = data.profile?.referral_code ?? "";
   const referralLink =
@@ -28,15 +25,7 @@ function IndicacoesPage() {
       ? `${window.location.origin}/auth?mode=signup&ref=${referralCode}`
       : `/auth?mode=signup&ref=${referralCode}`;
 
-  const tryAwardShare = async () => {
-    try {
-      const res = await awardShare();
-      toast.success(`+${res.points} pts por compartilhar!`);
-      qc.invalidateQueries({ queryKey: ["me"] });
-    } catch {
-      /* daily limit or rule off — silent */
-    }
-  };
+
 
   const copy = async (text: string, which: "code" | "link") => {
     try {
@@ -49,7 +38,7 @@ function IndicacoesPage() {
         setTimeout(() => setCopiedLink(false), 2000);
       }
       toast.success(which === "code" ? "Código copiado!" : "Link copiado!");
-      if (which === "link") void tryAwardShare();
+
     } catch {
       toast.error("Não foi possível copiar. Tente novamente.");
     }
@@ -60,7 +49,6 @@ function IndicacoesPage() {
   const shareWhatsApp = () => {
     const url = `https://wa.me/?text=${encodeURIComponent(shareMessage)}`;
     window.open(url, "_blank", "noopener,noreferrer");
-    void tryAwardShare();
   };
 
   const share = async () => {
@@ -71,7 +59,6 @@ function IndicacoesPage() {
           text: "Streaming premium com pontos e prêmios",
           url: referralLink,
         });
-        void tryAwardShare();
       } catch {
         /* user cancelled */
       }
@@ -79,6 +66,7 @@ function IndicacoesPage() {
       copy(referralLink, "link");
     }
   };
+
 
   const confirmed = data.referrals.filter((r) => r.status === "confirmed");
   const pending = data.referrals.filter((r) => r.status !== "confirmed");

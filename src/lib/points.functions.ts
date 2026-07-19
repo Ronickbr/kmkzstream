@@ -23,21 +23,8 @@ export const getMyPointsHistory = createServerFn({ method: "GET" })
     return { events: (data ?? []) as PointEvent[] };
   });
 
-export const awardSharePoints = createServerFn({ method: "POST" })
-  .middleware([requireSupabaseAuth])
-  .handler(async ({ context }) => {
-    const { supabase } = context;
-    const { data, error } = await supabase.rpc("award_share_points");
-    if (error) {
-      const map: Record<string, string> = {
-        daily_limit_reached: "Limite diário de compartilhamentos atingido.",
-        rule_inactive: "Recompensa de compartilhamento desativada.",
-      };
-      const key = Object.keys(map).find((k) => error.message.includes(k));
-      throw new Error(key ? map[key] : error.message);
-    }
-    return data as { points: number; remaining: number };
-  });
+
+
 
 export const getGrowthMetrics = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
