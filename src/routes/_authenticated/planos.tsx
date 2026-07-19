@@ -114,10 +114,10 @@ function PlanosPage() {
               )}
               <h3 className="text-xs font-bold uppercase tracking-widest text-muted-foreground">{p.name}</h3>
               <div className="mt-3 flex items-baseline gap-1">
-                <span className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
+                <span className="text-2xl font-bold tracking-tight text-foreground sm:text-[1.75rem]">
                   {formatCurrencyBRL(p.price_cents)}
                 </span>
-                <span className="text-sm text-muted-foreground">{PLAN_PERIOD_SHORT[p.period]}</span>
+                <span className="text-xs text-muted-foreground">{PLAN_PERIOD_SHORT[p.period]}</span>
               </div>
               {economy && <p className="mt-1 text-xs font-semibold text-accent">{economy}</p>}
 
