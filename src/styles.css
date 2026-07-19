@@ -197,16 +197,25 @@
 @utility bg-gradient-accent { background-image: var(--gradient-accent); }
 @utility shadow-elevate { box-shadow: var(--shadow-elevate); }
 @utility shadow-glow { box-shadow: var(--shadow-glow); }
+@utility shadow-neon { box-shadow: var(--shadow-neon); }
 
 @utility card-surface {
-  background-color: var(--card);
+  background-color: color-mix(in oklab, var(--card) 85%, transparent);
   border: 1px solid color-mix(in oklab, var(--border) 70%, transparent);
   border-radius: var(--radius-2xl);
   box-shadow: var(--shadow-elevate);
+  backdrop-filter: blur(8px);
   transition: transform 200ms ease, border-color 200ms ease, box-shadow 200ms ease;
   &:hover {
-    border-color: color-mix(in oklab, var(--brand) 40%, var(--border));
+    border-color: color-mix(in oklab, var(--brand) 55%, var(--border));
   }
+}
+
+@utility glass {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(16px) saturate(140%);
+  border-radius: var(--radius-2xl);
 }
 
 @utility eyebrow {
@@ -219,3 +228,15 @@
 
 @keyframes rise-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
 @utility animate-rise-in { animation: rise-in 400ms cubic-bezier(0.2, 0.7, 0.2, 1) both; }
+
+@keyframes neon-pulse {
+  0%, 100% { box-shadow: 0 0 20px rgba(147,51,234,0.6), 0 0 40px rgba(236,72,153,0.3); }
+  50% { box-shadow: 0 0 30px rgba(147,51,234,0.8), 0 0 60px rgba(236,72,153,0.5); }
+}
+@utility animate-neon-pulse { animation: neon-pulse 2.4s ease-in-out infinite; }
+
+@keyframes float-slow {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+@utility animate-float { animation: float-slow 4s ease-in-out infinite; }
