@@ -37,7 +37,7 @@ function MinhaContaPage() {
   return (
     <div className="min-h-dvh bg-surface-50">
       <AppNav isAdmin={data.isAdmin} />
-      <div className="mx-auto max-w-2xl px-6 py-10">
+      <main id="main" className="mx-auto max-w-2xl px-6 py-10">
         <h1 className="font-display text-3xl font-bold">Minha conta</h1>
         <form onSubmit={handleSave} className="mt-8 space-y-5 rounded-3xl border border-surface-200 bg-white p-8">
           <div>

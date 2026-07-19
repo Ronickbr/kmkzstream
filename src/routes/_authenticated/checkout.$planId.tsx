@@ -36,7 +36,7 @@ function CheckoutPage() {
     return (
       <div className="min-h-dvh bg-surface-50">
         <AppNav isAdmin={overview.isAdmin} />
-        <div className="mx-auto max-w-2xl px-6 py-20 text-center">
+        <main id="main" className="mx-auto max-w-2xl px-6 py-20 text-center">
           <h1 className="font-display text-2xl font-bold">Plano não encontrado</h1>
         </div>
       </div>
