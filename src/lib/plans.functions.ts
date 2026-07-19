@@ -35,7 +35,7 @@ export const listActiveRewards = createServerFn({ method: "GET" }).handler(async
   const supabase = makePublicClient();
   const { data, error } = await supabase
     .from("rewards")
-    .select("id, name, description, image_url, points_cost, stock, sort_order")
+    .select("id, name, description, image_url, points_cost, stock, sort_order, kind, subscription_months")
     .eq("active", true)
     .order("sort_order", { ascending: true });
   if (error) throw new Error(error.message);
