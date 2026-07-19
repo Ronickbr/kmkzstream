@@ -86,7 +86,7 @@ function PlanosPage() {
       </section>
 
       {/* Grid de planos */}
-      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="mx-auto flex flex-wrap justify-center gap-6 [&>*]:w-full [&>*]:sm:w-[calc(50%-0.75rem)] [&>*]:lg:w-[calc(25%-1.125rem)] [&>*]:lg:max-w-xs">
         {plans.map((p, idx) => {
           const popular = idx === 2;
           const isCurrent = p.id === currentPlanId;
