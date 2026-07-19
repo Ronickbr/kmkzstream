@@ -3,7 +3,7 @@ import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 
 export const subscribeToPlan = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((data: { planId: string }) => data)
+  .validator((data: { planId: string }) => data)
   .handler(async ({ data, context }) => {
     const { supabase, userId } = context;
 

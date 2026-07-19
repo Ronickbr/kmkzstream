@@ -103,7 +103,7 @@ export type LeaderboardEntry = { user_id: string; display_name: string | null; p
 
 export const getLeaderboard = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((data: { period?: "week" | "month" | "all" }) => data)
+  .validator((data: { period?: "week" | "month" | "all" }) => data)
   .handler(async ({ data, context }) => {
     const { supabase } = context;
     const { data: rows, error } = await supabase.rpc("leaderboard", { _period: data.period ?? "month" });
