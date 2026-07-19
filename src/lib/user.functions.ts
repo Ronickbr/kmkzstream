@@ -50,9 +50,16 @@ export const updateMyProfile = createServerFn({ method: "POST" })
     bio?: string | null;
     city?: string | null;
     state?: string | null;
+    cpf?: string | null;
   }) => data)
   .handler(async ({ data, context }) => {
     const { supabase, userId } = context;
+    // Normalize CPF to digits only (or null)
+    const cpfDigits = data.cpf ? data.cpf.replace(/\D/g, "") : "";
+    const cpfValue = cpfDigits.length === 11 ? cpfDigits : (data.cpf ? null : null);
+    if (data.cpf && cpfDigits.length !== 11) {
+      throw new Error("CPF inválido — informe 11 dígitos");
+    }
     const { error } = await supabase
       .from("profiles")
       .update({
@@ -63,9 +70,15 @@ export const updateMyProfile = createServerFn({ method: "POST" })
         bio: data.bio ?? null,
         city: data.city ?? null,
         state: data.state ?? null,
+        cpf: cpfValue,
       })
       .eq("id", userId);
-    if (error) throw new Error(error.message);
+    if (error) {
+      if (error.code === "23505" || /duplicate|unique/i.test(error.message)) {
+        throw new Error("Este CPF já está cadastrado em outra conta");
+      }
+      throw new Error(error.message);
+    }
     return { ok: true };
   });
 
