@@ -3,7 +3,7 @@ import { useSuspenseQuery, queryOptions, useQueryClient } from "@tanstack/react-
 import { useServerFn } from "@tanstack/react-start";
 import { getMyOverview } from "@/lib/user.functions";
 import { cancelMySubscription } from "@/lib/subscriptions.functions";
-import { getMyPointsHistory, claimDailyLogin } from "@/lib/points.functions";
+import { getMyPointsHistory } from "@/lib/points.functions";
 import { checkAchievements } from "@/lib/achievements.functions";
 import { formatCurrencyBRL, formatDateBR, formatPoints, PLAN_PERIOD_LABEL } from "@/lib/format";
 import { toast } from "sonner";
