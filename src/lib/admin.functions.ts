@@ -221,7 +221,7 @@ export const adminDeletePointRule = createServerFn({ method: "POST" })
   .handler(async ({ data, context }) => {
     const { supabase, userId } = context;
     await assertAdmin(supabase, userId);
-    const reserved = ["daily_login", "share", "referral_confirmed", "reward_redeemed"];
+    const reserved = ["share", "referral_confirmed", "reward_redeemed"];
     if (reserved.includes(data.id)) throw new Error("Regra do sistema não pode ser removida");
     const { error } = await supabase.from("point_rules").delete().eq("id", data.id);
     if (error) throw new Error(error.message);
