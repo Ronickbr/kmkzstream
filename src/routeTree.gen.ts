@@ -9,12 +9,12 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as SuporteRouteImport } from './routes/suporte'
-import { Route as PlanosRouteImport } from './routes/planos'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AuthenticatedSuporteRouteImport } from './routes/_authenticated/suporte'
 import { Route as AuthenticatedPremiosRouteImport } from './routes/_authenticated/premios'
+import { Route as AuthenticatedPlanosRouteImport } from './routes/_authenticated/planos'
 import { Route as AuthenticatedMinhaContaRouteImport } from './routes/_authenticated/minha-conta'
 import { Route as AuthenticatedIndicacoesRouteImport } from './routes/_authenticated/indicacoes'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
@@ -26,16 +26,6 @@ import { Route as AuthenticatedAdminResgatesRouteImport } from './routes/_authen
 import { Route as AuthenticatedAdminPremiosRouteImport } from './routes/_authenticated/admin/premios'
 import { Route as AuthenticatedAdminPlanosRouteImport } from './routes/_authenticated/admin/planos'
 
-const SuporteRoute = SuporteRouteImport.update({
-  id: '/suporte',
-  path: '/suporte',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const PlanosRoute = PlanosRouteImport.update({
-  id: '/planos',
-  path: '/planos',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
   path: '/auth',
@@ -50,9 +40,19 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedSuporteRoute = AuthenticatedSuporteRouteImport.update({
+  id: '/suporte',
+  path: '/suporte',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedPremiosRoute = AuthenticatedPremiosRouteImport.update({
   id: '/premios',
   path: '/premios',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedPlanosRoute = AuthenticatedPlanosRouteImport.update({
+  id: '/planos',
+  path: '/planos',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedMinhaContaRoute = AuthenticatedMinhaContaRouteImport.update({
@@ -114,13 +114,13 @@ const AuthenticatedAdminPlanosRoute =
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
-  '/planos': typeof PlanosRoute
-  '/suporte': typeof SuporteRoute
   '/admin': typeof AuthenticatedAdminRouteRouteWithChildren
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/indicacoes': typeof AuthenticatedIndicacoesRoute
   '/minha-conta': typeof AuthenticatedMinhaContaRoute
+  '/planos': typeof AuthenticatedPlanosRoute
   '/premios': typeof AuthenticatedPremiosRoute
+  '/suporte': typeof AuthenticatedSuporteRoute
   '/admin/planos': typeof AuthenticatedAdminPlanosRoute
   '/admin/premios': typeof AuthenticatedAdminPremiosRoute
   '/admin/resgates': typeof AuthenticatedAdminResgatesRoute
@@ -131,12 +131,12 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
-  '/planos': typeof PlanosRoute
-  '/suporte': typeof SuporteRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/indicacoes': typeof AuthenticatedIndicacoesRoute
   '/minha-conta': typeof AuthenticatedMinhaContaRoute
+  '/planos': typeof AuthenticatedPlanosRoute
   '/premios': typeof AuthenticatedPremiosRoute
+  '/suporte': typeof AuthenticatedSuporteRoute
   '/admin/planos': typeof AuthenticatedAdminPlanosRoute
   '/admin/premios': typeof AuthenticatedAdminPremiosRoute
   '/admin/resgates': typeof AuthenticatedAdminResgatesRoute
@@ -149,13 +149,13 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRoute
-  '/planos': typeof PlanosRoute
-  '/suporte': typeof SuporteRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRouteRouteWithChildren
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/indicacoes': typeof AuthenticatedIndicacoesRoute
   '/_authenticated/minha-conta': typeof AuthenticatedMinhaContaRoute
+  '/_authenticated/planos': typeof AuthenticatedPlanosRoute
   '/_authenticated/premios': typeof AuthenticatedPremiosRoute
+  '/_authenticated/suporte': typeof AuthenticatedSuporteRoute
   '/_authenticated/admin/planos': typeof AuthenticatedAdminPlanosRoute
   '/_authenticated/admin/premios': typeof AuthenticatedAdminPremiosRoute
   '/_authenticated/admin/resgates': typeof AuthenticatedAdminResgatesRoute
@@ -168,13 +168,13 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/auth'
-    | '/planos'
-    | '/suporte'
     | '/admin'
     | '/dashboard'
     | '/indicacoes'
     | '/minha-conta'
+    | '/planos'
     | '/premios'
+    | '/suporte'
     | '/admin/planos'
     | '/admin/premios'
     | '/admin/resgates'
@@ -185,12 +185,12 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/auth'
-    | '/planos'
-    | '/suporte'
     | '/dashboard'
     | '/indicacoes'
     | '/minha-conta'
+    | '/planos'
     | '/premios'
+    | '/suporte'
     | '/admin/planos'
     | '/admin/premios'
     | '/admin/resgates'
@@ -202,13 +202,13 @@ export interface FileRouteTypes {
     | '/'
     | '/_authenticated'
     | '/auth'
-    | '/planos'
-    | '/suporte'
     | '/_authenticated/admin'
     | '/_authenticated/dashboard'
     | '/_authenticated/indicacoes'
     | '/_authenticated/minha-conta'
+    | '/_authenticated/planos'
     | '/_authenticated/premios'
+    | '/_authenticated/suporte'
     | '/_authenticated/admin/planos'
     | '/_authenticated/admin/premios'
     | '/_authenticated/admin/resgates'
@@ -221,26 +221,10 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AuthRoute: typeof AuthRoute
-  PlanosRoute: typeof PlanosRoute
-  SuporteRoute: typeof SuporteRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/suporte': {
-      id: '/suporte'
-      path: '/suporte'
-      fullPath: '/suporte'
-      preLoaderRoute: typeof SuporteRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/planos': {
-      id: '/planos'
-      path: '/planos'
-      fullPath: '/planos'
-      preLoaderRoute: typeof PlanosRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/auth': {
       id: '/auth'
       path: '/auth'
@@ -262,11 +246,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/suporte': {
+      id: '/_authenticated/suporte'
+      path: '/suporte'
+      fullPath: '/suporte'
+      preLoaderRoute: typeof AuthenticatedSuporteRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/premios': {
       id: '/_authenticated/premios'
       path: '/premios'
       fullPath: '/premios'
       preLoaderRoute: typeof AuthenticatedPremiosRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/planos': {
+      id: '/_authenticated/planos'
+      path: '/planos'
+      fullPath: '/planos'
+      preLoaderRoute: typeof AuthenticatedPlanosRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/minha-conta': {
@@ -369,7 +367,9 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
   AuthenticatedIndicacoesRoute: typeof AuthenticatedIndicacoesRoute
   AuthenticatedMinhaContaRoute: typeof AuthenticatedMinhaContaRoute
+  AuthenticatedPlanosRoute: typeof AuthenticatedPlanosRoute
   AuthenticatedPremiosRoute: typeof AuthenticatedPremiosRoute
+  AuthenticatedSuporteRoute: typeof AuthenticatedSuporteRoute
   AuthenticatedCheckoutPlanIdRoute: typeof AuthenticatedCheckoutPlanIdRoute
 }
 
@@ -378,7 +378,9 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
   AuthenticatedIndicacoesRoute: AuthenticatedIndicacoesRoute,
   AuthenticatedMinhaContaRoute: AuthenticatedMinhaContaRoute,
+  AuthenticatedPlanosRoute: AuthenticatedPlanosRoute,
   AuthenticatedPremiosRoute: AuthenticatedPremiosRoute,
+  AuthenticatedSuporteRoute: AuthenticatedSuporteRoute,
   AuthenticatedCheckoutPlanIdRoute: AuthenticatedCheckoutPlanIdRoute,
 }
 
@@ -389,8 +391,6 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AuthRoute: AuthRoute,
-  PlanosRoute: PlanosRoute,
-  SuporteRoute: SuporteRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

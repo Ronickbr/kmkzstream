@@ -21,10 +21,10 @@ export function SiteNav() {
             <span className="font-display text-xl font-bold tracking-tight">NEXUS</span>
           </Link>
           <div className="hidden gap-8 text-sm font-medium md:flex">
-            <Link to="/planos" className="text-surface-900/70 hover:text-brand">Planos</Link>
+            <Link to="/" hash="planos" className="text-surface-900/70 hover:text-brand">Planos</Link>
             <Link to="/" hash="premios" className="text-surface-900/70 hover:text-brand">Prêmios</Link>
             <Link to="/" hash="como-funciona" className="text-surface-900/70 hover:text-brand">Como funciona</Link>
-            <Link to="/suporte" className="text-surface-900/70 hover:text-brand">Suporte</Link>
+            <a href="mailto:suporte@nexus.app" className="text-surface-900/70 hover:text-brand">Suporte</a>
           </div>
           <div className="flex items-center gap-4">
             {signedIn ? (
@@ -66,7 +66,7 @@ export function SiteFooter() {
         <div className="flex gap-6 text-sm font-medium text-surface-900/60">
           <a href="#" className="hover:text-brand">Termos</a>
           <a href="#" className="hover:text-brand">Privacidade</a>
-          <Link to="/suporte" className="hover:text-brand">Suporte</Link>
+          <a href="mailto:suporte@nexus.app" className="hover:text-brand">Suporte</a>
         </div>
       </div>
     </footer>
