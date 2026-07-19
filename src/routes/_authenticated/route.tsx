@@ -48,14 +48,17 @@ function AuthenticatedLayout() {
               {data.isAdmin ? "Painel Nexus · Administração" : "Área do usuário"}
             </span>
           </div>
-          <button
-            onClick={handleSignOut}
-            aria-label="Sair da conta"
-            className="inline-flex min-h-9 items-center gap-2 rounded-full border border-border/80 bg-card/60 px-3 py-1.5 text-sm font-medium text-foreground/90 transition hover:border-brand/50 hover:bg-card hover:text-foreground"
-          >
-            <LogOut className="size-4" aria-hidden="true" />
-            <span className="hidden sm:inline">Sair</span>
-          </button>
+          <div className="flex items-center gap-2">
+            <NotificationBell />
+            <button
+              onClick={handleSignOut}
+              aria-label="Sair da conta"
+              className="inline-flex min-h-9 items-center gap-2 rounded-full border border-border/80 bg-card/60 px-3 py-1.5 text-sm font-medium text-foreground/90 transition hover:border-brand/50 hover:bg-card hover:text-foreground"
+            >
+              <LogOut className="size-4" aria-hidden="true" />
+              <span className="hidden sm:inline">Sair</span>
+            </button>
+          </div>
         </header>
         <div className="animate-rise-in">
           <Outlet />
