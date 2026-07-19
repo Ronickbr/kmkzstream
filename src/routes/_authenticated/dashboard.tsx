@@ -1,15 +1,13 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useSuspenseQuery, queryOptions, useQueryClient } from "@tanstack/react-query";
+import { useSuspenseQuery, queryOptions } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { getMyOverview } from "@/lib/user.functions";
 import { cancelMySubscription } from "@/lib/subscriptions.functions";
-import { getMyPointsHistory, claimDailyLogin } from "@/lib/points.functions";
-import { checkAchievements } from "@/lib/achievements.functions";
+import { getMyPointsHistory } from "@/lib/points.functions";
 import { formatCurrencyBRL, formatDateBR, formatPoints, PLAN_PERIOD_LABEL } from "@/lib/format";
 import { toast } from "sonner";
-import { Sparkles, Users, Gift, CreditCard, CalendarCheck, History, TrendingUp, TrendingDown, Trophy } from "lucide-react";
+import { Sparkles, Users, Gift, CreditCard, History, TrendingUp, TrendingDown, Trophy } from "lucide-react";
 import { getVipLevel } from "@/lib/vip";
-import { celebrate } from "@/lib/confetti";
 import { WelcomeTour } from "@/components/welcome-tour";
 import { useState, useEffect } from "react";
 
@@ -29,9 +27,6 @@ function DashboardPage() {
   const { data, refetch } = useSuspenseQuery(overviewQO);
   const { data: history } = useSuspenseQuery(historyQO);
   const cancelFn = useServerFn(cancelMySubscription);
-  const claimFn = useServerFn(claimDailyLogin);
-  const checkFn = useServerFn(checkAchievements);
-  const qc = useQueryClient();
 
   const activeSub = data.subscription?.status === "active" ? data.subscription : null;
   const confirmedRefs = data.referrals.filter((r) => r.status === "confirmed").length;
@@ -55,24 +50,7 @@ function DashboardPage() {
     }
   };
 
-  const handleClaimDaily = async () => {
-    try {
-      const res = await claimFn() as { points: number; streak?: number; bonus?: number };
-      const bonusText = res.bonus ? ` (+${res.bonus} bônus 🔥 ${res.streak} dias!)` : res.streak ? ` • Sequência: ${res.streak}` : "";
-      toast.success(`+${res.points} pts pelo login diário!${bonusText}`);
-      celebrate();
-      qc.invalidateQueries({ queryKey: ["me"] });
-      // Check achievements silently after daily login
-      try {
-        const ach = await checkFn();
-        for (const u of ach.unlocked ?? []) {
-          toast.success(`🏆 Conquista: ${u.name}${u.points ? ` (+${u.points} pts)` : ""}`);
-        }
-      } catch { /* silent */ }
-    } catch (e: any) {
-      toast.error(e?.message ?? "Erro");
-    }
-  };
+
 
   const vip = getVipLevel(data.points);
   const progress = vip.next ? Math.min(100, ((data.points - vip.min) / (vip.next - vip.min)) * 100) : 100;
@@ -128,17 +106,6 @@ function DashboardPage() {
               Continue indicando amigos para acumular mais pontos e resgatar prêmios exclusivos.
             </p>
             <div className="relative mt-6 flex flex-wrap gap-2">
-              <button
-                type="button"
-                onClick={handleClaimDaily}
-                disabled={history.dailyLogin.claimed_today}
-                className="inline-flex items-center gap-1.5 rounded-full bg-accent px-4 py-2 text-sm font-bold text-slate-950 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md disabled:cursor-not-allowed disabled:bg-white/20 disabled:text-white/60 disabled:shadow-none disabled:hover:translate-y-0"
-              >
-                <CalendarCheck className="size-4" aria-hidden="true" />
-                {history.dailyLogin.claimed_today
-                  ? "Bônus diário resgatado"
-                  : `Resgatar +${history.dailyLogin.points} pts do dia`}
-              </button>
               <Link
                 to="/premios"
                 className="inline-flex items-center gap-1.5 rounded-full bg-white px-4 py-2 text-sm font-bold text-brand-dark shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"

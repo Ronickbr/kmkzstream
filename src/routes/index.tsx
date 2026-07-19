@@ -128,7 +128,7 @@ function Hero() {
               a cada uso.
             </h1>
             <p className="mt-5 max-w-xl text-base leading-relaxed text-slate-300 sm:text-lg">
-              +50.000 canais, filmes e séries em 4K com programa de fidelidade que te recompensa por login diário, indicações e conquistas.
+              +50.000 canais, filmes e séries em 4K com programa de fidelidade que te recompensa por indicações e conquistas.
             </p>
             <div className="mt-8 flex flex-wrap items-center gap-3">
               <Link
@@ -247,12 +247,12 @@ function Gamification({ rewards }: { rewards: any[] }) {
               </span>
             </h2>
             <p className="mt-4 text-base text-slate-300">
-              Ganhe pontos automaticamente por login diário, compartilhamento, indicações e conquistas. Troque por meses grátis, descontos ou prêmios físicos.
+              Ganhe pontos automaticamente por ,compartilhamento, indicações e conquistas. Troque por meses grátis, descontos ou prêmios físicos.
             </p>
             <ul className="mt-6 space-y-3">
               {[
                 { icon: Sparkles, label: "+100 pts de boas-vindas ao criar conta" },
-                { icon: Zap, label: "+5 pts por login diário (streak até 30 dias)" },
+                { icon: Zap, label: "+5 pts por compartilhar seu link (até 5x/dia)" },
                 { icon: Users, label: "+50 pts por indicação confirmada" },
                 { icon: Trophy, label: "5 níveis VIP: Bronze → Diamante" },
               ].map((r) => (
@@ -416,7 +416,7 @@ function FAQ() {
   const items = [
     { q: "Como funciona a ativação?", a: "Após confirmar o pagamento, sua assinatura é ativada instantaneamente. Você recebe o acesso por e-mail e WhatsApp." },
     { q: "Em quantos aparelhos posso assistir?", a: "Depende do plano. Do plano Básico (1 tela) ao Premium (4 telas simultâneas em 4K)." },
-    { q: "Como funcionam os pontos VIP?", a: "Você ganha 100 pontos de boas-vindas, +5 por login diário, +50 por indicação confirmada, e mais por conquistas. Troque no catálogo por meses grátis ou prêmios físicos." },
+    { q: "Como funcionam os pontos VIP?", a: "Você ganha 100 pontos de boas-vindas, +5 por ,+50 por indicação confirmada, e mais por conquistas. Troque no catálogo por meses grátis ou prêmios físicos." },
     { q: "Posso cancelar quando quiser?", a: "Sim. Sem multa, sem burocracia. Cancele direto pelo painel do assinante." },
     { q: "Aceitam PIX?", a: "Sim, aceitamos PIX (aprovação instantânea), cartão de crédito e Mercado Pago." },
   ];

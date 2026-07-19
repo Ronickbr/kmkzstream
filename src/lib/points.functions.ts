@@ -9,12 +9,6 @@ export type PointEvent = {
   created_at: string;
 };
 
-export type DailyLoginStatus = {
-  claimed_today: boolean;
-  points: number;
-  next_available_at: string;
-};
-
 export const getMyPointsHistory = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
@@ -26,47 +20,7 @@ export const getMyPointsHistory = createServerFn({ method: "GET" })
       .order("created_at", { ascending: false })
       .limit(50);
     if (error) throw new Error(error.message);
-
-    const startOfDay = new Date();
-    startOfDay.setUTCHours(0, 0, 0, 0);
-    const { data: rule } = await supabase
-      .from("point_rules")
-      .select("points, daily_limit")
-      .eq("id", "daily_login")
-      .maybeSingle();
-    const { count } = await supabase
-      .from("point_events")
-      .select("id", { count: "exact", head: true })
-      .eq("user_id", userId)
-      .eq("kind", "daily_login")
-      .gte("created_at", startOfDay.toISOString());
-
-    const nextDay = new Date(startOfDay);
-    nextDay.setUTCDate(nextDay.getUTCDate() + 1);
-
-    const dailyLogin: DailyLoginStatus = {
-      claimed_today: (count ?? 0) > 0,
-      points: rule?.points ?? 5,
-      next_available_at: nextDay.toISOString(),
-    };
-
-    return { events: (data ?? []) as PointEvent[], dailyLogin };
-  });
-
-export const claimDailyLogin = createServerFn({ method: "POST" })
-  .middleware([requireSupabaseAuth])
-  .handler(async ({ context }) => {
-    const { supabase } = context;
-    const { data, error } = await supabase.rpc("claim_daily_login");
-    if (error) {
-      const map: Record<string, string> = {
-        already_claimed_today: "Você já resgatou o bônus de hoje.",
-        rule_inactive: "Recompensa de login desativada.",
-      };
-      const key = Object.keys(map).find((k) => error.message.includes(k));
-      throw new Error(key ? map[key] : error.message);
-    }
-    return data as { points: number };
+    return { events: (data ?? []) as PointEvent[] };
   });
 
 export const awardSharePoints = createServerFn({ method: "POST" })

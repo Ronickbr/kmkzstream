@@ -101,10 +101,6 @@ function AchievementsPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const streak = data.streak;
-  const nextStreakMilestone = streak.current_streak < 3 ? 3 : streak.current_streak < 7 ? 7 : streak.current_streak < 30 ? 30 : null;
-  const streakPct = nextStreakMilestone ? Math.min(100, Math.round((streak.current_streak / nextStreakMilestone) * 100)) : 100;
-
   return (
     <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 sm:py-10">
       <header className="mb-6 flex flex-wrap items-end justify-between gap-4 sm:mb-8">
@@ -126,33 +122,9 @@ function AchievementsPage() {
         </button>
       </header>
 
-      {/* Streak + Progress cards */}
-      <section className="grid gap-4 lg:grid-cols-3">
-        <div className="relative overflow-hidden rounded-3xl border border-orange-500/30 bg-gradient-to-br from-orange-500/20 via-card to-card p-6 shadow-elevate">
-          <div aria-hidden className="pointer-events-none absolute -right-12 -top-12 size-48 rounded-full bg-orange-500/20 blur-3xl" />
-          <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-orange-300">
-            <Flame className="size-3.5" /> Sequência atual
-          </div>
-          <p className="mt-3 flex items-baseline gap-2 font-display">
-            <span className="text-5xl font-black text-orange-300">{streak.current_streak}</span>
-            <span className="text-sm text-muted-foreground">dias</span>
-          </p>
-          <p className="mt-1 text-xs text-muted-foreground">Maior: {streak.longest_streak} dias</p>
-          {nextStreakMilestone && (
-            <div className="mt-4">
-              <div className="mb-1.5 flex justify-between text-xs text-muted-foreground">
-                <span>Próxima meta: {nextStreakMilestone} dias</span>
-                <span className="font-mono">{streakPct}%</span>
-              </div>
-              <div className="h-2 overflow-hidden rounded-full bg-background/60">
-                <div className="h-full rounded-full bg-gradient-to-r from-orange-500 to-pink-500 transition-all" style={{ width: `${streakPct}%` }} />
-              </div>
-            </div>
-          )}
-          <p className="mt-3 text-xs text-muted-foreground">
-            💡 A cada 7 dias você ganha +20 pontos de bônus.
-          </p>
-        </div>
+      {/* Progress cards */}
+      <section className="grid gap-4 sm:grid-cols-2">
+
 
         <div className="rounded-3xl border border-border bg-card p-6 shadow-elevate">
           <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-muted-foreground">

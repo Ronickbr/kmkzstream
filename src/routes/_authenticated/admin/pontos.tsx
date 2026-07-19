@@ -18,7 +18,7 @@ export const Route = createFileRoute("/_authenticated/admin/pontos")({
   component: PointRulesPage,
 });
 
-const RESERVED = new Set(["daily_login", "share", "referral_confirmed", "reward_redeemed"]);
+const RESERVED = new Set(["share", "referral_confirmed", "reward_redeemed"]);
 
 type Draft = { id: string; name: string; points: number; daily_limit: number | null; active: boolean; isNew?: boolean };
 
@@ -126,7 +126,7 @@ function PointRulesPage() {
       <section className="mt-8 rounded-2xl border border-border/60 bg-card/60 p-5 text-sm text-muted-foreground">
         <p className="font-semibold text-foreground">Regras do sistema</p>
         <ul className="mt-2 list-disc space-y-1 pl-5">
-          <li><code className="text-foreground">daily_login</code> — bônus ao clicar em resgatar no painel.</li>
+          
           <li><code className="text-foreground">share</code> — concedido ao compartilhar/copiar o link.</li>
           <li><code className="text-foreground">referral_confirmed</code> — usa <em>referral_points</em> do plano.</li>
           <li><code className="text-foreground">reward_redeemed</code> — registro de resgate (negativo).</li>
