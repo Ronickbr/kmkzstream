@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useSuspenseQuery, queryOptions } from "@tanstack/react-query";
 import { getMyOverview } from "@/lib/user.functions";
 import { formatDateBR, formatPoints } from "@/lib/format";
-import { Copy, Share2, Users, Check, Link2, Gift } from "lucide-react";
+import { Copy, Share2, Users, Check, Link2, Gift, Clock, CheckCircle2, TrendingUp } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 
@@ -161,11 +161,38 @@ function IndicacoesPage() {
       </section>
 
       {/* Stats */}
-      <div className="mt-6 grid gap-4 sm:mt-8 sm:grid-cols-3">
-        <StatCard label="Total" value={data.referrals.length} />
-        <StatCard label="Confirmadas" value={confirmed.length} valueClass="text-emerald-400" />
-        <StatCard label="Pontos ganhos" value={formatPoints(totalPoints)} valueClass="text-primary" />
-      </div>
+      {(() => {
+        const total = data.referrals.length;
+        const conv = total > 0 ? Math.round((confirmed.length / total) * 100) : 0;
+        return (
+          <>
+            <div className="mt-6 grid gap-4 sm:mt-8 sm:grid-cols-2 lg:grid-cols-4">
+              <StatCard label="Total" value={total} icon={Users} />
+              <StatCard label="Confirmadas" value={confirmed.length} valueClass="text-emerald-400" icon={CheckCircle2} iconClass="text-emerald-400" />
+              <StatCard label="Pendentes" value={pending.length} valueClass="text-amber-400" icon={Clock} iconClass="text-amber-400" />
+              <StatCard label="Pontos ganhos" value={formatPoints(totalPoints)} valueClass="text-primary" icon={Gift} iconClass="text-primary" />
+            </div>
+
+            {total > 0 && (
+              <div className="mt-6 rounded-3xl border border-border/60 bg-card p-5 sm:p-6">
+                <div className="flex items-center justify-between gap-4">
+                  <div className="flex items-center gap-2 text-sm font-semibold text-foreground">
+                    <TrendingUp className="size-4 text-primary" aria-hidden="true" />
+                    Taxa de conversão
+                  </div>
+                  <span className="font-mono text-sm font-bold text-foreground">{conv}%</span>
+                </div>
+                <div className="mt-3 h-2 overflow-hidden rounded-full bg-background/60" role="progressbar" aria-valuenow={conv} aria-valuemin={0} aria-valuemax={100} aria-label="Taxa de conversão">
+                  <div className="h-full rounded-full bg-gradient-to-r from-primary to-accent transition-all" style={{ width: `${conv}%` }} />
+                </div>
+                <p className="mt-2 text-xs text-muted-foreground">
+                  {confirmed.length} de {total} indicações viraram assinantes.
+                </p>
+              </div>
+            )}
+          </>
+        );
+      })()}
 
       {/* Histórico */}
       <section
@@ -259,14 +286,21 @@ function StatCard({
   label,
   value,
   valueClass = "text-foreground",
+  icon: Icon,
+  iconClass = "text-muted-foreground",
 }: {
   label: string;
   value: React.ReactNode;
   valueClass?: string;
+  icon?: React.ComponentType<{ className?: string; "aria-hidden"?: boolean }>;
+  iconClass?: string;
 }) {
   return (
     <div className="rounded-3xl border border-border/60 bg-card p-5 sm:p-6">
-      <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground">{label}</p>
+      <div className="flex items-center justify-between">
+        <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground">{label}</p>
+        {Icon && <Icon className={`size-4 ${iconClass}`} aria-hidden={true} />}
+      </div>
       <p className={`mt-2 text-3xl font-bold ${valueClass}`}>{value}</p>
     </div>
   );

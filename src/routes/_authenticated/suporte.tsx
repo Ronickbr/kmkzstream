@@ -1,8 +1,9 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useId, useMemo, useState } from "react";
 import { toast } from "sonner";
 import {
   ChevronDown,
+  ChevronRight,
   CreditCard,
   Gift,
   HelpCircle,
@@ -24,11 +25,11 @@ export const Route = createFileRoute("/_authenticated/suporte")({
 type Category = "conta" | "pagamentos" | "indicacoes" | "premios" | "seguranca";
 
 const CATEGORIES: { id: Category; label: string; icon: typeof User; color: string }[] = [
-  { id: "conta", label: "Conta", icon: User, color: "text-brand" },
-  { id: "pagamentos", label: "Pagamentos", icon: CreditCard, color: "text-brand" },
+  { id: "conta", label: "Conta", icon: User, color: "text-primary" },
+  { id: "pagamentos", label: "Pagamentos", icon: CreditCard, color: "text-primary" },
   { id: "indicacoes", label: "Indicações", icon: Users, color: "text-accent" },
   { id: "premios", label: "Prêmios", icon: Gift, color: "text-accent" },
-  { id: "seguranca", label: "Segurança", icon: Shield, color: "text-brand" },
+  { id: "seguranca", label: "Segurança", icon: Shield, color: "text-primary" },
 ];
 
 const FAQS: { q: string; a: string; cat: Category }[] = [
@@ -61,48 +62,65 @@ function SupportPage() {
   }, [query, cat]);
 
   return (
-    <div>
-      <div className="mb-8">
-        <div className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-4 py-1.5 text-xs font-semibold text-muted-foreground">
-          <LifeBuoy className="size-3.5 text-brand" aria-hidden="true" />
-          Central de Suporte
-        </div>
-        <h1 className="mt-4 font-display text-3xl font-bold tracking-tight md:text-4xl">Como podemos ajudar?</h1>
-        <p className="mt-2 max-w-2xl text-muted-foreground">
-          Respostas rápidas sobre assinaturas, indicações, prêmios e mais. Ou fale com a nossa equipe.
-        </p>
+    <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 sm:py-10">
+      {/* Hero */}
+      <section
+        aria-labelledby="support-heading"
+        className="relative overflow-hidden rounded-3xl border border-border/60 bg-gradient-to-br from-primary/15 via-card to-card p-6 sm:p-10"
+      >
+        <div aria-hidden="true" className="pointer-events-none absolute -right-16 -top-16 size-64 rounded-full bg-primary/20 blur-3xl" />
+        <div className="relative">
+          <div className="inline-flex items-center gap-2 rounded-full border border-border/60 bg-background/60 px-3 py-1 text-xs font-semibold text-muted-foreground">
+            <LifeBuoy className="size-3.5 text-primary" aria-hidden="true" />
+            Central de Suporte
+          </div>
+          <h1 id="support-heading" className="mt-4 font-display text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
+            Como podemos ajudar?
+          </h1>
+          <p className="mt-2 max-w-2xl text-sm text-muted-foreground sm:text-base">
+            Respostas rápidas sobre assinaturas, indicações, prêmios e mais. Ou fale direto com nossa equipe.
+          </p>
 
-        <div className="mt-6 flex max-w-2xl items-center gap-2 rounded-2xl border border-border bg-card p-2 focus-within:border-brand focus-within:ring-2 focus-within:ring-brand/20">
-          <Search className="ml-2 size-5 text-muted-foreground" aria-hidden="true" />
-          <label htmlFor="support-search" className="sr-only">Buscar na central de ajuda</label>
-          <input
-            id="support-search"
-            type="search"
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            placeholder="Buscar por palavra-chave (ex: cartão, pontos, cancelar)"
-            className="flex-1 bg-transparent px-2 py-2 text-sm outline-none placeholder:text-muted-foreground"
-          />
+          <div className="mt-6 flex max-w-2xl items-center gap-2 rounded-2xl border border-border/60 bg-background/60 p-2 focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/20">
+            <Search className="ml-2 size-5 text-muted-foreground" aria-hidden="true" />
+            <label htmlFor="support-search" className="sr-only">Buscar na central de ajuda</label>
+            <input
+              id="support-search"
+              type="search"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="Buscar por palavra-chave (ex: cartão, pontos, cancelar)"
+              className="flex-1 bg-transparent px-2 py-2 text-sm text-foreground outline-none placeholder:text-muted-foreground"
+            />
+          </div>
         </div>
-      </div>
+      </section>
 
-      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
+      {/* Atalhos rápidos */}
+      <section aria-label="Atalhos" className="mt-6 grid gap-3 sm:grid-cols-3">
+        <QuickLink to="/indicacoes" icon={Users} title="Minhas indicações" desc="Acompanhe status e pontos" tone="primary" />
+        <QuickLink to="/premios" icon={Gift} title="Prêmios" desc="Resgate seus pontos" tone="accent" />
+        <QuickLink to="/planos" icon={CreditCard} title="Planos" desc="Ver e trocar assinatura" tone="primary" />
+      </section>
+
+      {/* Categorias */}
+      <div className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
         <CategoryChip active={cat === "todas"} onClick={() => setCat("todas")} icon={HelpCircle} label="Todas" color="text-foreground" />
         {CATEGORIES.map((c) => (
           <CategoryChip key={c.id} active={cat === c.id} onClick={() => setCat(c.id)} icon={c.icon} label={c.label} color={c.color} />
         ))}
       </div>
 
-      <div className="mt-10 grid gap-8 lg:grid-cols-[1fr_360px]">
+      <div className="mt-8 grid gap-8 lg:grid-cols-[1fr_360px]">
         <div>
-          <h2 className="font-display text-2xl font-bold">Perguntas frequentes</h2>
+          <h2 className="font-display text-xl font-bold text-foreground">Perguntas frequentes</h2>
           <p className="mt-1 text-sm text-muted-foreground">
             {filtered.length} {filtered.length === 1 ? "resultado" : "resultados"}
           </p>
 
-          <ul className="mt-6 space-y-3">
+          <ul className="mt-5 space-y-3">
             {filtered.length === 0 && (
-              <li className="rounded-2xl border border-dashed border-border bg-card p-8 text-center text-sm text-muted-foreground">
+              <li className="rounded-2xl border border-dashed border-border/60 bg-card p-8 text-center text-sm text-muted-foreground">
                 Nenhum resultado. Tente outra palavra ou nos envie uma mensagem.
               </li>
             )}
@@ -110,19 +128,19 @@ function SupportPage() {
               const id = `faq-${i}`;
               const isOpen = open === id;
               return (
-                <li key={id} className="overflow-hidden rounded-2xl border border-border bg-card">
+                <li key={id} className="overflow-hidden rounded-2xl border border-border/60 bg-card transition hover:border-primary/40">
                   <button
                     type="button"
                     onClick={() => setOpen(isOpen ? null : id)}
                     aria-expanded={isOpen}
                     aria-controls={`${id}-content`}
-                    className="flex w-full items-center justify-between gap-4 px-5 py-4 text-left hover:bg-muted/40"
+                    className="flex w-full items-center justify-between gap-4 px-5 py-4 text-left"
                   >
-                    <span className="text-sm font-semibold">{f.q}</span>
+                    <span className="text-sm font-semibold text-foreground">{f.q}</span>
                     <ChevronDown className={`size-4 shrink-0 text-muted-foreground transition-transform ${isOpen ? "rotate-180" : ""}`} aria-hidden="true" />
                   </button>
                   {isOpen && (
-                    <div id={`${id}-content`} className="border-t border-border px-5 py-4 text-sm text-foreground/80">
+                    <div id={`${id}-content`} className="border-t border-border/60 px-5 py-4 text-sm text-foreground/80">
                       {f.a}
                     </div>
                   )}
@@ -134,33 +152,64 @@ function SupportPage() {
 
         <aside className="space-y-4">
           <ContactCard />
-          <div className="rounded-3xl border border-border bg-card p-6">
+          <div className="rounded-3xl border border-border/60 bg-card p-6">
             <div className="flex items-center gap-2">
-              <MessageCircle className="size-5 text-brand" aria-hidden="true" />
-              <h3 className="font-bold">Fale por chat</h3>
+              <MessageCircle className="size-5 text-primary" aria-hidden="true" />
+              <h3 className="font-bold text-foreground">Fale por chat</h3>
             </div>
             <p className="mt-2 text-sm text-muted-foreground">Nossa equipe responde de seg a sex, 9h às 18h.</p>
             <button
               type="button"
               onClick={() => toast.info("Chat em breve — enquanto isso, use o formulário ao lado.")}
-              className="mt-4 inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-xl border border-border px-4 text-sm font-semibold hover:bg-muted/40"
+              className="mt-4 inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-xl border border-border bg-background/50 px-4 text-sm font-semibold text-foreground hover:bg-background"
             >
               Abrir chat
             </button>
           </div>
-          <div className="rounded-3xl border border-border bg-card p-6">
+          <div className="rounded-3xl border border-border/60 bg-card p-6">
             <div className="flex items-center gap-2">
               <Mail className="size-5 text-accent" aria-hidden="true" />
-              <h3 className="font-bold">Email direto</h3>
+              <h3 className="font-bold text-foreground">Email direto</h3>
             </div>
             <p className="mt-2 text-sm text-muted-foreground">
               Prefere email? Escreva para{" "}
-              <a href="mailto:suporte@nexus.app" className="font-semibold text-brand hover:underline">suporte@nexus.app</a>
+              <a href="mailto:suporte@nexus.app" className="font-semibold text-primary hover:underline">suporte@nexus.app</a>
             </p>
           </div>
         </aside>
       </div>
     </div>
+  );
+}
+
+function QuickLink({
+  to,
+  icon: Icon,
+  title,
+  desc,
+  tone,
+}: {
+  to: "/indicacoes" | "/premios" | "/planos";
+  icon: typeof User;
+  title: string;
+  desc: string;
+  tone: "primary" | "accent";
+}) {
+  const toneCls = tone === "primary" ? "bg-primary/15 text-primary" : "bg-accent/15 text-accent";
+  return (
+    <Link
+      to={to}
+      className="group flex items-center gap-4 rounded-2xl border border-border/60 bg-card p-4 transition hover:border-primary/40"
+    >
+      <div className={`flex size-10 shrink-0 items-center justify-center rounded-xl ${toneCls}`}>
+        <Icon className="size-5" aria-hidden="true" />
+      </div>
+      <div className="min-w-0 flex-1">
+        <p className="font-semibold text-foreground">{title}</p>
+        <p className="truncate text-xs text-muted-foreground">{desc}</p>
+      </div>
+      <ChevronRight className="size-4 text-muted-foreground transition group-hover:text-foreground" aria-hidden="true" />
+    </Link>
   );
 }
 
@@ -171,10 +220,10 @@ function CategoryChip({ active, onClick, icon: Icon, label, color }: { active: b
       onClick={onClick}
       aria-pressed={active}
       className={`flex flex-col items-center gap-2 rounded-2xl border p-4 text-xs font-semibold transition ${
-        active ? "border-brand bg-brand text-brand-foreground" : "border-border bg-card text-muted-foreground hover:border-brand/40"
+        active ? "border-primary bg-primary text-primary-foreground" : "border-border/60 bg-card text-muted-foreground hover:border-primary/40"
       }`}
     >
-      <Icon className={`size-5 ${active ? "text-brand-foreground" : color}`} aria-hidden="true" />
+      <Icon className={`size-5 ${active ? "text-primary-foreground" : color}`} aria-hidden="true" />
       {label}
     </button>
   );
@@ -206,8 +255,8 @@ function ContactCard() {
   };
 
   return (
-    <form onSubmit={submit} className="rounded-3xl border border-border bg-card p-6" aria-labelledby="contact-heading">
-      <h3 id="contact-heading" className="font-display text-lg font-bold">Envie uma mensagem</h3>
+    <form onSubmit={submit} className="rounded-3xl border border-border/60 bg-card p-6" aria-labelledby="contact-heading">
+      <h3 id="contact-heading" className="font-display text-lg font-bold text-foreground">Envie uma mensagem</h3>
       <p className="mt-1 text-xs text-muted-foreground">Resposta média em 24h úteis.</p>
 
       <div className="mt-4 space-y-3">
@@ -222,7 +271,7 @@ function ContactCard() {
             value={form.message}
             onChange={(e) => setForm({ ...form, message: e.target.value })}
             aria-required="true"
-            className="w-full resize-none rounded-xl border border-border bg-background px-3 py-2 text-sm focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/20"
+            className="w-full resize-none rounded-xl border border-border bg-background px-3 py-2 text-sm text-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
           />
         </div>
       </div>
@@ -231,7 +280,7 @@ function ContactCard() {
         type="submit"
         disabled={!valid || busy}
         aria-busy={busy}
-        className="mt-5 inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-xl bg-brand px-4 text-sm font-bold text-brand-foreground hover:bg-brand-dark disabled:cursor-not-allowed disabled:opacity-50"
+        className="mt-5 inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-xl bg-primary px-4 text-sm font-bold text-primary-foreground hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
       >
         <Send className="size-4" aria-hidden="true" />
         {busy ? "Enviando…" : "Enviar mensagem"}
@@ -251,7 +300,7 @@ function Field({ id, label, value, onChange, type = "text", autoComplete }: { id
         onChange={(e) => onChange(e.target.value)}
         autoComplete={autoComplete}
         aria-required="true"
-        className="w-full rounded-xl border border-border bg-background px-3 py-2 text-sm focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/20"
+        className="w-full rounded-xl border border-border bg-background px-3 py-2 text-sm text-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
       />
     </div>
   );
