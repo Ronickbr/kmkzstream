@@ -1,7 +1,6 @@
 import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { useSuspenseQuery, queryOptions } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { AppNav } from "@/components/app-nav";
 import { listActivePlans } from "@/lib/plans.functions";
 import { getMyOverview } from "@/lib/user.functions";
 import { subscribeToPlan } from "@/lib/subscriptions.functions";
@@ -62,7 +61,6 @@ function CheckoutPage() {
   if (!plan) {
     return (
       <div className="min-h-dvh bg-surface-50">
-        <AppNav isAdmin={overview.isAdmin} />
         <main role="main" id="main" className="mx-auto max-w-2xl px-6 py-20 text-center">
           <h1 className="font-display text-2xl font-bold">Plano não encontrado</h1>
           <Link to="/planos" className="mt-4 inline-block text-brand hover:underline">
@@ -93,7 +91,6 @@ function CheckoutPage() {
 
   return (
     <div className="min-h-dvh bg-surface-50">
-      <AppNav isAdmin={overview.isAdmin} />
       <main role="main" id="main" className="mx-auto max-w-5xl px-6 py-10">
         <Link
           to="/planos"
