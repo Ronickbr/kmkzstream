@@ -42,7 +42,7 @@ export const getMyOverview = createServerFn({ method: "GET" })
 
 export const updateMyProfile = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((data: {
+  .validator((data: {
     display_name: string;
     avatar_url?: string | null;
     whatsapp?: string | null;

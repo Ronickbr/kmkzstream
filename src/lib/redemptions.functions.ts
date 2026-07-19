@@ -13,7 +13,7 @@ export type ShippingInput = {
 
 export const redeemReward = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((data: { rewardId: string; shipping?: ShippingInput }) => data)
+  .validator((data: { rewardId: string; shipping?: ShippingInput }) => data)
   .handler(async ({ data, context }) => {
     const { supabase } = context;
     const { data: redemptionId, error } = await supabase.rpc("redeem_reward", {
