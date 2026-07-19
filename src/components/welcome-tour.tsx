@@ -26,10 +26,10 @@ const STEPS: Step[] = [
   },
   {
     icon: Sparkles,
-    title: "Login diário = pontos grátis",
+    title: "Compartilhe e ganhe pontos",
     description:
-      "Toda vez que você acessar seu painel, resgate seu bônus diário. Mantenha a sequência de 7 dias para ganhar pontos extras!",
-    highlight: "Acesse todo dia",
+      "Compartilhe seu link exclusivo com amigos: cada compartilhamento vale pontos (até 5 por dia) e cada assinatura vale ainda mais.",
+    highlight: "Compartilhe todo dia",
   },
   {
     icon: Users,
