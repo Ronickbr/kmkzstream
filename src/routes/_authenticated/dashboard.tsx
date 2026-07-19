@@ -86,6 +86,17 @@ function DashboardPage() {
               Continue indicando amigos para acumular mais pontos e resgatar prêmios exclusivos.
             </p>
             <div className="relative mt-6 flex flex-wrap gap-2">
+              <button
+                type="button"
+                onClick={handleClaimDaily}
+                disabled={history.dailyLogin.claimed_today}
+                className="inline-flex items-center gap-1.5 rounded-full bg-accent px-4 py-2 text-sm font-bold text-slate-950 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md disabled:cursor-not-allowed disabled:bg-white/20 disabled:text-white/60 disabled:shadow-none disabled:hover:translate-y-0"
+              >
+                <CalendarCheck className="size-4" aria-hidden="true" />
+                {history.dailyLogin.claimed_today
+                  ? "Bônus diário resgatado"
+                  : `Resgatar +${history.dailyLogin.points} pts do dia`}
+              </button>
               <Link
                 to="/premios"
                 className="inline-flex items-center gap-1.5 rounded-full bg-white px-4 py-2 text-sm font-bold text-brand-dark shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
