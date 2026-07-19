@@ -10,6 +10,8 @@ import { toast } from "sonner";
 import { Sparkles, Users, Gift, CreditCard, CalendarCheck, History, TrendingUp, TrendingDown, Trophy } from "lucide-react";
 import { getVipLevel } from "@/lib/vip";
 import { celebrate } from "@/lib/confetti";
+import { WelcomeTour } from "@/components/welcome-tour";
+import { useState, useEffect } from "react";
 
 const overviewQO = queryOptions({ queryKey: ["me", "overview"], queryFn: () => getMyOverview() });
 const historyQO = queryOptions({ queryKey: ["me", "points-history"], queryFn: () => getMyPointsHistory() });
@@ -33,6 +35,14 @@ function DashboardPage() {
 
   const activeSub = data.subscription?.status === "active" ? data.subscription : null;
   const confirmedRefs = data.referrals.filter((r) => r.status === "confirmed").length;
+
+  const [tourOpen, setTourOpen] = useState(false);
+  useEffect(() => {
+    if (!(data.profile as any)?.onboarded_at) {
+      const t = setTimeout(() => setTourOpen(true), 400);
+      return () => clearTimeout(t);
+    }
+  }, [data.profile]);
 
   const handleCancel = async () => {
     if (!confirm("Cancelar assinatura atual?")) return;
@@ -70,6 +80,7 @@ function DashboardPage() {
 
   return (
     <div className="min-h-dvh">
+      <WelcomeTour open={tourOpen} onClose={() => setTourOpen(false)} />
       <div role="main" id="main" className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:py-12">
         <header className="mb-8 sm:mb-10">
           <p className="eyebrow">Painel</p>

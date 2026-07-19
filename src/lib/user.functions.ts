@@ -7,7 +7,7 @@ export const getMyOverview = createServerFn({ method: "GET" })
     const { supabase, userId, claims } = context;
 
     const [profileRes, pointsRes, subRes, refRes, redRes, isAdminRes] = await Promise.all([
-      supabase.from("profiles").select("id, display_name, avatar_url, referral_code, whatsapp, phone, bio, city, state, created_at").eq("id", userId).maybeSingle(),
+      supabase.from("profiles").select("id, display_name, avatar_url, referral_code, whatsapp, phone, bio, city, state, created_at, onboarded_at").eq("id", userId).maybeSingle(),
       supabase.from("user_points").select("total_points").eq("user_id", userId).maybeSingle(),
       supabase
         .from("subscriptions")
@@ -64,6 +64,18 @@ export const updateMyProfile = createServerFn({ method: "POST" })
         city: data.city ?? null,
         state: data.state ?? null,
       })
+      .eq("id", userId);
+    if (error) throw new Error(error.message);
+    return { ok: true };
+  });
+
+export const completeOnboarding = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    const { supabase, userId } = context;
+    const { error } = await supabase
+      .from("profiles")
+      .update({ onboarded_at: new Date().toISOString() })
       .eq("id", userId);
     if (error) throw new Error(error.message);
     return { ok: true };
