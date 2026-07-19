@@ -18,7 +18,7 @@ export const Route = createFileRoute("/_authenticated/admin")({
 function AdminLayout() {
   const data = Route.useLoaderData();
   return (
-    <div className="min-h-dvh bg-surface-50">
+    <main id="main" className="min-h-dvh bg-surface-50">
       <AppNav isAdmin={data.isAdmin} />
       <AdminNav />
       <Outlet />
