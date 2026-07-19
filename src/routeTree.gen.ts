@@ -13,6 +13,7 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedSuporteRouteImport } from './routes/_authenticated/suporte'
+import { Route as AuthenticatedRankingRouteImport } from './routes/_authenticated/ranking'
 import { Route as AuthenticatedPremiosRouteImport } from './routes/_authenticated/premios'
 import { Route as AuthenticatedPlanosRouteImport } from './routes/_authenticated/planos'
 import { Route as AuthenticatedMinhaContaRouteImport } from './routes/_authenticated/minha-conta'
@@ -45,6 +46,11 @@ const IndexRoute = IndexRouteImport.update({
 const AuthenticatedSuporteRoute = AuthenticatedSuporteRouteImport.update({
   id: '/suporte',
   path: '/suporte',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedRankingRoute = AuthenticatedRankingRouteImport.update({
+  id: '/ranking',
+  path: '/ranking',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedPremiosRoute = AuthenticatedPremiosRouteImport.update({
@@ -134,6 +140,7 @@ export interface FileRoutesByFullPath {
   '/minha-conta': typeof AuthenticatedMinhaContaRoute
   '/planos': typeof AuthenticatedPlanosRoute
   '/premios': typeof AuthenticatedPremiosRoute
+  '/ranking': typeof AuthenticatedRankingRoute
   '/suporte': typeof AuthenticatedSuporteRoute
   '/admin/crescimento': typeof AuthenticatedAdminCrescimentoRoute
   '/admin/planos': typeof AuthenticatedAdminPlanosRoute
@@ -152,6 +159,7 @@ export interface FileRoutesByTo {
   '/minha-conta': typeof AuthenticatedMinhaContaRoute
   '/planos': typeof AuthenticatedPlanosRoute
   '/premios': typeof AuthenticatedPremiosRoute
+  '/ranking': typeof AuthenticatedRankingRoute
   '/suporte': typeof AuthenticatedSuporteRoute
   '/admin/crescimento': typeof AuthenticatedAdminCrescimentoRoute
   '/admin/planos': typeof AuthenticatedAdminPlanosRoute
@@ -173,6 +181,7 @@ export interface FileRoutesById {
   '/_authenticated/minha-conta': typeof AuthenticatedMinhaContaRoute
   '/_authenticated/planos': typeof AuthenticatedPlanosRoute
   '/_authenticated/premios': typeof AuthenticatedPremiosRoute
+  '/_authenticated/ranking': typeof AuthenticatedRankingRoute
   '/_authenticated/suporte': typeof AuthenticatedSuporteRoute
   '/_authenticated/admin/crescimento': typeof AuthenticatedAdminCrescimentoRoute
   '/_authenticated/admin/planos': typeof AuthenticatedAdminPlanosRoute
@@ -194,6 +203,7 @@ export interface FileRouteTypes {
     | '/minha-conta'
     | '/planos'
     | '/premios'
+    | '/ranking'
     | '/suporte'
     | '/admin/crescimento'
     | '/admin/planos'
@@ -212,6 +222,7 @@ export interface FileRouteTypes {
     | '/minha-conta'
     | '/planos'
     | '/premios'
+    | '/ranking'
     | '/suporte'
     | '/admin/crescimento'
     | '/admin/planos'
@@ -232,6 +243,7 @@ export interface FileRouteTypes {
     | '/_authenticated/minha-conta'
     | '/_authenticated/planos'
     | '/_authenticated/premios'
+    | '/_authenticated/ranking'
     | '/_authenticated/suporte'
     | '/_authenticated/admin/crescimento'
     | '/_authenticated/admin/planos'
@@ -277,6 +289,13 @@ declare module '@tanstack/react-router' {
       path: '/suporte'
       fullPath: '/suporte'
       preLoaderRoute: typeof AuthenticatedSuporteRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/ranking': {
+      id: '/_authenticated/ranking'
+      path: '/ranking'
+      fullPath: '/ranking'
+      preLoaderRoute: typeof AuthenticatedRankingRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/premios': {
@@ -413,6 +432,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedMinhaContaRoute: typeof AuthenticatedMinhaContaRoute
   AuthenticatedPlanosRoute: typeof AuthenticatedPlanosRoute
   AuthenticatedPremiosRoute: typeof AuthenticatedPremiosRoute
+  AuthenticatedRankingRoute: typeof AuthenticatedRankingRoute
   AuthenticatedSuporteRoute: typeof AuthenticatedSuporteRoute
   AuthenticatedCheckoutPlanIdRoute: typeof AuthenticatedCheckoutPlanIdRoute
 }
@@ -424,6 +444,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedMinhaContaRoute: AuthenticatedMinhaContaRoute,
   AuthenticatedPlanosRoute: AuthenticatedPlanosRoute,
   AuthenticatedPremiosRoute: AuthenticatedPremiosRoute,
+  AuthenticatedRankingRoute: AuthenticatedRankingRoute,
   AuthenticatedSuporteRoute: AuthenticatedSuporteRoute,
   AuthenticatedCheckoutPlanIdRoute: AuthenticatedCheckoutPlanIdRoute,
 }
