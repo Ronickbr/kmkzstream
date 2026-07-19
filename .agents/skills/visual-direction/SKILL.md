@@ -1,5 +1,5 @@
 ---
-name: Visual Direction
+name: visual-direction
 description: "Direção visual para Q1/Q2 2026: paletas de cores estruturadas com funções semânticas, combinações de fontes com contraste de tamanho (3x display vs. corpo), layouts assimétricos que quebram o grid tradicional, e uso estratégico de imagens. Define o tom visual do projeto alinhado às tendências atuais de mercado."
 ---
 
