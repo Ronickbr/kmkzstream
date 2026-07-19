@@ -179,3 +179,51 @@ export const adminUpdateRedemption = createServerFn({ method: "POST" })
     if (error) throw new Error(error.message);
     return { ok: true };
   });
+
+// ============ Point Rules ============
+
+export type PointRule = {
+  id: string;
+  name: string;
+  points: number;
+  daily_limit: number | null;
+  active: boolean;
+  updated_at: string;
+};
+
+export const adminListPointRules = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    const { supabase, userId } = context;
+    await assertAdmin(supabase, userId);
+    const { data, error } = await supabase.from("point_rules").select("*").order("id");
+    if (error) throw new Error(error.message);
+    return (data ?? []) as PointRule[];
+  });
+
+export const adminUpsertPointRule = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: { id: string; name: string; points: number; daily_limit: number | null; active: boolean }) => d)
+  .handler(async ({ data, context }) => {
+    const { supabase, userId } = context;
+    await assertAdmin(supabase, userId);
+    if (!/^[a-z0-9_]+$/.test(data.id)) throw new Error("ID deve conter apenas letras minúsculas, números e _");
+    if (data.points < 0) throw new Error("Pontos não podem ser negativos");
+    const payload = { ...data, updated_at: new Date().toISOString() };
+    const { error } = await supabase.from("point_rules").upsert(payload, { onConflict: "id" });
+    if (error) throw new Error(error.message);
+    return { ok: true };
+  });
+
+export const adminDeletePointRule = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: { id: string }) => d)
+  .handler(async ({ data, context }) => {
+    const { supabase, userId } = context;
+    await assertAdmin(supabase, userId);
+    const reserved = ["daily_login", "share", "referral_confirmed", "reward_redeemed"];
+    if (reserved.includes(data.id)) throw new Error("Regra do sistema não pode ser removida");
+    const { error } = await supabase.from("point_rules").delete().eq("id", data.id);
+    if (error) throw new Error(error.message);
+    return { ok: true };
+  });
