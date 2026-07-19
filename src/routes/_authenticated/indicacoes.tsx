@@ -38,7 +38,7 @@ function IndicacoesPage() {
         setTimeout(() => setCopiedLink(false), 2000);
       }
       toast.success(which === "code" ? "Código copiado!" : "Link copiado!");
-      if (which === "link") void tryAwardShare();
+
     } catch {
       toast.error("Não foi possível copiar. Tente novamente.");
     }
