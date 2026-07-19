@@ -51,11 +51,20 @@ export function AppSidebar({ isAdmin }: { isAdmin: boolean }) {
     exact ? pathname === to : pathname === to || pathname.startsWith(to + "/");
 
   return (
-    <Sidebar collapsible="icon">
-      <SidebarHeader className="border-b border-surface-200">
-        <Link to="/dashboard" aria-label="Nexus — painel" className="flex items-center gap-2 px-2 py-1">
-          <span aria-hidden="true" className="size-8 shrink-0 rounded-lg bg-brand" />
-          {!collapsed && <span className="font-display text-lg font-bold tracking-tight">NEXUS</span>}
+    <Sidebar collapsible="icon" className="border-r border-sidebar-border">
+      <SidebarHeader className="border-b border-sidebar-border">
+        <Link to="/dashboard" aria-label="Nexus — painel" className="flex items-center gap-2.5 px-2 py-1.5">
+          <span
+            aria-hidden="true"
+            className="grid size-9 shrink-0 place-items-center rounded-xl bg-gradient-brand text-sm font-black text-white shadow-glow"
+          >
+            N
+          </span>
+          {!collapsed && (
+            <span className="font-display text-lg font-black tracking-tight text-sidebar-foreground">
+              Nexus
+            </span>
+          )}
         </Link>
       </SidebarHeader>
       <SidebarContent>
