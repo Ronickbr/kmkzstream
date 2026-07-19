@@ -49,7 +49,6 @@ function IndicacoesPage() {
   const shareWhatsApp = () => {
     const url = `https://wa.me/?text=${encodeURIComponent(shareMessage)}`;
     window.open(url, "_blank", "noopener,noreferrer");
-    void tryAwardShare();
   };
 
   const share = async () => {
@@ -60,7 +59,6 @@ function IndicacoesPage() {
           text: "Streaming premium com pontos e prêmios",
           url: referralLink,
         });
-        void tryAwardShare();
       } catch {
         /* user cancelled */
       }
@@ -68,6 +66,7 @@ function IndicacoesPage() {
       copy(referralLink, "link");
     }
   };
+
 
   const confirmed = data.referrals.filter((r) => r.status === "confirmed");
   const pending = data.referrals.filter((r) => r.status !== "confirmed");
