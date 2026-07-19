@@ -24,6 +24,7 @@ export function SiteNav() {
             <Link to="/planos" className="text-surface-900/70 hover:text-brand">Planos</Link>
             <Link to="/" hash="premios" className="text-surface-900/70 hover:text-brand">Prêmios</Link>
             <Link to="/" hash="como-funciona" className="text-surface-900/70 hover:text-brand">Como funciona</Link>
+            <Link to="/suporte" className="text-surface-900/70 hover:text-brand">Suporte</Link>
           </div>
           <div className="flex items-center gap-4">
             {signedIn ? (
