@@ -22,6 +22,13 @@ function formatPhone(v: string) {
   return d.replace(/(\d{2})(\d{5})(\d{0,4})/, "($1) $2-$3");
 }
 
+function formatCpf(v: string) {
+  const d = v.replace(/\D/g, "").slice(0, 11);
+  return d.replace(/(\d{3})(\d{0,3})(\d{0,3})(\d{0,2})/, (_, a, b, c, e) =>
+    [a, b && `.${b}`, c && `.${c}`, e && `-${e}`].filter(Boolean).join("")
+  );
+}
+
 function MinhaContaPage() {
   const { data, refetch } = useSuspenseQuery(overviewQO);
   const updateFn = useServerFn(updateMyProfile);
