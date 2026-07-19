@@ -122,7 +122,15 @@ export type Database = {
           id: string
           points_spent: number
           reward_id: string
+          shipping_address: string | null
+          shipping_city: string | null
+          shipping_notes: string | null
+          shipping_phone: string | null
+          shipping_recipient: string | null
+          shipping_state: string | null
+          shipping_zip: string | null
           status: Database["public"]["Enums"]["redemption_status"]
+          tracking_code: string | null
           updated_at: string
           user_id: string
         }
@@ -131,7 +139,15 @@ export type Database = {
           id?: string
           points_spent: number
           reward_id: string
+          shipping_address?: string | null
+          shipping_city?: string | null
+          shipping_notes?: string | null
+          shipping_phone?: string | null
+          shipping_recipient?: string | null
+          shipping_state?: string | null
+          shipping_zip?: string | null
           status?: Database["public"]["Enums"]["redemption_status"]
+          tracking_code?: string | null
           updated_at?: string
           user_id: string
         }
@@ -140,7 +156,15 @@ export type Database = {
           id?: string
           points_spent?: number
           reward_id?: string
+          shipping_address?: string | null
+          shipping_city?: string | null
+          shipping_notes?: string | null
+          shipping_phone?: string | null
+          shipping_recipient?: string | null
+          shipping_state?: string | null
+          shipping_zip?: string | null
           status?: Database["public"]["Enums"]["redemption_status"]
+          tracking_code?: string | null
           updated_at?: string
           user_id?: string
         }
@@ -161,10 +185,12 @@ export type Database = {
           description: string | null
           id: string
           image_url: string | null
+          kind: string
           name: string
           points_cost: number
           sort_order: number
           stock: number
+          subscription_months: number | null
           updated_at: string
         }
         Insert: {
@@ -173,10 +199,12 @@ export type Database = {
           description?: string | null
           id?: string
           image_url?: string | null
+          kind?: string
           name: string
           points_cost: number
           sort_order?: number
           stock?: number
+          subscription_months?: number | null
           updated_at?: string
         }
         Update: {
@@ -185,10 +213,12 @@ export type Database = {
           description?: string | null
           id?: string
           image_url?: string | null
+          kind?: string
           name?: string
           points_cost?: number
           sort_order?: number
           stock?: number
+          subscription_months?: number | null
           updated_at?: string
         }
         Relationships: []
@@ -287,7 +317,9 @@ export type Database = {
         }
         Returns: boolean
       }
-      redeem_reward: { Args: { _reward_id: string }; Returns: string }
+      redeem_reward:
+        | { Args: { _reward_id: string }; Returns: string }
+        | { Args: { _reward_id: string; _shipping?: Json }; Returns: string }
     }
     Enums: {
       app_role: "admin" | "user"
