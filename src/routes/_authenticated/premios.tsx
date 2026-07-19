@@ -1,7 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useSuspenseQuery, queryOptions } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { AppNav } from "@/components/app-nav";
 import { getMyOverview } from "@/lib/user.functions";
 import { listActiveRewards } from "@/lib/plans.functions";
 import { redeemReward, type ShippingInput } from "@/lib/redemptions.functions";
@@ -88,7 +87,6 @@ function PremiosPage() {
 
   return (
     <div className="min-h-dvh bg-surface-50">
-      <AppNav isAdmin={overview.isAdmin} />
       <div role="main" id="main" className="mx-auto max-w-7xl px-6 py-10">
         <header className="mb-8 flex flex-col items-start justify-between gap-4 md:flex-row md:items-end">
           <div>

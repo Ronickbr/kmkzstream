@@ -1,7 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useSuspenseQuery, queryOptions } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { AppNav } from "@/components/app-nav";
 import { getMyOverview } from "@/lib/user.functions";
 import { cancelMySubscription } from "@/lib/subscriptions.functions";
 import { formatCurrencyBRL, formatDateBR, formatPoints, PLAN_PERIOD_LABEL } from "@/lib/format";
@@ -35,7 +34,6 @@ function DashboardPage() {
 
   return (
     <div className="min-h-dvh bg-surface-50">
-      <AppNav isAdmin={data.isAdmin} />
       <div role="main" id="main" className="mx-auto max-w-7xl px-6 py-10">
         <header className="mb-8">
           <h1 className="font-display text-3xl font-bold">

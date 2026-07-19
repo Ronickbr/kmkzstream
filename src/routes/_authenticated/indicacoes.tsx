@@ -1,6 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useSuspenseQuery, queryOptions } from "@tanstack/react-query";
-import { AppNav } from "@/components/app-nav";
 import { getMyOverview } from "@/lib/user.functions";
 import { formatDateBR, formatPoints } from "@/lib/format";
 import { Copy, Share2, Users, Check } from "lucide-react";
@@ -48,7 +47,6 @@ function IndicacoesPage() {
 
   return (
     <div className="min-h-dvh bg-surface-50">
-      <AppNav isAdmin={data.isAdmin} />
       <div role="main" id="main" className="mx-auto max-w-7xl px-6 py-10">
         <header className="mb-8">
           <h1 className="font-display text-3xl font-bold">Suas indicações</h1>
