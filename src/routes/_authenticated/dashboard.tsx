@@ -22,7 +22,10 @@ export const Route = createFileRoute("/_authenticated/dashboard")({
 
 function DashboardPage() {
   const { data, refetch } = useSuspenseQuery(overviewQO);
+  const { data: history } = useSuspenseQuery(historyQO);
   const cancelFn = useServerFn(cancelMySubscription);
+  const claimFn = useServerFn(claimDailyLogin);
+  const qc = useQueryClient();
 
   const activeSub = data.subscription?.status === "active" ? data.subscription : null;
   const confirmedRefs = data.referrals.filter((r) => r.status === "confirmed").length;
@@ -33,6 +36,16 @@ function DashboardPage() {
       await cancelFn();
       toast.success("Assinatura cancelada");
       refetch();
+    } catch (e: any) {
+      toast.error(e?.message ?? "Erro");
+    }
+  };
+
+  const handleClaimDaily = async () => {
+    try {
+      const res = await claimFn();
+      toast.success(`+${res.points} pts pelo login diário!`);
+      qc.invalidateQueries({ queryKey: ["me"] });
     } catch (e: any) {
       toast.error(e?.message ?? "Erro");
     }
