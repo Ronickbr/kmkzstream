@@ -92,14 +92,14 @@ function DarkNav() {
 
 function DarkFooter() {
   return (
-    <footer className="border-t border-slate-800/60 bg-slate-950 py-12">
-      <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-8 px-6 md:flex-row">
+    <footer className="border-t border-slate-800/60 bg-slate-950 py-10 sm:py-12">
+      <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-6 px-4 text-center sm:px-6 md:flex-row md:text-left">
         <div className="flex items-center gap-2">
           <div className="size-6 rounded-md bg-gradient-to-br from-indigo-500 to-indigo-700" />
           <span className="font-display text-lg font-bold tracking-tight text-white">NEXUS</span>
         </div>
-        <p className="text-sm text-slate-500">© {new Date().getFullYear()} Nexus. Todos os direitos reservados.</p>
-        <div className="flex gap-6 text-sm font-medium text-slate-400">
+        <p className="text-xs text-slate-500 sm:text-sm">© {new Date().getFullYear()} Nexus. Todos os direitos reservados.</p>
+        <div className="flex flex-wrap justify-center gap-4 text-sm font-medium text-slate-400 sm:gap-6">
           <a href="#" className="hover:text-white">Termos</a>
           <a href="#" className="hover:text-white">Privacidade</a>
           <a href="#" className="hover:text-white">Suporte</a>
