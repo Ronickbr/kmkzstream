@@ -252,7 +252,7 @@ function Gamification({ rewards }: { rewards: any[] }) {
             <ul className="mt-6 space-y-3">
               {[
                 { icon: Sparkles, label: "+100 pts de boas-vindas ao criar conta" },
-                { icon: Zap, label: "+5 pts por login diário (streak até 30 dias)" },
+                { icon: Zap, label: "+5 pts por compartilhar seu link (até 5x/dia)" },
                 { icon: Users, label: "+50 pts por indicação confirmada" },
                 { icon: Trophy, label: "5 níveis VIP: Bronze → Diamante" },
               ].map((r) => (
