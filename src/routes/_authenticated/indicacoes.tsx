@@ -55,12 +55,20 @@ function IndicacoesPage() {
     }
   };
 
+  const shareMessage = `🎬 Assista TV, filmes e séries em 4K com o *KMKZ IPTV*! Use meu link e ganhe bônus de boas-vindas: ${referralLink}`;
+
+  const shareWhatsApp = () => {
+    const url = `https://wa.me/?text=${encodeURIComponent(shareMessage)}`;
+    window.open(url, "_blank", "noopener,noreferrer");
+    void tryAwardShare();
+  };
+
   const share = async () => {
     if (navigator.share) {
       try {
         await navigator.share({
-          title: "Junte-se ao Nexus",
-          text: "Assine o Nexus e ganhe recompensas!",
+          title: "KMKZ IPTV",
+          text: "Streaming premium com pontos e prêmios",
           url: referralLink,
         });
         void tryAwardShare();
