@@ -9,38 +9,232 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as PlanosRouteImport } from './routes/planos'
+import { Route as AuthRouteImport } from './routes/auth'
+import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AuthenticatedPremiosRouteImport } from './routes/_authenticated/premios'
+import { Route as AuthenticatedMinhaContaRouteImport } from './routes/_authenticated/minha-conta'
+import { Route as AuthenticatedIndicacoesRouteImport } from './routes/_authenticated/indicacoes'
+import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
+import { Route as AuthenticatedAdminRouteRouteImport } from './routes/_authenticated/admin/route'
+import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin/index'
+import { Route as AuthenticatedCheckoutPlanIdRouteImport } from './routes/_authenticated/checkout.$planId'
+import { Route as AuthenticatedAdminUsuariosRouteImport } from './routes/_authenticated/admin/usuarios'
+import { Route as AuthenticatedAdminResgatesRouteImport } from './routes/_authenticated/admin/resgates'
+import { Route as AuthenticatedAdminPremiosRouteImport } from './routes/_authenticated/admin/premios'
+import { Route as AuthenticatedAdminPlanosRouteImport } from './routes/_authenticated/admin/planos'
 
+const PlanosRoute = PlanosRouteImport.update({
+  id: '/planos',
+  path: '/planos',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
+  id: '/_authenticated',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedPremiosRoute = AuthenticatedPremiosRouteImport.update({
+  id: '/premios',
+  path: '/premios',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedMinhaContaRoute = AuthenticatedMinhaContaRouteImport.update({
+  id: '/minha-conta',
+  path: '/minha-conta',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedIndicacoesRoute = AuthenticatedIndicacoesRouteImport.update({
+  id: '/indicacoes',
+  path: '/indicacoes',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedAdminRouteRoute = AuthenticatedAdminRouteRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedAdminIndexRoute = AuthenticatedAdminIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AuthenticatedAdminRouteRoute,
+} as any)
+const AuthenticatedCheckoutPlanIdRoute =
+  AuthenticatedCheckoutPlanIdRouteImport.update({
+    id: '/checkout/$planId',
+    path: '/checkout/$planId',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedAdminUsuariosRoute =
+  AuthenticatedAdminUsuariosRouteImport.update({
+    id: '/usuarios',
+    path: '/usuarios',
+    getParentRoute: () => AuthenticatedAdminRouteRoute,
+  } as any)
+const AuthenticatedAdminResgatesRoute =
+  AuthenticatedAdminResgatesRouteImport.update({
+    id: '/resgates',
+    path: '/resgates',
+    getParentRoute: () => AuthenticatedAdminRouteRoute,
+  } as any)
+const AuthenticatedAdminPremiosRoute =
+  AuthenticatedAdminPremiosRouteImport.update({
+    id: '/premios',
+    path: '/premios',
+    getParentRoute: () => AuthenticatedAdminRouteRoute,
+  } as any)
+const AuthenticatedAdminPlanosRoute =
+  AuthenticatedAdminPlanosRouteImport.update({
+    id: '/planos',
+    path: '/planos',
+    getParentRoute: () => AuthenticatedAdminRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
+  '/planos': typeof PlanosRoute
+  '/admin': typeof AuthenticatedAdminRouteRouteWithChildren
+  '/dashboard': typeof AuthenticatedDashboardRoute
+  '/indicacoes': typeof AuthenticatedIndicacoesRoute
+  '/minha-conta': typeof AuthenticatedMinhaContaRoute
+  '/premios': typeof AuthenticatedPremiosRoute
+  '/admin/planos': typeof AuthenticatedAdminPlanosRoute
+  '/admin/premios': typeof AuthenticatedAdminPremiosRoute
+  '/admin/resgates': typeof AuthenticatedAdminResgatesRoute
+  '/admin/usuarios': typeof AuthenticatedAdminUsuariosRoute
+  '/checkout/$planId': typeof AuthenticatedCheckoutPlanIdRoute
+  '/admin/': typeof AuthenticatedAdminIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
+  '/planos': typeof PlanosRoute
+  '/dashboard': typeof AuthenticatedDashboardRoute
+  '/indicacoes': typeof AuthenticatedIndicacoesRoute
+  '/minha-conta': typeof AuthenticatedMinhaContaRoute
+  '/premios': typeof AuthenticatedPremiosRoute
+  '/admin/planos': typeof AuthenticatedAdminPlanosRoute
+  '/admin/premios': typeof AuthenticatedAdminPremiosRoute
+  '/admin/resgates': typeof AuthenticatedAdminResgatesRoute
+  '/admin/usuarios': typeof AuthenticatedAdminUsuariosRoute
+  '/checkout/$planId': typeof AuthenticatedCheckoutPlanIdRoute
+  '/admin': typeof AuthenticatedAdminIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
+  '/auth': typeof AuthRoute
+  '/planos': typeof PlanosRoute
+  '/_authenticated/admin': typeof AuthenticatedAdminRouteRouteWithChildren
+  '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
+  '/_authenticated/indicacoes': typeof AuthenticatedIndicacoesRoute
+  '/_authenticated/minha-conta': typeof AuthenticatedMinhaContaRoute
+  '/_authenticated/premios': typeof AuthenticatedPremiosRoute
+  '/_authenticated/admin/planos': typeof AuthenticatedAdminPlanosRoute
+  '/_authenticated/admin/premios': typeof AuthenticatedAdminPremiosRoute
+  '/_authenticated/admin/resgates': typeof AuthenticatedAdminResgatesRoute
+  '/_authenticated/admin/usuarios': typeof AuthenticatedAdminUsuariosRoute
+  '/_authenticated/checkout/$planId': typeof AuthenticatedCheckoutPlanIdRoute
+  '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/auth'
+    | '/planos'
+    | '/admin'
+    | '/dashboard'
+    | '/indicacoes'
+    | '/minha-conta'
+    | '/premios'
+    | '/admin/planos'
+    | '/admin/premios'
+    | '/admin/resgates'
+    | '/admin/usuarios'
+    | '/checkout/$planId'
+    | '/admin/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/auth'
+    | '/planos'
+    | '/dashboard'
+    | '/indicacoes'
+    | '/minha-conta'
+    | '/premios'
+    | '/admin/planos'
+    | '/admin/premios'
+    | '/admin/resgates'
+    | '/admin/usuarios'
+    | '/checkout/$planId'
+    | '/admin'
+  id:
+    | '__root__'
+    | '/'
+    | '/_authenticated'
+    | '/auth'
+    | '/planos'
+    | '/_authenticated/admin'
+    | '/_authenticated/dashboard'
+    | '/_authenticated/indicacoes'
+    | '/_authenticated/minha-conta'
+    | '/_authenticated/premios'
+    | '/_authenticated/admin/planos'
+    | '/_authenticated/admin/premios'
+    | '/_authenticated/admin/resgates'
+    | '/_authenticated/admin/usuarios'
+    | '/_authenticated/checkout/$planId'
+    | '/_authenticated/admin/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
+  AuthRoute: typeof AuthRoute
+  PlanosRoute: typeof PlanosRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/planos': {
+      id: '/planos'
+      path: '/planos'
+      fullPath: '/planos'
+      preLoaderRoute: typeof PlanosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -48,11 +242,134 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/premios': {
+      id: '/_authenticated/premios'
+      path: '/premios'
+      fullPath: '/premios'
+      preLoaderRoute: typeof AuthenticatedPremiosRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/minha-conta': {
+      id: '/_authenticated/minha-conta'
+      path: '/minha-conta'
+      fullPath: '/minha-conta'
+      preLoaderRoute: typeof AuthenticatedMinhaContaRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/indicacoes': {
+      id: '/_authenticated/indicacoes'
+      path: '/indicacoes'
+      fullPath: '/indicacoes'
+      preLoaderRoute: typeof AuthenticatedIndicacoesRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/dashboard': {
+      id: '/_authenticated/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof AuthenticatedDashboardRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/admin': {
+      id: '/_authenticated/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AuthenticatedAdminRouteRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/admin/': {
+      id: '/_authenticated/admin/'
+      path: '/'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AuthenticatedAdminIndexRouteImport
+      parentRoute: typeof AuthenticatedAdminRouteRoute
+    }
+    '/_authenticated/checkout/$planId': {
+      id: '/_authenticated/checkout/$planId'
+      path: '/checkout/$planId'
+      fullPath: '/checkout/$planId'
+      preLoaderRoute: typeof AuthenticatedCheckoutPlanIdRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/admin/usuarios': {
+      id: '/_authenticated/admin/usuarios'
+      path: '/usuarios'
+      fullPath: '/admin/usuarios'
+      preLoaderRoute: typeof AuthenticatedAdminUsuariosRouteImport
+      parentRoute: typeof AuthenticatedAdminRouteRoute
+    }
+    '/_authenticated/admin/resgates': {
+      id: '/_authenticated/admin/resgates'
+      path: '/resgates'
+      fullPath: '/admin/resgates'
+      preLoaderRoute: typeof AuthenticatedAdminResgatesRouteImport
+      parentRoute: typeof AuthenticatedAdminRouteRoute
+    }
+    '/_authenticated/admin/premios': {
+      id: '/_authenticated/admin/premios'
+      path: '/premios'
+      fullPath: '/admin/premios'
+      preLoaderRoute: typeof AuthenticatedAdminPremiosRouteImport
+      parentRoute: typeof AuthenticatedAdminRouteRoute
+    }
+    '/_authenticated/admin/planos': {
+      id: '/_authenticated/admin/planos'
+      path: '/planos'
+      fullPath: '/admin/planos'
+      preLoaderRoute: typeof AuthenticatedAdminPlanosRouteImport
+      parentRoute: typeof AuthenticatedAdminRouteRoute
+    }
   }
 }
 
+interface AuthenticatedAdminRouteRouteChildren {
+  AuthenticatedAdminPlanosRoute: typeof AuthenticatedAdminPlanosRoute
+  AuthenticatedAdminPremiosRoute: typeof AuthenticatedAdminPremiosRoute
+  AuthenticatedAdminResgatesRoute: typeof AuthenticatedAdminResgatesRoute
+  AuthenticatedAdminUsuariosRoute: typeof AuthenticatedAdminUsuariosRoute
+  AuthenticatedAdminIndexRoute: typeof AuthenticatedAdminIndexRoute
+}
+
+const AuthenticatedAdminRouteRouteChildren: AuthenticatedAdminRouteRouteChildren =
+  {
+    AuthenticatedAdminPlanosRoute: AuthenticatedAdminPlanosRoute,
+    AuthenticatedAdminPremiosRoute: AuthenticatedAdminPremiosRoute,
+    AuthenticatedAdminResgatesRoute: AuthenticatedAdminResgatesRoute,
+    AuthenticatedAdminUsuariosRoute: AuthenticatedAdminUsuariosRoute,
+    AuthenticatedAdminIndexRoute: AuthenticatedAdminIndexRoute,
+  }
+
+const AuthenticatedAdminRouteRouteWithChildren =
+  AuthenticatedAdminRouteRoute._addFileChildren(
+    AuthenticatedAdminRouteRouteChildren,
+  )
+
+interface AuthenticatedRouteRouteChildren {
+  AuthenticatedAdminRouteRoute: typeof AuthenticatedAdminRouteRouteWithChildren
+  AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
+  AuthenticatedIndicacoesRoute: typeof AuthenticatedIndicacoesRoute
+  AuthenticatedMinhaContaRoute: typeof AuthenticatedMinhaContaRoute
+  AuthenticatedPremiosRoute: typeof AuthenticatedPremiosRoute
+  AuthenticatedCheckoutPlanIdRoute: typeof AuthenticatedCheckoutPlanIdRoute
+}
+
+const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedAdminRouteRoute: AuthenticatedAdminRouteRouteWithChildren,
+  AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
+  AuthenticatedIndicacoesRoute: AuthenticatedIndicacoesRoute,
+  AuthenticatedMinhaContaRoute: AuthenticatedMinhaContaRoute,
+  AuthenticatedPremiosRoute: AuthenticatedPremiosRoute,
+  AuthenticatedCheckoutPlanIdRoute: AuthenticatedCheckoutPlanIdRoute,
+}
+
+const AuthenticatedRouteRouteWithChildren =
+  AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
+  AuthRoute: AuthRoute,
+  PlanosRoute: PlanosRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
