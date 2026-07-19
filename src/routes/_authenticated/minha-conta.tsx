@@ -181,6 +181,10 @@ function MinhaContaPage() {
             </select>
           </Field>
 
+          <Field label="CPF" icon={<ShieldCheck className="h-3.5 w-3.5" />} hint="Usado para prevenir fraudes e cadastros duplicados">
+            <input type="text" value={cpf} onChange={(e)=>setCpf(formatCpf(e.target.value))} placeholder="000.000.000-00" inputMode="numeric" className={inputCls} />
+          </Field>
+
           <div className="sm:col-span-2">
             <Field label="URL do avatar" icon={<ImageIcon className="h-3.5 w-3.5" />}>
               <input type="url" value={avatar} onChange={(e)=>setAvatar(e.target.value)} placeholder="https://…" className={inputCls} />
