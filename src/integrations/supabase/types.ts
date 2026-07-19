@@ -100,6 +100,7 @@ export type Database = {
           name: string
           period: Database["public"]["Enums"]["plan_period"]
           price_cents: number
+          purchase_points: number
           quality: string
           referral_points: number
           screen_limit: number
@@ -116,6 +117,7 @@ export type Database = {
           name: string
           period: Database["public"]["Enums"]["plan_period"]
           price_cents: number
+          purchase_points?: number
           quality?: string
           referral_points?: number
           screen_limit?: number
@@ -132,6 +134,7 @@ export type Database = {
           name?: string
           period?: Database["public"]["Enums"]["plan_period"]
           price_cents?: number
+          purchase_points?: number
           quality?: string
           referral_points?: number
           screen_limit?: number
