@@ -71,6 +71,8 @@ export function AppNav({ isAdmin }: { isAdmin: boolean }) {
         </button>
       </div>
     </nav>
+    </>
   );
 }
+
 
