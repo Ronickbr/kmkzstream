@@ -1,6 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useSuspenseQuery, queryOptions } from "@tanstack/react-query";
+import { useSuspenseQuery, queryOptions, useQueryClient } from "@tanstack/react-query";
+import { useServerFn } from "@tanstack/react-start";
 import { getMyOverview } from "@/lib/user.functions";
+import { awardSharePoints } from "@/lib/points.functions";
 import { formatDateBR, formatPoints } from "@/lib/format";
 import { Copy, Share2, Users, Check, Link2, Gift, Clock, CheckCircle2, TrendingUp } from "lucide-react";
 import { useState } from "react";
@@ -17,12 +19,24 @@ function IndicacoesPage() {
   const { data } = useSuspenseQuery(overviewQO);
   const [copiedCode, setCopiedCode] = useState(false);
   const [copiedLink, setCopiedLink] = useState(false);
+  const awardShare = useServerFn(awardSharePoints);
+  const qc = useQueryClient();
 
   const referralCode = data.profile?.referral_code ?? "";
   const referralLink =
     typeof window !== "undefined"
       ? `${window.location.origin}/auth?mode=signup&ref=${referralCode}`
       : `/auth?mode=signup&ref=${referralCode}`;
+
+  const tryAwardShare = async () => {
+    try {
+      const res = await awardShare();
+      toast.success(`+${res.points} pts por compartilhar!`);
+      qc.invalidateQueries({ queryKey: ["me"] });
+    } catch {
+      /* daily limit or rule off — silent */
+    }
+  };
 
   const copy = async (text: string, which: "code" | "link") => {
     try {
@@ -35,6 +49,7 @@ function IndicacoesPage() {
         setTimeout(() => setCopiedLink(false), 2000);
       }
       toast.success(which === "code" ? "Código copiado!" : "Link copiado!");
+      if (which === "link") void tryAwardShare();
     } catch {
       toast.error("Não foi possível copiar. Tente novamente.");
     }
@@ -48,6 +63,7 @@ function IndicacoesPage() {
           text: "Assine o Nexus e ganhe recompensas!",
           url: referralLink,
         });
+        void tryAwardShare();
       } catch {
         /* user cancelled */
       }

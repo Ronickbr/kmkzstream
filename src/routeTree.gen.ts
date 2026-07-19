@@ -25,6 +25,7 @@ import { Route as AuthenticatedAdminUsuariosRouteImport } from './routes/_authen
 import { Route as AuthenticatedAdminResgatesRouteImport } from './routes/_authenticated/admin/resgates'
 import { Route as AuthenticatedAdminPremiosRouteImport } from './routes/_authenticated/admin/premios'
 import { Route as AuthenticatedAdminPlanosRouteImport } from './routes/_authenticated/admin/planos'
+import { Route as AuthenticatedAdminCrescimentoRouteImport } from './routes/_authenticated/admin/crescimento'
 
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
@@ -110,6 +111,12 @@ const AuthenticatedAdminPlanosRoute =
     path: '/planos',
     getParentRoute: () => AuthenticatedAdminRouteRoute,
   } as any)
+const AuthenticatedAdminCrescimentoRoute =
+  AuthenticatedAdminCrescimentoRouteImport.update({
+    id: '/crescimento',
+    path: '/crescimento',
+    getParentRoute: () => AuthenticatedAdminRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -121,6 +128,7 @@ export interface FileRoutesByFullPath {
   '/planos': typeof AuthenticatedPlanosRoute
   '/premios': typeof AuthenticatedPremiosRoute
   '/suporte': typeof AuthenticatedSuporteRoute
+  '/admin/crescimento': typeof AuthenticatedAdminCrescimentoRoute
   '/admin/planos': typeof AuthenticatedAdminPlanosRoute
   '/admin/premios': typeof AuthenticatedAdminPremiosRoute
   '/admin/resgates': typeof AuthenticatedAdminResgatesRoute
@@ -137,6 +145,7 @@ export interface FileRoutesByTo {
   '/planos': typeof AuthenticatedPlanosRoute
   '/premios': typeof AuthenticatedPremiosRoute
   '/suporte': typeof AuthenticatedSuporteRoute
+  '/admin/crescimento': typeof AuthenticatedAdminCrescimentoRoute
   '/admin/planos': typeof AuthenticatedAdminPlanosRoute
   '/admin/premios': typeof AuthenticatedAdminPremiosRoute
   '/admin/resgates': typeof AuthenticatedAdminResgatesRoute
@@ -156,6 +165,7 @@ export interface FileRoutesById {
   '/_authenticated/planos': typeof AuthenticatedPlanosRoute
   '/_authenticated/premios': typeof AuthenticatedPremiosRoute
   '/_authenticated/suporte': typeof AuthenticatedSuporteRoute
+  '/_authenticated/admin/crescimento': typeof AuthenticatedAdminCrescimentoRoute
   '/_authenticated/admin/planos': typeof AuthenticatedAdminPlanosRoute
   '/_authenticated/admin/premios': typeof AuthenticatedAdminPremiosRoute
   '/_authenticated/admin/resgates': typeof AuthenticatedAdminResgatesRoute
@@ -175,6 +185,7 @@ export interface FileRouteTypes {
     | '/planos'
     | '/premios'
     | '/suporte'
+    | '/admin/crescimento'
     | '/admin/planos'
     | '/admin/premios'
     | '/admin/resgates'
@@ -191,6 +202,7 @@ export interface FileRouteTypes {
     | '/planos'
     | '/premios'
     | '/suporte'
+    | '/admin/crescimento'
     | '/admin/planos'
     | '/admin/premios'
     | '/admin/resgates'
@@ -209,6 +221,7 @@ export interface FileRouteTypes {
     | '/_authenticated/planos'
     | '/_authenticated/premios'
     | '/_authenticated/suporte'
+    | '/_authenticated/admin/crescimento'
     | '/_authenticated/admin/planos'
     | '/_authenticated/admin/premios'
     | '/_authenticated/admin/resgates'
@@ -337,10 +350,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminPlanosRouteImport
       parentRoute: typeof AuthenticatedAdminRouteRoute
     }
+    '/_authenticated/admin/crescimento': {
+      id: '/_authenticated/admin/crescimento'
+      path: '/crescimento'
+      fullPath: '/admin/crescimento'
+      preLoaderRoute: typeof AuthenticatedAdminCrescimentoRouteImport
+      parentRoute: typeof AuthenticatedAdminRouteRoute
+    }
   }
 }
 
 interface AuthenticatedAdminRouteRouteChildren {
+  AuthenticatedAdminCrescimentoRoute: typeof AuthenticatedAdminCrescimentoRoute
   AuthenticatedAdminPlanosRoute: typeof AuthenticatedAdminPlanosRoute
   AuthenticatedAdminPremiosRoute: typeof AuthenticatedAdminPremiosRoute
   AuthenticatedAdminResgatesRoute: typeof AuthenticatedAdminResgatesRoute
@@ -350,6 +371,7 @@ interface AuthenticatedAdminRouteRouteChildren {
 
 const AuthenticatedAdminRouteRouteChildren: AuthenticatedAdminRouteRouteChildren =
   {
+    AuthenticatedAdminCrescimentoRoute: AuthenticatedAdminCrescimentoRoute,
     AuthenticatedAdminPlanosRoute: AuthenticatedAdminPlanosRoute,
     AuthenticatedAdminPremiosRoute: AuthenticatedAdminPremiosRoute,
     AuthenticatedAdminResgatesRoute: AuthenticatedAdminResgatesRoute,
@@ -395,13 +417,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}

@@ -1,22 +1,31 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useSuspenseQuery, queryOptions } from "@tanstack/react-query";
+import { useSuspenseQuery, queryOptions, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { getMyOverview } from "@/lib/user.functions";
 import { cancelMySubscription } from "@/lib/subscriptions.functions";
+import { getMyPointsHistory, claimDailyLogin } from "@/lib/points.functions";
 import { formatCurrencyBRL, formatDateBR, formatPoints, PLAN_PERIOD_LABEL } from "@/lib/format";
 import { toast } from "sonner";
-import { Sparkles, Users, Gift, CreditCard } from "lucide-react";
+import { Sparkles, Users, Gift, CreditCard, CalendarCheck, History, TrendingUp, TrendingDown } from "lucide-react";
 
 const overviewQO = queryOptions({ queryKey: ["me", "overview"], queryFn: () => getMyOverview() });
+const historyQO = queryOptions({ queryKey: ["me", "points-history"], queryFn: () => getMyPointsHistory() });
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
-  loader: ({ context }) => context.queryClient.ensureQueryData(overviewQO),
+  loader: ({ context }) =>
+    Promise.all([
+      context.queryClient.ensureQueryData(overviewQO),
+      context.queryClient.ensureQueryData(historyQO),
+    ]),
   component: DashboardPage,
 });
 
 function DashboardPage() {
   const { data, refetch } = useSuspenseQuery(overviewQO);
+  const { data: history } = useSuspenseQuery(historyQO);
   const cancelFn = useServerFn(cancelMySubscription);
+  const claimFn = useServerFn(claimDailyLogin);
+  const qc = useQueryClient();
 
   const activeSub = data.subscription?.status === "active" ? data.subscription : null;
   const confirmedRefs = data.referrals.filter((r) => r.status === "confirmed").length;
@@ -27,6 +36,16 @@ function DashboardPage() {
       await cancelFn();
       toast.success("Assinatura cancelada");
       refetch();
+    } catch (e: any) {
+      toast.error(e?.message ?? "Erro");
+    }
+  };
+
+  const handleClaimDaily = async () => {
+    try {
+      const res = await claimFn();
+      toast.success(`+${res.points} pts pelo login diário!`);
+      qc.invalidateQueries({ queryKey: ["me"] });
     } catch (e: any) {
       toast.error(e?.message ?? "Erro");
     }
@@ -67,6 +86,17 @@ function DashboardPage() {
               Continue indicando amigos para acumular mais pontos e resgatar prêmios exclusivos.
             </p>
             <div className="relative mt-6 flex flex-wrap gap-2">
+              <button
+                type="button"
+                onClick={handleClaimDaily}
+                disabled={history.dailyLogin.claimed_today}
+                className="inline-flex items-center gap-1.5 rounded-full bg-accent px-4 py-2 text-sm font-bold text-slate-950 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md disabled:cursor-not-allowed disabled:bg-white/20 disabled:text-white/60 disabled:shadow-none disabled:hover:translate-y-0"
+              >
+                <CalendarCheck className="size-4" aria-hidden="true" />
+                {history.dailyLogin.claimed_today
+                  ? "Bônus diário resgatado"
+                  : `Resgatar +${history.dailyLogin.points} pts do dia`}
+              </button>
               <Link
                 to="/premios"
                 className="inline-flex items-center gap-1.5 rounded-full bg-white px-4 py-2 text-sm font-bold text-brand-dark shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
@@ -225,6 +255,50 @@ function DashboardPage() {
               </ul>
             )}
           </div>
+        </section>
+
+        {/* Histórico de pontos */}
+        <section className="mt-10 card-surface p-6">
+          <div className="mb-4 flex items-center justify-between">
+            <h2 className="flex items-center gap-2 font-display text-lg font-bold">
+              <History className="size-4 text-brand" aria-hidden="true" />
+              Histórico de pontos
+            </h2>
+            <span className="text-xs text-muted-foreground">Últimos {history.events.length} eventos</span>
+          </div>
+          {history.events.length === 0 ? (
+            <div className="rounded-2xl border border-dashed border-border/80 bg-background/40 p-6 text-center text-sm text-muted-foreground">
+              Nenhum evento ainda. Resgate o bônus diário ou indique amigos.
+            </div>
+          ) : (
+            <ul className="divide-y divide-border/70">
+              {history.events.map((e) => (
+                <li key={e.id} className="flex items-center justify-between gap-3 py-3 text-sm">
+                  <div className="flex min-w-0 items-center gap-3">
+                    <span
+                      className={`grid size-8 shrink-0 place-items-center rounded-lg ${
+                        e.points >= 0 ? "bg-emerald-500/15 text-emerald-400" : "bg-destructive/15 text-destructive"
+                      }`}
+                    >
+                      {e.points >= 0 ? <TrendingUp className="size-4" /> : <TrendingDown className="size-4" />}
+                    </span>
+                    <div className="min-w-0">
+                      <p className="truncate font-medium">{e.description ?? e.kind}</p>
+                      <p className="text-xs text-muted-foreground">{formatDateBR(e.created_at)}</p>
+                    </div>
+                  </div>
+                  <span
+                    className={`shrink-0 font-mono text-sm font-bold ${
+                      e.points >= 0 ? "text-emerald-400" : "text-destructive"
+                    }`}
+                  >
+                    {e.points >= 0 ? "+" : ""}
+                    {e.points}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          )}
         </section>
       </div>
     </div>

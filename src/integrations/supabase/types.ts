@@ -56,6 +56,63 @@ export type Database = {
         }
         Relationships: []
       }
+      point_events: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: string
+          kind: string
+          metadata: Json | null
+          points: number
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          kind: string
+          metadata?: Json | null
+          points: number
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          kind?: string
+          metadata?: Json | null
+          points?: number
+          user_id?: string
+        }
+        Relationships: []
+      }
+      point_rules: {
+        Row: {
+          active: boolean
+          daily_limit: number | null
+          id: string
+          name: string
+          points: number
+          updated_at: string
+        }
+        Insert: {
+          active?: boolean
+          daily_limit?: number | null
+          id: string
+          name: string
+          points?: number
+          updated_at?: string
+        }
+        Update: {
+          active?: boolean
+          daily_limit?: number | null
+          id?: string
+          name?: string
+          points?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null
@@ -309,7 +366,10 @@ export type Database = {
     }
     Functions: {
       admin_stats: { Args: never; Returns: Json }
+      award_share_points: { Args: never; Returns: Json }
+      claim_daily_login: { Args: never; Returns: Json }
       generate_referral_code: { Args: never; Returns: string }
+      growth_metrics: { Args: never; Returns: Json }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
