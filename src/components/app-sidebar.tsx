@@ -10,6 +10,7 @@ import {
   Package,
   Ticket,
   BarChart3,
+  Sparkles,
 } from "lucide-react";
 import {
   Sidebar,
@@ -38,6 +39,7 @@ const adminItems = [
   { to: "/admin/crescimento", label: "Crescimento", icon: BarChart3 },
   { to: "/admin/planos", label: "Planos", icon: CreditCard },
   { to: "/admin/premios", label: "Prêmios", icon: Gift },
+  { to: "/admin/pontos", label: "Regras de pontos", icon: Sparkles },
   { to: "/admin/usuarios", label: "Usuários", icon: Users },
   { to: "/admin/resgates", label: "Resgates", icon: Package },
   { to: "/admin/resgates", label: "Resgates", icon: Ticket, hidden: true },
