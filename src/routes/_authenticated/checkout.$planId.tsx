@@ -91,7 +91,7 @@ function CheckoutPage() {
 
   return (
     <div className="min-h-dvh bg-surface-50">
-      <main role="main" id="main" className="mx-auto max-w-5xl px-6 py-10">
+      <main role="main" id="main" className="mx-auto max-w-5xl px-4 py-6 sm:px-6 sm:py-10">
         <Link
           to="/planos"
           className="inline-flex items-center gap-1.5 text-sm text-surface-900/70 hover:text-surface-900"

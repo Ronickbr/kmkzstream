@@ -128,8 +128,9 @@
 }
 
 @layer base {
-  * { border-color: var(--color-border); }
-  html { color-scheme: dark; }
+  * { border-color: var(--color-border); min-width: 0; }
+  html { color-scheme: dark; -webkit-text-size-adjust: 100%; }
+  html, body { overflow-x: hidden; max-width: 100%; }
   body {
     background-color: var(--color-background);
     background-image: var(--gradient-surface);
@@ -138,8 +139,14 @@
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
+    overflow-wrap: break-word;
   }
-  h1, h2, h3, h4, h5, h6 { font-family: var(--font-display); letter-spacing: -0.02em; }
+  img, svg, video, canvas, iframe { max-width: 100%; height: auto; }
+  h1, h2, h3, h4, h5, h6 { font-family: var(--font-display); letter-spacing: -0.02em; overflow-wrap: break-word; }
+  input, textarea, select, button { font: inherit; }
+  @media (max-width: 640px) {
+    ::-webkit-scrollbar { width: 4px; height: 4px; }
+  }
 
   :focus-visible {
     outline: 2px solid var(--ring);
