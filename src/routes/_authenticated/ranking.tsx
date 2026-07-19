@@ -84,8 +84,8 @@ function RankingPage() {
           )}
           {board.map((row, i) => {
             const vip = getVipLevel(row.points);
-            const isMe = row.user_id === me.userId;
-            const icon = i === 0 ? Crown : i === 1 ? Trophy : i === 2 ? Medal : null;
+            const isMe = row.user_id === myId;
+            const Icon = i === 0 ? Crown : i === 1 ? Trophy : i === 2 ? Medal : null;
             return (
               <li
                 key={row.user_id}
@@ -96,7 +96,7 @@ function RankingPage() {
                     i < 3 ? "bg-gradient-brand text-white shadow-neon" : "bg-muted text-muted-foreground"
                   }`}
                 >
-                  {icon ? <icon.name className="size-5" /> : `#${i + 1}`}
+                  {Icon ? <Icon className="size-5" /> : `#${i + 1}`}
                 </div>
                 <div className="min-w-0 flex-1">
                   <p className="truncate font-semibold">
