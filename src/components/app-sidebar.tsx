@@ -35,6 +35,7 @@ const userItems = [
 
 const adminItems = [
   { to: "/admin", label: "Visão geral", icon: BarChart3, exact: true },
+  { to: "/admin/crescimento", label: "Crescimento", icon: BarChart3 },
   { to: "/admin/planos", label: "Planos", icon: CreditCard },
   { to: "/admin/premios", label: "Prêmios", icon: Gift },
   { to: "/admin/usuarios", label: "Usuários", icon: Users },
