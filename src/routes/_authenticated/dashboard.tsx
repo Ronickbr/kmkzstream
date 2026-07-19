@@ -256,6 +256,50 @@ function DashboardPage() {
             )}
           </div>
         </section>
+
+        {/* Histórico de pontos */}
+        <section className="mt-10 card-surface p-6">
+          <div className="mb-4 flex items-center justify-between">
+            <h2 className="flex items-center gap-2 font-display text-lg font-bold">
+              <History className="size-4 text-brand" aria-hidden="true" />
+              Histórico de pontos
+            </h2>
+            <span className="text-xs text-muted-foreground">Últimos {history.events.length} eventos</span>
+          </div>
+          {history.events.length === 0 ? (
+            <div className="rounded-2xl border border-dashed border-border/80 bg-background/40 p-6 text-center text-sm text-muted-foreground">
+              Nenhum evento ainda. Resgate o bônus diário ou indique amigos.
+            </div>
+          ) : (
+            <ul className="divide-y divide-border/70">
+              {history.events.map((e) => (
+                <li key={e.id} className="flex items-center justify-between gap-3 py-3 text-sm">
+                  <div className="flex min-w-0 items-center gap-3">
+                    <span
+                      className={`grid size-8 shrink-0 place-items-center rounded-lg ${
+                        e.points >= 0 ? "bg-emerald-500/15 text-emerald-400" : "bg-destructive/15 text-destructive"
+                      }`}
+                    >
+                      {e.points >= 0 ? <TrendingUp className="size-4" /> : <TrendingDown className="size-4" />}
+                    </span>
+                    <div className="min-w-0">
+                      <p className="truncate font-medium">{e.description ?? e.kind}</p>
+                      <p className="text-xs text-muted-foreground">{formatDateBR(e.created_at)}</p>
+                    </div>
+                  </div>
+                  <span
+                    className={`shrink-0 font-mono text-sm font-bold ${
+                      e.points >= 0 ? "text-emerald-400" : "text-destructive"
+                    }`}
+                  >
+                    {e.points >= 0 ? "+" : ""}
+                    {e.points}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          )}
+        </section>
       </div>
     </div>
   );
