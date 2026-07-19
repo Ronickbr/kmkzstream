@@ -144,6 +144,8 @@ export type Database = {
         Row: {
           created_at: string
           description: string | null
+          expired: boolean
+          expires_at: string | null
           id: string
           kind: string
           metadata: Json | null
@@ -153,6 +155,8 @@ export type Database = {
         Insert: {
           created_at?: string
           description?: string | null
+          expired?: boolean
+          expires_at?: string | null
           id?: string
           kind: string
           metadata?: Json | null
@@ -162,6 +166,8 @@ export type Database = {
         Update: {
           created_at?: string
           description?: string | null
+          expired?: boolean
+          expires_at?: string | null
           id?: string
           kind?: string
           metadata?: Json | null
@@ -510,6 +516,7 @@ export type Database = {
       award_share_points: { Args: never; Returns: Json }
       check_and_award_achievements: { Args: never; Returns: Json }
       claim_daily_login: { Args: never; Returns: Json }
+      expire_old_points: { Args: never; Returns: number }
       generate_referral_code: { Args: never; Returns: string }
       growth_metrics: { Args: never; Returns: Json }
       has_role: {
