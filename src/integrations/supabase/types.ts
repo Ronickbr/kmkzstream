@@ -518,7 +518,6 @@ export type Database = {
       admin_stats: { Args: never; Returns: Json }
       award_share_points: { Args: never; Returns: Json }
       check_and_award_achievements: { Args: never; Returns: Json }
-      claim_daily_login: { Args: never; Returns: Json }
       expire_old_points: { Args: never; Returns: number }
       generate_referral_code: { Args: never; Returns: string }
       growth_metrics: { Args: never; Returns: Json }
