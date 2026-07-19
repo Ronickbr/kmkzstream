@@ -24,8 +24,9 @@ function RankingPage() {
   const { data: me } = useSuspenseQuery(meQO);
   const { data: board } = useSuspenseQuery(boardQO(period));
 
+  const myId = me.profile?.id;
   const myVip = getVipLevel(me.points);
-  const myRank = board.findIndex((r) => r.user_id === me.userId) + 1;
+  const myRank = board.findIndex((r) => r.user_id === myId) + 1;
 
   return (
     <div role="main" id="main" className="mx-auto max-w-5xl px-4 py-6 sm:px-6 sm:py-10">
