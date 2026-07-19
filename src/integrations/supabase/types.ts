@@ -53,6 +53,42 @@ export type Database = {
         }
         Relationships: []
       }
+      notifications: {
+        Row: {
+          body: string | null
+          created_at: string
+          id: string
+          link: string | null
+          metadata: Json | null
+          read_at: string | null
+          title: string
+          type: string
+          user_id: string
+        }
+        Insert: {
+          body?: string | null
+          created_at?: string
+          id?: string
+          link?: string | null
+          metadata?: Json | null
+          read_at?: string | null
+          title: string
+          type?: string
+          user_id: string
+        }
+        Update: {
+          body?: string | null
+          created_at?: string
+          id?: string
+          link?: string | null
+          metadata?: Json | null
+          read_at?: string | null
+          title?: string
+          type?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       plans: {
         Row: {
           active: boolean
@@ -480,6 +516,7 @@ export type Database = {
         Returns: boolean
       }
       leaderboard: { Args: { _period?: string }; Returns: Json }
+      mark_all_notifications_read: { Args: never; Returns: number }
       redeem_reward:
         | { Args: { _reward_id: string }; Returns: string }
         | { Args: { _reward_id: string; _shipping?: Json }; Returns: string }
