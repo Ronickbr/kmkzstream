@@ -47,9 +47,9 @@ function IndicacoesPage() {
   const totalPoints = confirmed.reduce((s, r) => s + (r.points_awarded ?? 0), 0);
 
   return (
-    <div className="min-h-screen bg-surface-50">
+    <div className="min-h-dvh bg-surface-50">
       <AppNav isAdmin={data.isAdmin} />
-      <div className="mx-auto max-w-7xl px-6 py-10">
+      <div role="main" id="main" className="mx-auto max-w-7xl px-6 py-10">
         <header className="mb-8">
           <h1 className="font-display text-3xl font-bold">Suas indicações</h1>
           <p className="mt-1 text-sm text-surface-900/60">

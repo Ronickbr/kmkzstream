@@ -25,9 +25,9 @@ export const Route = createFileRoute("/planos")({
 function PlanosPage() {
   const { data: plans } = useSuspenseQuery(plansQO);
   return (
-    <div className="min-h-screen bg-surface-50">
+    <div className="min-h-dvh bg-surface-50">
       <SiteNav />
-      <div className="mx-auto max-w-7xl px-6 py-16">
+      <div role="main" id="main" className="mx-auto max-w-7xl px-6 py-16">
         <div className="mb-12 text-center">
           <h1 className="font-display text-4xl font-bold md:text-5xl">Planos de assinatura</h1>
           <p className="mt-3 text-surface-900/60">Todos os planos incluem o programa de indicações.</p>

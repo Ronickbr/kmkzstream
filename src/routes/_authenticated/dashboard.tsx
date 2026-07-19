@@ -34,9 +34,9 @@ function DashboardPage() {
   };
 
   return (
-    <div className="min-h-screen bg-surface-50">
+    <div className="min-h-dvh bg-surface-50">
       <AppNav isAdmin={data.isAdmin} />
-      <div className="mx-auto max-w-7xl px-6 py-10">
+      <div role="main" id="main" className="mx-auto max-w-7xl px-6 py-10">
         <header className="mb-8">
           <h1 className="font-display text-3xl font-bold">
             Olá, {data.profile?.display_name ?? "usuário"}

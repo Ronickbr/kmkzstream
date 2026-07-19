@@ -34,9 +34,9 @@ function CheckoutPage() {
 
   if (!plan) {
     return (
-      <div className="min-h-screen bg-surface-50">
+      <div className="min-h-dvh bg-surface-50">
         <AppNav isAdmin={overview.isAdmin} />
-        <div className="mx-auto max-w-2xl px-6 py-20 text-center">
+        <div role="main" id="main" className="mx-auto max-w-2xl px-6 py-20 text-center">
           <h1 className="font-display text-2xl font-bold">Plano não encontrado</h1>
         </div>
       </div>
@@ -57,7 +57,7 @@ function CheckoutPage() {
   };
 
   return (
-    <div className="min-h-screen bg-surface-50">
+    <div className="min-h-dvh bg-surface-50">
       <AppNav isAdmin={overview.isAdmin} />
       <div className="mx-auto max-w-4xl px-6 py-10">
         <h1 className="font-display text-3xl font-bold">Finalizar assinatura</h1>
