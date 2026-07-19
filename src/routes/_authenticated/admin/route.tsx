@@ -1,6 +1,4 @@
 import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
-import { AppNav } from "@/components/app-nav";
-import { AdminNav } from "@/components/admin-nav";
 import { getMyOverview } from "@/lib/user.functions";
 import { queryOptions } from "@tanstack/react-query";
 
@@ -12,16 +10,5 @@ export const Route = createFileRoute("/_authenticated/admin")({
     if (!data.isAdmin) throw redirect({ to: "/dashboard" });
     return data;
   },
-  component: AdminLayout,
+  component: () => <Outlet />,
 });
-
-function AdminLayout() {
-  const data = Route.useLoaderData();
-  return (
-    <div className="min-h-dvh bg-surface-50">
-      <AppNav isAdmin={data.isAdmin} />
-      <AdminNav />
-      <Outlet />
-    </div>
-  );
-}
