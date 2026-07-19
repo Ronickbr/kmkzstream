@@ -30,7 +30,7 @@ function AdminRedemptionsPage() {
     <div role="main" id="main" className="mx-auto max-w-7xl px-4 py-6 sm:px-6 sm:py-10">
       <h1 className="font-display text-3xl font-bold">Resgates</h1>
       <div className="mt-8 overflow-x-auto rounded-3xl border border-surface-200 bg-card">
-        <table className="w-full text-sm">
+        <table className="w-full min-w-[760px] text-sm">
           <thead className="bg-surface-50 text-xs font-bold uppercase tracking-wider text-surface-900/60">
             <tr>
               <th className="px-4 py-3 text-left">Usuário</th>

@@ -175,7 +175,7 @@ function Hero() {
                 ].map((s) => (
                   <div key={s.k} className="rounded-xl bg-white/5 p-3">
                     <p className="font-display text-lg font-black text-white">{s.v}</p>
-                    <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400">{s.k}</p>
+                    <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400 break-normal hyphens-none [word-break:keep-all]">{s.k}</p>
                   </div>
                 ))}
               </div>
