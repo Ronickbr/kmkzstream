@@ -68,3 +68,15 @@ export const updateMyProfile = createServerFn({ method: "POST" })
     if (error) throw new Error(error.message);
     return { ok: true };
   });
+
+export const completeOnboarding = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    const { supabase, userId } = context;
+    const { error } = await supabase
+      .from("profiles")
+      .update({ onboarded_at: new Date().toISOString() })
+      .eq("id", userId);
+    if (error) throw new Error(error.message);
+    return { ok: true };
+  });
