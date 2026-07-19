@@ -7,9 +7,8 @@ import { getMyPointsHistory } from "@/lib/points.functions";
 import { checkAchievements } from "@/lib/achievements.functions";
 import { formatCurrencyBRL, formatDateBR, formatPoints, PLAN_PERIOD_LABEL } from "@/lib/format";
 import { toast } from "sonner";
-import { Sparkles, Users, Gift, CreditCard, CalendarCheck, History, TrendingUp, TrendingDown, Trophy } from "lucide-react";
+import { Sparkles, Users, Gift, CreditCard, History, TrendingUp, TrendingDown, Trophy } from "lucide-react";
 import { getVipLevel } from "@/lib/vip";
-import { celebrate } from "@/lib/confetti";
 import { WelcomeTour } from "@/components/welcome-tour";
 import { useState, useEffect } from "react";
 
