@@ -205,6 +205,7 @@ export type Database = {
           created_at: string
           display_name: string | null
           id: string
+          onboarded_at: string | null
           phone: string | null
           referral_code: string
           state: string | null
@@ -218,6 +219,7 @@ export type Database = {
           created_at?: string
           display_name?: string | null
           id: string
+          onboarded_at?: string | null
           phone?: string | null
           referral_code: string
           state?: string | null
@@ -231,6 +233,7 @@ export type Database = {
           created_at?: string
           display_name?: string | null
           id?: string
+          onboarded_at?: string | null
           phone?: string | null
           referral_code?: string
           state?: string | null
