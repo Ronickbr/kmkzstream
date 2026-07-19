@@ -38,7 +38,7 @@ function DarkNav() {
           <span className="font-display text-xl font-bold tracking-tight text-white">NEXUS</span>
         </Link>
         <div className="hidden gap-8 text-sm font-medium md:flex">
-          <Link to="/planos" className="text-slate-300 transition-colors hover:text-white">Planos</Link>
+          <Link to="/" hash="planos" className="text-slate-300 transition-colors hover:text-white">Planos</Link>
           <Link to="/" hash="premios" className="text-slate-300 transition-colors hover:text-white">Prêmios</Link>
           <Link to="/" hash="como-funciona" className="text-slate-300 transition-colors hover:text-white">Como funciona</Link>
         </div>
