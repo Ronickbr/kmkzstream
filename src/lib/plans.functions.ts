@@ -24,7 +24,7 @@ export const listActivePlans = createServerFn({ method: "GET" }).handler(async (
   const supabase = makePublicClient();
   const { data, error } = await supabase
     .from("plans")
-    .select("id, name, period, price_cents, duration_days, referral_points, features, sort_order, screen_limit, quality, is_popular")
+    .select("id, name, period, price_cents, duration_days, referral_points, purchase_points, features, sort_order, screen_limit, quality, is_popular")
     .eq("active", true)
     .order("sort_order", { ascending: true });
   if (error) throw new Error(error.message);
