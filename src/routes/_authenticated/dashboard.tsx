@@ -28,7 +28,6 @@ function DashboardPage() {
   const { data, refetch } = useSuspenseQuery(overviewQO);
   const { data: history } = useSuspenseQuery(historyQO);
   const cancelFn = useServerFn(cancelMySubscription);
-  const claimFn = useServerFn(claimDailyLogin);
   const checkFn = useServerFn(checkAchievements);
   const qc = useQueryClient();
 
