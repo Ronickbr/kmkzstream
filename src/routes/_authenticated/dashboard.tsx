@@ -47,11 +47,16 @@ function DashboardPage() {
     try {
       const res = await claimFn();
       toast.success(`+${res.points} pts pelo login diário!`);
+      celebrate();
       qc.invalidateQueries({ queryKey: ["me"] });
     } catch (e: any) {
       toast.error(e?.message ?? "Erro");
     }
   };
+
+  const vip = getVipLevel(data.points);
+  const progress = vip.next ? Math.min(100, ((data.points - vip.min) / (vip.next - vip.min)) * 100) : 100;
+
 
   return (
     <div className="min-h-dvh">
