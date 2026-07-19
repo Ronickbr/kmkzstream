@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useSuspenseQuery, queryOptions } from "@tanstack/react-query";
 import { getMyOverview } from "@/lib/user.functions";
 import { formatDateBR, formatPoints } from "@/lib/format";
-import { Copy, Share2, Users, Check } from "lucide-react";
+import { Copy, Share2, Users, Check, Link2, Gift } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 
@@ -15,29 +15,44 @@ export const Route = createFileRoute("/_authenticated/indicacoes")({
 
 function IndicacoesPage() {
   const { data } = useSuspenseQuery(overviewQO);
-  const [copied, setCopied] = useState(false);
+  const [copiedCode, setCopiedCode] = useState(false);
+  const [copiedLink, setCopiedLink] = useState(false);
 
   const referralCode = data.profile?.referral_code ?? "";
-  const referralLink = typeof window !== "undefined"
-    ? `${window.location.origin}/auth?mode=signup&ref=${referralCode}`
-    : `/auth?mode=signup&ref=${referralCode}`;
+  const referralLink =
+    typeof window !== "undefined"
+      ? `${window.location.origin}/auth?mode=signup&ref=${referralCode}`
+      : `/auth?mode=signup&ref=${referralCode}`;
 
-  const copy = async (text: string) => {
-    await navigator.clipboard.writeText(text);
-    setCopied(true);
-    toast.success("Copiado!");
-    setTimeout(() => setCopied(false), 2000);
+  const copy = async (text: string, which: "code" | "link") => {
+    try {
+      await navigator.clipboard.writeText(text);
+      if (which === "code") {
+        setCopiedCode(true);
+        setTimeout(() => setCopiedCode(false), 2000);
+      } else {
+        setCopiedLink(true);
+        setTimeout(() => setCopiedLink(false), 2000);
+      }
+      toast.success(which === "code" ? "Código copiado!" : "Link copiado!");
+    } catch {
+      toast.error("Não foi possível copiar. Tente novamente.");
+    }
   };
 
   const share = async () => {
     if (navigator.share) {
-      await navigator.share({
-        title: "Junte-se ao Nexus",
-        text: "Assine o Nexus e ganhe recompensas!",
-        url: referralLink,
-      });
+      try {
+        await navigator.share({
+          title: "Junte-se ao Nexus",
+          text: "Assine o Nexus e ganhe recompensas!",
+          url: referralLink,
+        });
+      } catch {
+        /* user cancelled */
+      }
     } else {
-      copy(referralLink);
+      copy(referralLink, "link");
     }
   };
 
@@ -46,117 +61,228 @@ function IndicacoesPage() {
   const totalPoints = confirmed.reduce((s, r) => s + (r.points_awarded ?? 0), 0);
 
   return (
-    <div className="min-h-dvh bg-surface-50">
-      <div role="main" id="main" className="mx-auto max-w-7xl px-6 py-10">
-        <header className="mb-8">
-          <h1 className="font-display text-3xl font-bold">Suas indicações</h1>
-          <p className="mt-1 text-sm text-surface-900/60">
-            Compartilhe seu link e ganhe pontos quando amigos assinarem.
-          </p>
-        </header>
+    <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 sm:py-10">
+      <header className="mb-6 sm:mb-8">
+        <h1 className="font-display text-2xl font-bold text-foreground sm:text-3xl">
+          Suas indicações
+        </h1>
+        <p className="mt-1 text-sm text-muted-foreground">
+          Compartilhe seu link e ganhe pontos quando amigos assinarem.
+        </p>
+      </header>
 
-        <div className="rounded-3xl bg-gradient-to-br from-surface-900 to-surface-900/90 p-8 text-white">
-          <p className="text-xs font-bold uppercase tracking-widest text-white/60">Seu código único</p>
-          <div className="mt-4 flex flex-wrap items-center gap-4">
-            <div className="rounded-2xl bg-card/10 px-6 py-3 font-mono text-2xl font-bold tracking-widest">
-              {referralCode}
-            </div>
+      {/* Referral card */}
+      <section
+        aria-labelledby="referral-heading"
+        className="relative overflow-hidden rounded-3xl border border-border/60 bg-gradient-to-br from-primary/20 via-card to-card p-5 shadow-elevate sm:p-8"
+      >
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute -right-16 -top-16 size-64 rounded-full bg-primary/20 blur-3xl"
+        />
+        <h2 id="referral-heading" className="sr-only">
+          Seu código e link de indicação
+        </h2>
+
+        {/* Código */}
+        <div>
+          <label
+            htmlFor="referral-code"
+            className="text-xs font-bold uppercase tracking-widest text-muted-foreground"
+          >
+            Seu código único
+          </label>
+          <div className="mt-3 grid gap-3 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center">
+            <input
+              id="referral-code"
+              readOnly
+              value={referralCode}
+              aria-label="Seu código de indicação"
+              className="w-full min-w-0 rounded-2xl border border-border/60 bg-background/60 px-5 py-3 text-center font-mono text-xl font-bold tracking-[0.3em] text-foreground sm:text-2xl"
+            />
             <button
-              onClick={() => copy(referralCode)}
-              className="inline-flex items-center gap-2 rounded-full bg-card px-4 py-2 text-sm font-bold text-surface-900 hover:bg-card/90"
+              type="button"
+              onClick={() => copy(referralCode, "code")}
+              aria-label={copiedCode ? "Código copiado" : "Copiar código"}
+              className="inline-flex min-h-11 shrink-0 items-center justify-center gap-2 rounded-xl bg-foreground px-4 py-2.5 text-sm font-bold text-background transition hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-card"
             >
-              {copied ? <Check className="size-4" /> : <Copy className="size-4" />}
-              Copiar código
+              {copiedCode ? <Check className="size-4" aria-hidden="true" /> : <Copy className="size-4" aria-hidden="true" />}
+              {copiedCode ? "Copiado" : "Copiar código"}
             </button>
           </div>
+        </div>
 
-          <div className="mt-6">
-            <p className="mb-2 text-xs font-bold uppercase tracking-widest text-white/60">Link de indicação</p>
-            <div className="flex flex-col gap-2 sm:flex-row">
+        {/* Link */}
+        <div className="mt-6">
+          <label
+            htmlFor="referral-link"
+            className="text-xs font-bold uppercase tracking-widest text-muted-foreground"
+          >
+            Link de indicação
+          </label>
+          <div className="mt-3 grid gap-2 sm:grid-cols-[minmax(0,1fr)_auto_auto]">
+            <div className="relative min-w-0">
+              <Link2
+                aria-hidden="true"
+                className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground"
+              />
               <input
+                id="referral-link"
                 readOnly
                 value={referralLink}
-                className="flex-1 rounded-xl bg-card/10 px-4 py-2.5 text-sm text-white"
+                aria-label="Seu link de indicação"
+                onFocus={(e) => e.currentTarget.select()}
+                className="w-full truncate rounded-xl border border-border/60 bg-background/60 py-2.5 pl-9 pr-3 text-sm text-foreground"
               />
-              <button
-                onClick={() => copy(referralLink)}
-                className="inline-flex items-center justify-center gap-2 rounded-xl bg-brand px-4 py-2 text-sm font-bold hover:bg-brand-dark"
-              >
-                <Copy className="size-4" /> Copiar link
-              </button>
-              <button
-                onClick={share}
-                className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/20 px-4 py-2 text-sm font-bold hover:bg-card/10"
-              >
-                <Share2 className="size-4" /> Compartilhar
-              </button>
             </div>
+            <button
+              type="button"
+              onClick={() => copy(referralLink, "link")}
+              aria-label={copiedLink ? "Link copiado" : "Copiar link"}
+              className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-primary px-4 py-2 text-sm font-bold text-primary-foreground transition hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-card"
+            >
+              {copiedLink ? <Check className="size-4" aria-hidden="true" /> : <Copy className="size-4" aria-hidden="true" />}
+              {copiedLink ? "Copiado" : "Copiar link"}
+            </button>
+            <button
+              type="button"
+              onClick={share}
+              aria-label="Compartilhar link de indicação"
+              className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-border/60 bg-background/40 px-4 py-2 text-sm font-bold text-foreground transition hover:bg-background/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-card"
+            >
+              <Share2 className="size-4" aria-hidden="true" /> Compartilhar
+            </button>
           </div>
+          <p className="mt-3 text-xs text-muted-foreground">
+            <Gift className="mr-1 inline size-3.5 align-[-2px]" aria-hidden="true" />
+            Ganhe pontos automaticamente quando o convite virar uma assinatura.
+          </p>
         </div>
+      </section>
 
-        <div className="mt-8 grid gap-4 md:grid-cols-3">
-          <div className="rounded-3xl border border-surface-200 bg-card p-6">
-            <p className="text-xs font-bold uppercase tracking-widest text-surface-900/60">Total</p>
-            <p className="mt-2 text-3xl font-bold">{data.referrals.length}</p>
-          </div>
-          <div className="rounded-3xl border border-surface-200 bg-card p-6">
-            <p className="text-xs font-bold uppercase tracking-widest text-surface-900/60">Confirmadas</p>
-            <p className="mt-2 text-3xl font-bold text-emerald-600">{confirmed.length}</p>
-          </div>
-          <div className="rounded-3xl border border-surface-200 bg-card p-6">
-            <p className="text-xs font-bold uppercase tracking-widest text-surface-900/60">Pontos ganhos</p>
-            <p className="mt-2 text-3xl font-bold text-brand">{formatPoints(totalPoints)}</p>
-          </div>
-        </div>
-
-        <section className="mt-8 rounded-3xl border border-surface-200 bg-card p-6">
-          <h2 className="font-display text-lg font-bold">Histórico</h2>
-          {data.referrals.length === 0 ? (
-            <div className="mt-6 flex flex-col items-center py-12 text-center">
-              <Users className="size-12 text-surface-900/20" />
-              <p className="mt-3 text-sm text-surface-900/60">
-                Nenhuma indicação ainda. Compartilhe seu link para começar!
-              </p>
-            </div>
-          ) : (
-            <table className="mt-4 w-full text-sm">
-              <thead>
-                <tr className="border-b border-surface-200 text-xs font-bold uppercase tracking-wider text-surface-900/40">
-                  <th className="py-2 text-left">Indicado</th>
-                  <th className="py-2 text-left">Status</th>
-                  <th className="py-2 text-right">Pontos</th>
-                  <th className="py-2 text-right">Data</th>
-                </tr>
-              </thead>
-              <tbody>
-                {data.referrals.map((r) => (
-                  <tr key={r.id} className="border-b border-surface-100 last:border-0">
-                    <td className="py-3">{(r.referred as any)?.display_name ?? "Usuário"}</td>
-                    <td>
-                      {r.status === "confirmed" ? (
-                        <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-[10px] font-bold text-emerald-700">
-                          CONFIRMADA
-                        </span>
-                      ) : (
-                        <span className="rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-bold text-amber-700">
-                          PENDENTE
-                        </span>
-                      )}
-                    </td>
-                    <td className="text-right font-mono">{r.points_awarded ?? 0}</td>
-                    <td className="text-right text-surface-900/60">{formatDateBR(r.confirmed_at ?? r.created_at)}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          )}
-          {pending.length > 0 && (
-            <p className="mt-4 text-xs text-surface-900/50">
-              Indicações pendentes são confirmadas quando o convidado ativar uma assinatura.
-            </p>
-          )}
-        </section>
+      {/* Stats */}
+      <div className="mt-6 grid gap-4 sm:mt-8 sm:grid-cols-3">
+        <StatCard label="Total" value={data.referrals.length} />
+        <StatCard label="Confirmadas" value={confirmed.length} valueClass="text-emerald-400" />
+        <StatCard label="Pontos ganhos" value={formatPoints(totalPoints)} valueClass="text-primary" />
       </div>
+
+      {/* Histórico */}
+      <section
+        aria-labelledby="history-heading"
+        className="mt-6 rounded-3xl border border-border/60 bg-card p-5 sm:mt-8 sm:p-6"
+      >
+        <h2 id="history-heading" className="font-display text-lg font-bold text-foreground">
+          Histórico
+        </h2>
+
+        {data.referrals.length === 0 ? (
+          <div className="mt-6 flex flex-col items-center py-10 text-center sm:py-12">
+            <Users className="size-12 text-muted-foreground/40" aria-hidden="true" />
+            <p className="mt-3 text-sm text-muted-foreground">
+              Nenhuma indicação ainda. Compartilhe seu link para começar!
+            </p>
+          </div>
+        ) : (
+          <>
+            {/* Desktop table */}
+            <div className="mt-4 hidden overflow-x-auto sm:block">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="border-b border-border/60 text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                    <th scope="col" className="py-2 text-left">Indicado</th>
+                    <th scope="col" className="py-2 text-left">Status</th>
+                    <th scope="col" className="py-2 text-right">Pontos</th>
+                    <th scope="col" className="py-2 text-right">Data</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {data.referrals.map((r) => (
+                    <tr key={r.id} className="border-b border-border/40 last:border-0">
+                      <td className="py-3 text-foreground">
+                        {(r.referred as any)?.display_name ?? "Usuário"}
+                      </td>
+                      <td>
+                        <StatusBadge status={r.status} />
+                      </td>
+                      <td className="text-right font-mono text-foreground">{r.points_awarded ?? 0}</td>
+                      <td className="text-right text-muted-foreground">
+                        {formatDateBR(r.confirmed_at ?? r.created_at)}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            {/* Mobile list */}
+            <ul className="mt-4 space-y-3 sm:hidden">
+              {data.referrals.map((r) => (
+                <li
+                  key={r.id}
+                  className="rounded-2xl border border-border/60 bg-background/40 p-4"
+                >
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="min-w-0">
+                      <p className="truncate font-semibold text-foreground">
+                        {(r.referred as any)?.display_name ?? "Usuário"}
+                      </p>
+                      <p className="mt-1 text-xs text-muted-foreground">
+                        {formatDateBR(r.confirmed_at ?? r.created_at)}
+                      </p>
+                    </div>
+                    <StatusBadge status={r.status} />
+                  </div>
+                  <p className="mt-3 text-xs text-muted-foreground">
+                    Pontos:{" "}
+                    <span className="font-mono font-bold text-foreground">
+                      {r.points_awarded ?? 0}
+                    </span>
+                  </p>
+                </li>
+              ))}
+            </ul>
+          </>
+        )}
+
+        {pending.length > 0 && (
+          <p className="mt-4 text-xs text-muted-foreground">
+            Indicações pendentes são confirmadas quando o convidado ativar uma assinatura.
+          </p>
+        )}
+      </section>
     </div>
+  );
+}
+
+function StatCard({
+  label,
+  value,
+  valueClass = "text-foreground",
+}: {
+  label: string;
+  value: React.ReactNode;
+  valueClass?: string;
+}) {
+  return (
+    <div className="rounded-3xl border border-border/60 bg-card p-5 sm:p-6">
+      <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground">{label}</p>
+      <p className={`mt-2 text-3xl font-bold ${valueClass}`}>{value}</p>
+    </div>
+  );
+}
+
+function StatusBadge({ status }: { status: string }) {
+  if (status === "confirmed") {
+    return (
+      <span className="inline-flex rounded-full bg-emerald-500/15 px-2 py-0.5 text-[10px] font-bold text-emerald-300">
+        CONFIRMADA
+      </span>
+    );
+  }
+  return (
+    <span className="inline-flex rounded-full bg-amber-500/15 px-2 py-0.5 text-[10px] font-bold text-amber-300">
+      PENDENTE
+    </span>
   );
 }
