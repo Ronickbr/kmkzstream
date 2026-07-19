@@ -103,7 +103,7 @@ function AuthPage() {
           <span aria-hidden="true" className="size-8 rounded-lg bg-brand" />
           <span className="font-display text-xl font-bold tracking-tight">NEXUS</span>
         </Link>
-        <div className="rounded-3xl border border-surface-200 bg-card p-8 shadow-xl">
+        <div className="rounded-3xl border border-surface-200 bg-card p-5 shadow-xl sm:p-8">
           <h1 className="font-display text-2xl font-bold">
             {mode === "signup" ? "Criar conta" : "Entrar"}
           </h1>
