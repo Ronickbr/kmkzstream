@@ -28,6 +28,7 @@ function DashboardPage() {
   const { data: history } = useSuspenseQuery(historyQO);
   const cancelFn = useServerFn(cancelMySubscription);
   const claimFn = useServerFn(claimDailyLogin);
+  const checkFn = useServerFn(checkAchievements);
   const qc = useQueryClient();
 
   const activeSub = data.subscription?.status === "active" ? data.subscription : null;
