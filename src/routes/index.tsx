@@ -21,6 +21,7 @@ export const Route = createFileRoute("/")({
 
 function DarkNav() {
   const [signedIn, setSignedIn] = useState<boolean | null>(null);
+  const [menuOpen, setMenuOpen] = useState(false);
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => setSignedIn(!!data.session));
     const { data: sub } = supabase.auth.onAuthStateChange((_e, s) => setSignedIn(!!s));
@@ -32,38 +33,59 @@ function DarkNav() {
       aria-label="Navegação principal"
       className="sticky top-0 z-50 border-b border-slate-800/60 bg-slate-950/80 backdrop-blur-md"
     >
-      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-6">
-        <Link to="/" className="flex items-center gap-2" aria-label="Nexus - página inicial">
+      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-2 px-4 sm:px-6">
+        <Link to="/" className="flex shrink-0 items-center gap-2" aria-label="Nexus - página inicial">
           <div className="size-8 rounded-lg bg-gradient-to-br from-indigo-500 to-indigo-700 shadow-lg shadow-indigo-500/30" />
-          <span className="font-display text-xl font-bold tracking-tight text-white">NEXUS</span>
+          <span className="font-display text-lg font-bold tracking-tight text-white sm:text-xl">NEXUS</span>
         </Link>
-        <div className="hidden gap-8 text-sm font-medium md:flex">
+        <div className="hidden gap-6 text-sm font-medium md:flex lg:gap-8">
           <Link to="/" hash="planos" className="text-slate-300 transition-colors hover:text-white">Planos</Link>
           <Link to="/" hash="premios" className="text-slate-300 transition-colors hover:text-white">Prêmios</Link>
           <Link to="/" hash="como-funciona" className="text-slate-300 transition-colors hover:text-white">Como funciona</Link>
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2 sm:gap-3">
           {signedIn ? (
             <Link
               to="/dashboard"
-              className="rounded-full bg-indigo-600 px-5 py-2 text-sm font-semibold text-white shadow-lg shadow-indigo-600/30 transition hover:bg-indigo-500"
+              className="rounded-full bg-indigo-600 px-3.5 py-2 text-xs font-semibold text-white shadow-lg shadow-indigo-600/30 transition hover:bg-indigo-500 sm:px-5 sm:text-sm"
             >
               Meu Painel
             </Link>
           ) : (
             <>
-              <Link to="/auth" className="text-sm font-semibold text-slate-200 hover:text-white">Entrar</Link>
+              <Link to="/auth" className="hidden text-sm font-semibold text-slate-200 hover:text-white sm:inline">Entrar</Link>
               <Link
                 to="/auth"
                 search={{ mode: "signup" }}
-                className="rounded-full bg-indigo-600 px-5 py-2 text-sm font-semibold text-white shadow-lg shadow-indigo-600/30 transition hover:bg-indigo-500 active:scale-95"
+                className="rounded-full bg-indigo-600 px-3.5 py-2 text-xs font-semibold text-white shadow-lg shadow-indigo-600/30 transition hover:bg-indigo-500 active:scale-95 sm:px-5 sm:text-sm"
               >
-                Começar agora
+                Começar
               </Link>
             </>
           )}
+          <button
+            type="button"
+            onClick={() => setMenuOpen((v) => !v)}
+            aria-label={menuOpen ? "Fechar menu" : "Abrir menu"}
+            aria-expanded={menuOpen}
+            className="ml-1 grid size-10 place-items-center rounded-lg text-slate-200 hover:bg-slate-800 md:hidden"
+          >
+            {menuOpen ? <X className="size-5" /> : <Menu className="size-5" />}
+          </button>
         </div>
       </div>
+      {menuOpen && (
+        <div className="border-t border-slate-800/60 bg-slate-950 md:hidden">
+          <div className="mx-auto flex max-w-7xl flex-col gap-1 px-4 py-3">
+            <Link to="/" hash="planos" onClick={() => setMenuOpen(false)} className="rounded-lg px-3 py-3 text-sm font-semibold text-slate-200 hover:bg-slate-900">Planos</Link>
+            <Link to="/" hash="premios" onClick={() => setMenuOpen(false)} className="rounded-lg px-3 py-3 text-sm font-semibold text-slate-200 hover:bg-slate-900">Prêmios</Link>
+            <Link to="/" hash="como-funciona" onClick={() => setMenuOpen(false)} className="rounded-lg px-3 py-3 text-sm font-semibold text-slate-200 hover:bg-slate-900">Como funciona</Link>
+            {!signedIn && (
+              <Link to="/auth" onClick={() => setMenuOpen(false)} className="rounded-lg px-3 py-3 text-sm font-semibold text-slate-200 hover:bg-slate-900">Entrar</Link>
+            )}
+          </div>
+        </div>
+      )}
     </nav>
   );
 }
