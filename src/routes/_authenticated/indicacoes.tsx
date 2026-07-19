@@ -18,8 +18,6 @@ function IndicacoesPage() {
   const { data } = useSuspenseQuery(overviewQO);
   const [copiedCode, setCopiedCode] = useState(false);
   const [copiedLink, setCopiedLink] = useState(false);
-  const awardShare = useServerFn(awardSharePoints);
-  const qc = useQueryClient();
 
   const referralCode = data.profile?.referral_code ?? "";
   const referralLink =
@@ -27,15 +25,7 @@ function IndicacoesPage() {
       ? `${window.location.origin}/auth?mode=signup&ref=${referralCode}`
       : `/auth?mode=signup&ref=${referralCode}`;
 
-  const tryAwardShare = async () => {
-    try {
-      const res = await awardShare();
-      toast.success(`+${res.points} pts por compartilhar!`);
-      qc.invalidateQueries({ queryKey: ["me"] });
-    } catch {
-      /* daily limit or rule off — silent */
-    }
-  };
+
 
   const copy = async (text: string, which: "code" | "link") => {
     try {
