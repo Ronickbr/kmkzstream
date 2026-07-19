@@ -36,6 +36,14 @@ function DashboardPage() {
   const activeSub = data.subscription?.status === "active" ? data.subscription : null;
   const confirmedRefs = data.referrals.filter((r) => r.status === "confirmed").length;
 
+  const [tourOpen, setTourOpen] = useState(false);
+  useEffect(() => {
+    if (!(data.profile as any)?.onboarded_at) {
+      const t = setTimeout(() => setTourOpen(true), 400);
+      return () => clearTimeout(t);
+    }
+  }, [data.profile]);
+
   const handleCancel = async () => {
     if (!confirm("Cancelar assinatura atual?")) return;
     try {
