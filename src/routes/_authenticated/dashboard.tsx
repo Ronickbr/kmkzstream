@@ -47,10 +47,18 @@ function DashboardPage() {
 
   const handleClaimDaily = async () => {
     try {
-      const res = await claimFn();
-      toast.success(`+${res.points} pts pelo login diário!`);
+      const res = await claimFn() as { points: number; streak?: number; bonus?: number };
+      const bonusText = res.bonus ? ` (+${res.bonus} bônus 🔥 ${res.streak} dias!)` : res.streak ? ` • Sequência: ${res.streak}` : "";
+      toast.success(`+${res.points} pts pelo login diário!${bonusText}`);
       celebrate();
       qc.invalidateQueries({ queryKey: ["me"] });
+      // Check achievements silently after daily login
+      try {
+        const ach = await checkFn();
+        for (const u of ach.unlocked ?? []) {
+          toast.success(`🏆 Conquista: ${u.name}${u.points ? ` (+${u.points} pts)` : ""}`);
+        }
+      } catch { /* silent */ }
     } catch (e: any) {
       toast.error(e?.message ?? "Erro");
     }
