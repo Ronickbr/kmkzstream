@@ -23,7 +23,7 @@ function AdminHome() {
   ];
 
   return (
-    <main id="main" className="mx-auto max-w-7xl px-6 py-10">
+    <div role="main" id="main" className="mx-auto max-w-7xl px-6 py-10">
       <h1 className="font-display text-3xl font-bold">Painel administrativo</h1>
       <p className="mt-1 text-sm text-surface-900/60">Visão geral da plataforma.</p>
 

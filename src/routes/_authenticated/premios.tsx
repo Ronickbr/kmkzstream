@@ -45,7 +45,7 @@ function PremiosPage() {
   return (
     <div className="min-h-dvh bg-surface-50">
       <AppNav isAdmin={overview.isAdmin} />
-      <main id="main" className="mx-auto max-w-7xl px-6 py-10">
+      <div role="main" id="main" className="mx-auto max-w-7xl px-6 py-10">
         <header className="mb-8 flex flex-col items-start justify-between gap-4 md:flex-row md:items-end">
           <div>
             <h1 className="font-display text-3xl font-bold">Catálogo de prêmios</h1>
