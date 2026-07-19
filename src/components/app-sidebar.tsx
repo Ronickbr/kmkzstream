@@ -29,6 +29,7 @@ const userItems = [
   { to: "/dashboard", label: "Painel", icon: LayoutDashboard },
   { to: "/indicacoes", label: "Indicações", icon: Users },
   { to: "/premios", label: "Prêmios", icon: Gift },
+  { to: "/ranking", label: "Ranking VIP", icon: Sparkles },
   { to: "/planos", label: "Planos", icon: CreditCard },
   { to: "/suporte", label: "Suporte", icon: LifeBuoy },
   { to: "/minha-conta", label: "Minha conta", icon: UserCircle },
@@ -56,16 +57,16 @@ export function AppSidebar({ isAdmin }: { isAdmin: boolean }) {
   return (
     <Sidebar collapsible="icon" className="border-r border-sidebar-border">
       <SidebarHeader className="border-b border-sidebar-border">
-        <Link to="/dashboard" aria-label="Nexus — painel" className="flex items-center gap-2.5 px-2 py-1.5">
+        <Link to="/dashboard" aria-label="KMKZ IPTV — painel" className="flex items-center gap-2.5 px-2 py-1.5">
           <span
             aria-hidden="true"
-            className="grid size-9 shrink-0 place-items-center rounded-xl bg-gradient-brand text-sm font-black text-white shadow-glow"
+            className="grid size-9 shrink-0 place-items-center rounded-xl bg-gradient-brand text-xs font-black text-white shadow-glow animate-neon-pulse"
           >
-            N
+            K
           </span>
           {!collapsed && (
             <span className="font-display text-lg font-black tracking-tight text-sidebar-foreground">
-              Nexus
+              KMKZ <span className="bg-gradient-brand bg-clip-text text-transparent">IPTV</span>
             </span>
           )}
         </Link>
