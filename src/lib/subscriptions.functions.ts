@@ -15,12 +15,19 @@ export const subscribeToPlan = createServerFn({ method: "POST" })
     if (planErr) throw new Error(planErr.message);
     if (!plan || !plan.active) throw new Error("Plano indisponível");
 
-    // Cancela assinatura ativa anterior
-    await supabase
+    // Bloqueia contratação enquanto o período pago anterior ainda estiver vigente
+    const { data: activePeriod } = await supabase
       .from("subscriptions")
-      .update({ status: "canceled" })
+      .select("id, ends_at")
       .eq("user_id", userId)
-      .eq("status", "active");
+      .gt("ends_at", new Date().toISOString())
+      .limit(1)
+      .maybeSingle();
+    if (activePeriod) {
+      throw new Error(
+        "Você já possui um período pago em vigor. Aguarde o término antes de contratar novamente."
+      );
+    }
 
     const startsAt = new Date();
     const endsAt = new Date(startsAt.getTime() + plan.duration_days * 86400_000);
@@ -37,6 +44,7 @@ export const subscribeToPlan = createServerFn({ method: "POST" })
       .select("id")
       .single();
     if (error) throw new Error(error.message);
+
     return { id: sub.id };
   });
 
