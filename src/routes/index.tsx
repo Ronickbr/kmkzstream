@@ -372,8 +372,8 @@ function Recompensas({ rewards }: { rewards: any[] }) {
 
             <dl className="mt-10 grid grid-cols-2 gap-x-6 gap-y-4">
               {[
-                { k: "Boas-vindas", v: "+100" },
-                { k: "Indicação paga", v: "+50" },
+                { k: "Boas-vindas", v: "+10" },
+                { k: "Indicação paga", v: "+20" },
                 { k: "Renovação anual", v: "+120" },
                 { k: "Níveis VIP", v: "Bronze → Diamante" },
               ].map((r) => (
