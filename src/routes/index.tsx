@@ -52,12 +52,12 @@ function DarkNav() {
       className="sticky top-0 z-50 border-b border-purple-900/40 bg-slate-950/80 backdrop-blur-md"
     >
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-2 px-4 sm:px-6">
-        <Link to="/" className="flex shrink-0 items-center gap-2" aria-label="KMKZ IPTV - início">
+        <Link to="/" className="flex shrink-0 items-center gap-2" aria-label="KMKZ Streaming - início">
           <div className="grid size-9 place-items-center rounded-xl bg-gradient-to-br from-purple-600 via-fuchsia-600 to-pink-500 font-black text-white shadow-[0_0_25px_rgba(147,51,234,0.7)]">
             K
           </div>
           <span className="font-display text-lg font-black tracking-tight text-white sm:text-xl">
-            KMKZ <span className="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">IPTV</span>
+            KMKZ <span className="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">Streaming</span>
           </span>
         </Link>
         <div className="hidden gap-6 text-sm font-medium md:flex lg:gap-8">
@@ -453,9 +453,9 @@ function Footer() {
         <div className="flex flex-col items-center justify-between gap-6 text-center sm:flex-row sm:text-left">
           <div className="flex items-center gap-2">
             <div className="grid size-8 place-items-center rounded-lg bg-gradient-to-br from-purple-600 to-pink-500 font-black text-white">K</div>
-            <span className="font-display font-black text-white">KMKZ IPTV</span>
+            <span className="font-display font-black text-white">KMKZ Streaming</span>
           </div>
-          <p className="text-xs text-slate-500">© {new Date().getFullYear()} KMKZ IPTV. Todos os direitos reservados.</p>
+          <p className="text-xs text-slate-500">© {new Date().getFullYear()} KMKZ Streaming. Todos os direitos reservados.</p>
           <div className="flex gap-5 text-xs text-slate-400">
             <a href="#faq" className="hover:text-pink-400">FAQ</a>
             <Link to="/auth" className="hover:text-pink-400">Entrar</Link>

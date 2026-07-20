@@ -59,7 +59,7 @@ export function AppSidebar({ isAdmin }: { isAdmin: boolean }) {
   return (
     <Sidebar collapsible="icon" className="border-r border-sidebar-border">
       <SidebarHeader className="border-b border-sidebar-border">
-        <Link to="/dashboard" aria-label="KMKZ IPTV — painel" className="flex items-center gap-2.5 px-2 py-1.5">
+        <Link to="/dashboard" aria-label="KMKZ Streaming — painel" className="flex items-center gap-2.5 px-2 py-1.5">
           <span
             aria-hidden="true"
             className="grid size-9 shrink-0 place-items-center rounded-xl bg-gradient-brand text-xs font-black text-white shadow-glow animate-neon-pulse"
@@ -68,7 +68,7 @@ export function AppSidebar({ isAdmin }: { isAdmin: boolean }) {
           </span>
           {!collapsed && (
             <span className="font-display text-lg font-black tracking-tight text-sidebar-foreground">
-              KMKZ <span className="bg-gradient-brand bg-clip-text text-transparent">IPTV</span>
+              KMKZ <span className="bg-gradient-brand bg-clip-text text-transparent">Streaming</span>
             </span>
           )}
         </Link>

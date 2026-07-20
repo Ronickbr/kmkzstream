@@ -45,7 +45,7 @@ function AuthenticatedLayout() {
             <SidebarTrigger aria-label="Alternar menu lateral" className="text-muted-foreground hover:text-foreground" />
             <span className="hidden h-4 w-px bg-border sm:block" aria-hidden="true" />
             <span className="truncate text-sm font-medium text-muted-foreground">
-              {data.isAdmin ? "Painel KMKZ IPTV · Administração" : "Área do usuário"}
+              {data.isAdmin ? "Painel KMKZ Streaming · Administração" : "Área do usuário"}
             </span>
           </div>
           <div className="flex items-center gap-2">

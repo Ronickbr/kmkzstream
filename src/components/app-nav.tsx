@@ -30,9 +30,9 @@ export function AppNav({ isAdmin }: { isAdmin: boolean }) {
     <nav aria-label="Navegação principal" className="sticky top-0 z-50 border-b border-surface-200 bg-card/80 backdrop-blur-md">
 
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-6">
-        <Link to="/dashboard" aria-label="KMKZ IPTV — painel" className="flex items-center gap-2">
+        <Link to="/dashboard" aria-label="KMKZ Streaming — painel" className="flex items-center gap-2">
           <span aria-hidden="true" className="size-8 rounded-lg bg-brand" />
-          <span className="font-display text-xl font-bold tracking-tight">KMKZ IPTV</span>
+          <span className="font-display text-xl font-bold tracking-tight">KMKZ Streaming</span>
         </Link>
         <div className="hidden items-center gap-1 md:flex">
           {items.map((it) => {
