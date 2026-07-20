@@ -544,7 +544,7 @@ function FAQ() {
   const [open, setOpen] = useState<number | null>(0);
   const items = [
     { q: "Como funciona a ativação?", a: "Confirmação do pagamento e o sinal entra no ar em minutos. Você recebe o acesso por e-mail e WhatsApp." },
-    { q: "Em quantos aparelhos posso assistir?", a: "Independente do plano. Pode ser utilizado em ate 2 telas simultâneas." },
+    { q: "Em quantos aparelhos posso assistir?", a: "Todos os planos liberam até 2 telas simultâneas — assista no que quiser: TV, celular, tablet ou TV Stick, ao mesmo tempo e sem limite de trocas." },
     { q: "Como funcionam os pontos VIP?", a: "Você recebe 10 pontos ao criar conta e +20 por indicação confirmada. Troque por meses grátis ou prêmios físicos no catálogo." },
     { q: "Posso cancelar quando quiser?", a: "Sim. Sem multa, sem burocracia. Cancele direto pelo painel do assinante." },
     { q: "Aceitam PIX?", a: "Sim: PIX (aprovação imediata), cartão de crédito e Mercado Pago." },
