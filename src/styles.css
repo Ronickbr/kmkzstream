@@ -7,6 +7,16 @@
 @theme inline {
   --font-display: "Outfit", ui-sans-serif, system-ui, sans-serif;
   --font-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-broadcast: "Bebas Neue", "Impact", ui-sans-serif, sans-serif;
+  --font-body: "Inter Tight", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", monospace;
+
+  --color-tally: #ff2d55;
+  --color-phosphor: #f72585;
+  --color-signal: #7b2cff;
+  --color-vinyl: #0a0612;
+  --color-bone: #f2ece4;
+
 
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
