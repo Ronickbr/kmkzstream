@@ -19,6 +19,7 @@ type PlanEdit = {
   price_cents?: number;
   purchase_points?: number;
   referral_points?: number;
+  points_multiplier?: number;
   screen_limit?: number;
   quality?: string;
   is_popular?: boolean;
@@ -69,6 +70,7 @@ function AdminPlansPage() {
           const price = e.price_cents ?? p.price_cents;
           const purchase = e.purchase_points ?? p.purchase_points ?? 0;
           const referral = e.referral_points ?? p.referral_points ?? 0;
+          const multiplier = e.points_multiplier ?? p.points_multiplier ?? 1;
           const screens = e.screen_limit ?? p.screen_limit ?? 1;
           const quality = e.quality ?? p.quality ?? "HD";
           const popular = e.is_popular ?? p.is_popular ?? false;
@@ -166,6 +168,20 @@ function AdminPlansPage() {
                     onChange={(ev) => patch(p.id, { referral_points: Number(ev.target.value) })}
                     className={inputCls}
                   />
+                </Field>
+                <Field label="Multiplicador de pontos" icon={<Sparkles className="size-3.5" />}>
+                  <div className="relative mt-1">
+                    <input
+                      type="number"
+                      step="0.25"
+                      min={1}
+                      max={10}
+                      value={multiplier}
+                      onChange={(ev) => patch(p.id, { points_multiplier: Number(ev.target.value) })}
+                      className={inputCls + " pr-8"}
+                    />
+                    <span className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-sm font-bold text-brand">×</span>
+                  </div>
                 </Field>
               </div>
 
