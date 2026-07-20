@@ -372,8 +372,8 @@ function Recompensas({ rewards }: { rewards: any[] }) {
 
             <dl className="mt-10 grid grid-cols-2 gap-x-6 gap-y-4">
               {[
-                { k: "Boas-vindas", v: "+100" },
-                { k: "Indicação paga", v: "+50" },
+                { k: "Boas-vindas", v: "+10" },
+                { k: "Indicação paga", v: "+20" },
                 { k: "Renovação anual", v: "+120" },
                 { k: "Níveis VIP", v: "Bronze → Diamante" },
               ].map((r) => (
@@ -567,7 +567,7 @@ function FAQ() {
   const items = [
     { q: "Como funciona a ativação?", a: "Confirmação do pagamento e o sinal entra no ar em minutos. Você recebe o acesso por e-mail e WhatsApp." },
     { q: "Em quantos aparelhos posso assistir?", a: "Depende do plano. Vai do Básico (1 tela) ao Premium (4 telas simultâneas em 4K)." },
-    { q: "Como funcionam os pontos VIP?", a: "Você recebe 100 pontos ao criar conta e +50 por indicação confirmada. Troque por meses grátis ou prêmios físicos no catálogo." },
+    { q: "Como funcionam os pontos VIP?", a: "Você recebe 10 pontos ao criar conta e +20 por indicação confirmada. Troque por meses grátis ou prêmios físicos no catálogo." },
     { q: "Posso cancelar quando quiser?", a: "Sim. Sem multa, sem burocracia. Cancele direto pelo painel do assinante." },
     { q: "Aceitam PIX?", a: "Sim: PIX (aprovação imediata), cartão de crédito e Mercado Pago." },
   ];
