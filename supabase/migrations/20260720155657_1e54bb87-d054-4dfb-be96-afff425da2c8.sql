@@ -1,0 +1,1 @@
+REVOKE EXECUTE ON FUNCTION public.prevent_subscription_farming() FROM PUBLIC, anon, authenticated;
