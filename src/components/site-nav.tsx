@@ -16,9 +16,9 @@ export function SiteNav() {
       <a href="#main" className="skip-link">Pular para o conteúdo</a>
       <nav aria-label="Navegação principal" className="sticky top-0 z-50 border-b border-surface-200 bg-card/80 backdrop-blur-md">
         <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-6">
-          <Link to="/" aria-label="Nexus — página inicial" className="flex items-center gap-2">
+          <Link to="/" aria-label="KMKZ IPTV — página inicial" className="flex items-center gap-2">
             <span aria-hidden="true" className="size-8 rounded-lg bg-brand" />
-            <span className="font-display text-xl font-bold tracking-tight">NEXUS</span>
+            <span className="font-display text-xl font-bold tracking-tight">KMKZ IPTV</span>
           </Link>
           <div className="hidden gap-8 text-sm font-medium md:flex">
             <Link to="/" hash="planos" className="text-surface-900/70 hover:text-brand">Planos</Link>
@@ -60,9 +60,9 @@ export function SiteFooter() {
       <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-8 px-6 md:flex-row">
         <div className="flex items-center gap-2">
           <div className="size-6 rounded-md bg-brand" />
-          <span className="font-display text-lg font-bold tracking-tight">NEXUS</span>
+          <span className="font-display text-lg font-bold tracking-tight">KMKZ IPTV</span>
         </div>
-        <p className="text-sm text-surface-900/40">© {new Date().getFullYear()} Nexus. Todos os direitos reservados.</p>
+        <p className="text-sm text-surface-900/40">© {new Date().getFullYear()} KMKZ IPTV. Todos os direitos reservados.</p>
         <div className="flex gap-6 text-sm font-medium text-surface-900/60">
           <a href="#" className="hover:text-brand">Termos</a>
           <a href="#" className="hover:text-brand">Privacidade</a>
