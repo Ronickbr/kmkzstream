@@ -185,11 +185,11 @@ function Hero() {
 
           <div className="mt-8 grid max-w-2xl grid-cols-12 gap-x-6 gap-y-3">
             <p className="col-span-12 font-body-b text-[15px] leading-relaxed text-white/70 sm:col-span-9 sm:text-[16px]">
-              Mais de <span className="text-white">50.000 canais</span>, filmes e séries transmitindo agora. Assista em qualquer tela e receba pontos toda vez que trouxer alguém para dentro do sinal.
+              Mais de <span className="text-white">5.000 canais</span>, filmes e séries transmitindo agora. Assista em qualquer tela e receba pontos toda vez que trouxer alguém para dentro do sinal.
             </p>
             <div className="col-span-12 flex items-center gap-2 sm:col-span-3 sm:justify-end">
               <span className="font-mono-b text-[10px] uppercase tracking-[0.2em] text-white/40">
-                Sinal 4K · 99,9% up
+                SINAL UHD · 99,9% UP
               </span>
             </div>
           </div>
@@ -213,7 +213,7 @@ function Hero() {
           {/* Meta strip */}
           <dl className="mt-14 grid max-w-2xl grid-cols-3 gap-6 border-t border-white/10 pt-6">
             {[
-              { k: "Canais no ar", v: "50.128" },
+              { k: "Canais no ar", v: "5.128" },
               { k: "Assinantes", v: "12.4k" },
               { k: "Uptime · 30d", v: "99,97%" },
             ].map((s) => (
@@ -275,7 +275,7 @@ function Ticker() {
     "F1 · GP Interlagos",
     "UFC · Card Principal",
     "NBA · Regular Season",
-    "Filmes · Estreias 4K",
+    "FILMES · ESTREIAS",
     "Séries · HBO · Netflix · Prime",
     "Infantil · Cartoon · Disney",
     "Notícias 24h",
@@ -304,13 +304,13 @@ function Ticker() {
 function Grade() {
   const channels = [
     { n: "CH.001", cat: "Futebol", tag: "Brasileirão · ao vivo", accent: true },
-    { n: "CH.014", cat: "Filmes", tag: "Estreia · Ação 4K" },
+    { n: "CH.014", cat: "Filmes", tag: "ESTREIA · AÇÃO UHD" },
     { n: "CH.027", cat: "Séries", tag: "Novo episódio" },
     { n: "CH.041", cat: "F1", tag: "Volta rápida" },
     { n: "CH.058", cat: "UFC", tag: "Card principal", accent: true },
     { n: "CH.072", cat: "Notícias", tag: "Ao vivo · 24h" },
     { n: "CH.089", cat: "Infantil", tag: "Sessão da tarde" },
-    { n: "CH.103", cat: "Documentário", tag: "Natureza 4K" },
+    { n: "CH.103", cat: "Documentário", tag: "NATUREZA UHD" },
   ];
   return (
     <section id="grade" className="relative border-b border-white/[0.06] py-24 sm:py-32">
@@ -321,7 +321,7 @@ function Grade() {
             Uma grade que <span className="text-[color:var(--color-tally)]">não dorme</span>.
           </h2>
           <p className="mt-5 max-w-md font-body-b text-[15px] leading-relaxed text-white/60">
-            Do apito inicial ao último frame. Assista simultaneamente do celular, TV, tablet ou notebook — sem congelar, sem trava, sem publicidade fora do ar.
+            Do apito inicial ao último frame. Assista simultaneamente do celular, TV ou tablet — sem congelar, sem trava, sem publicidade fora do ar.
           </p>
         </header>
         <ul className="col-span-12 grid grid-cols-2 gap-px overflow-hidden rounded-sm border border-white/[0.08] bg-white/[0.06] md:grid-cols-4 lg:col-span-8">
@@ -367,7 +367,7 @@ function Recompensas({ rewards }: { rewards: any[] }) {
               vale um <span className="text-[color:var(--color-tally)]">crédito no ar</span>.
             </h2>
             <p className="mt-5 max-w-md font-body-b text-[15px] leading-relaxed text-white/60">
-              Traga alguém para o sinal e recebe pontos assim que a assinatura confirma. Troque por meses grátis, Fire TV Stick, Mi TV Stick e outras peças da linha KMKZ.
+              Traga alguém para o sinal e recebe pontos assim que a assinatura confirma. Troque por meses grátis, TV Stick, Mi TV Stick e outras peças da linha KMKZ.
             </p>
 
             <dl className="mt-10 grid grid-cols-2 gap-x-6 gap-y-4">
@@ -501,9 +501,9 @@ function Planos({ plans }: { plans: any[] }) {
 
 function Depoimentos() {
   const items = [
-    { name: "Rafael M.", role: "Assinante · 14 meses", text: "Assisto quatro jogos ao mesmo tempo no domingo. Não trava um segundo. Já resgatei um Fire Stick só indicando o pessoal do trabalho." },
+    { name: "Rafael M.", role: "Assinante · 14 meses", text: "Assisto quatro jogos ao mesmo tempo no domingo. Não trava um segundo. Já resgatei um mi tv Stick só indicando o pessoal do trabalho." },
     { name: "Camila S.", role: "Assinante · 8 meses", text: "Suporte responde no WhatsApp em minutos. Assinei o anual, subi para Ouro no mês seguinte e nunca mais mexi." },
-    { name: "João P.", role: "Assinante · 22 meses", text: "Testei três serviços antes. 4K real só aqui, especialmente em esportes. Custo-benefício ridículo de bom." },
+    { name: "João P.", role: "Assinante · 22 meses", text: "Testei três serviços antes. sem travamento só aqui, especialmente em esportes. Custo-benefício ridículo de bom." },
   ];
   return (
     <section className="relative border-b border-white/[0.06] py-24 sm:py-32">
