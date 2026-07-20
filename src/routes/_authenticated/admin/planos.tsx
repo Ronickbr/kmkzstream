@@ -169,20 +169,6 @@ function AdminPlansPage() {
                     className={inputCls}
                   />
                 </Field>
-                <Field label="Multiplicador de pontos" icon={<Sparkles className="size-3.5" />}>
-                  <div className="relative mt-1">
-                    <input
-                      type="number"
-                      step="0.25"
-                      min={1}
-                      max={10}
-                      value={multiplier}
-                      onChange={(ev) => patch(p.id, { points_multiplier: Number(ev.target.value) })}
-                      className={inputCls + " pr-8"}
-                    />
-                    <span className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-sm font-bold text-brand">×</span>
-                  </div>
-                </Field>
               </div>
 
               <div className="mt-4 flex flex-wrap items-center justify-between gap-3 border-t border-border/60 pt-4">
