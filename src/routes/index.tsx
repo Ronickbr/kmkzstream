@@ -57,7 +57,7 @@ function DarkNav() {
             K
           </div>
           <span className="font-display text-lg font-black tracking-tight text-white sm:text-xl">
-            KMKZ <span className="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">IPTV</span>
+            KMKZ <span className="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">Streaming</span>
           </span>
         </Link>
         <div className="hidden gap-6 text-sm font-medium md:flex lg:gap-8">
