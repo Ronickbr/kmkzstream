@@ -4,25 +4,8 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { listActivePlans, listActiveRewards } from "@/lib/plans.functions";
 import { formatCurrencyBRL, formatPoints } from "@/lib/format";
-import {
-  ArrowRight,
-  Check,
-  Gift,
-  Sparkles,
-  ShieldCheck,
-  Zap,
-  Trophy,
-  Menu,
-  X,
-  Tv,
-  Users,
-  Star,
-  Play,
-  Award,
-  Smartphone,
-  Wifi,
-  ChevronDown,
-} from "lucide-react";
+import broadcastWall from "@/assets/broadcast-wall.jpg";
+import { ArrowUpRight, Check, Menu, X, Plus, ChevronDown } from "lucide-react";
 
 const plansQO = queryOptions({ queryKey: ["public", "plans"], queryFn: () => listActivePlans() });
 const rewardsQO = queryOptions({ queryKey: ["public", "rewards"], queryFn: () => listActiveRewards() });
@@ -37,7 +20,48 @@ export const Route = createFileRoute("/")({
   component: LandingPage,
 });
 
-function DarkNav() {
+/* ------------------------------- Primitives ------------------------------- */
+
+function TallyDot({ label = "AO VIVO" }: { label?: string }) {
+  return (
+    <span className="inline-flex items-center gap-2 font-mono-b text-[11px] font-medium uppercase tracking-[0.22em] text-white/80">
+      <span className="relative inline-block size-2 rounded-full bg-[color:var(--color-tally)] animate-tally" />
+      {label}
+    </span>
+  );
+}
+
+function TimecodeBar({ ch, label }: { ch: string; label: string }) {
+  const [tc, setTc] = useState("00:00:00:00");
+  useEffect(() => {
+    const start = Date.now();
+    const t = setInterval(() => {
+      const ms = Date.now() - start;
+      const h = Math.floor(ms / 3_600_000) % 24;
+      const m = Math.floor(ms / 60_000) % 60;
+      const s = Math.floor(ms / 1000) % 60;
+      const f = Math.floor((ms % 1000) / 40); // 25 fps feel
+      const pad = (n: number) => String(n).padStart(2, "0");
+      setTc(`${pad(h)}:${pad(m)}:${pad(s)}:${pad(f)}`);
+    }, 40);
+    return () => clearInterval(t);
+  }, []);
+  return (
+    <div className="inline-flex items-center gap-3 rounded-sm border border-white/10 bg-black/50 px-3 py-1.5 font-mono-b text-[11px] uppercase tracking-[0.18em] text-white/70 backdrop-blur">
+      <TallyDot />
+      <span className="text-white/40">·</span>
+      <span className="text-[color:var(--color-tally)]">{ch}</span>
+      <span className="text-white/40">·</span>
+      <span>{label}</span>
+      <span className="text-white/40">·</span>
+      <span className="tabular-nums">{tc}</span>
+    </div>
+  );
+}
+
+/* --------------------------------- Nav ---------------------------------- */
+
+function Nav() {
   const [signedIn, setSignedIn] = useState<boolean | null>(null);
   const [menuOpen, setMenuOpen] = useState(false);
   useEffect(() => {
@@ -46,330 +70,447 @@ function DarkNav() {
     return () => sub.subscription.unsubscribe();
   }, []);
 
+  const links = [
+    { href: "#grade", n: "01", label: "A grade" },
+    { href: "#recompensas", n: "02", label: "Recompensas" },
+    { href: "#planos", n: "03", label: "Planos" },
+    { href: "#faq", n: "04", label: "Perguntas" },
+  ];
+
   return (
     <nav
       aria-label="Navegação principal"
-      className="sticky top-0 z-50 border-b border-purple-900/40 bg-slate-950/80 backdrop-blur-md"
+      className="sticky top-0 z-50 border-b border-white/[0.06] bg-[color:var(--color-vinyl)]/85 backdrop-blur-xl"
     >
-      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-2 px-4 sm:px-6">
-        <Link to="/" className="flex shrink-0 items-center gap-2" aria-label="KMKZ Streaming - início">
-          <div className="grid size-9 place-items-center rounded-xl bg-gradient-to-br from-purple-600 via-fuchsia-600 to-pink-500 font-black text-white shadow-[0_0_25px_rgba(147,51,234,0.7)]">
+      <div className="mx-auto flex h-14 max-w-[1400px] items-center justify-between gap-4 px-4 sm:px-8">
+        <Link to="/" className="flex shrink-0 items-center gap-3" aria-label="KMKZ Streaming - início">
+          <span className="grid size-7 place-items-center rounded-sm bg-[color:var(--color-tally)] font-broadcast text-base leading-none text-white">
             K
-          </div>
-          <span className="font-display text-lg font-black tracking-tight text-white sm:text-xl">
-            KMKZ <span className="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">Streaming</span>
           </span>
+          <span className="font-broadcast text-xl leading-none tracking-[0.02em] text-white">
+            KMKZ<span className="text-white/40">·</span>STREAMING
+          </span>
+          <span className="hidden md:inline"><TallyDot label="ON AIR" /></span>
         </Link>
-        <div className="hidden gap-6 text-sm font-medium md:flex lg:gap-8">
-          <a href="#planos" className="text-slate-300 transition hover:text-pink-400">Planos</a>
-          <a href="#gamificacao" className="text-slate-300 transition hover:text-pink-400">Recompensas</a>
-          <a href="#recursos" className="text-slate-300 transition hover:text-pink-400">Recursos</a>
-          <a href="#faq" className="text-slate-300 transition hover:text-pink-400">FAQ</a>
-        </div>
-        <div className="flex items-center gap-2 sm:gap-3">
+
+        <ul className="hidden items-center gap-7 md:flex">
+          {links.map((l) => (
+            <li key={l.href}>
+              <a
+                href={l.href}
+                className="group inline-flex items-baseline gap-2 font-body-b text-[13px] font-medium text-white/70 transition hover:text-white"
+              >
+                <span className="font-mono-b text-[10px] text-white/30 group-hover:text-[color:var(--color-tally)]">
+                  {l.n}
+                </span>
+                {l.label}
+              </a>
+            </li>
+          ))}
+        </ul>
+
+        <div className="flex items-center gap-2">
           {signedIn ? (
             <Link
               to="/dashboard"
-              className="rounded-full bg-gradient-to-r from-purple-600 to-pink-500 px-4 py-2 text-xs font-bold text-white shadow-[0_0_20px_rgba(236,72,153,0.5)] transition hover:shadow-[0_0_30px_rgba(236,72,153,0.7)] sm:text-sm"
+              className="inline-flex items-center gap-2 rounded-sm bg-white px-4 py-2 font-mono-b text-[11px] font-bold uppercase tracking-[0.18em] text-black transition hover:bg-[color:var(--color-tally)] hover:text-white"
             >
-              Meu painel
+              Meu painel <ArrowUpRight className="size-3.5" />
             </Link>
           ) : (
             <>
-              <Link to="/auth" className="hidden text-sm font-semibold text-slate-300 hover:text-white sm:inline">Entrar</Link>
+              <Link to="/auth" className="hidden font-body-b text-[13px] font-medium text-white/70 hover:text-white sm:inline">
+                Entrar
+              </Link>
               <Link
                 to="/auth"
-                className="rounded-full bg-gradient-to-r from-purple-600 to-pink-500 px-4 py-2 text-xs font-bold text-white shadow-[0_0_20px_rgba(236,72,153,0.5)] transition hover:shadow-[0_0_30px_rgba(236,72,153,0.7)] sm:text-sm"
+                className="inline-flex items-center gap-2 rounded-sm bg-[color:var(--color-tally)] px-4 py-2 font-mono-b text-[11px] font-bold uppercase tracking-[0.18em] text-white transition hover:bg-white hover:text-black"
               >
-                Criar conta
+                Assinar <ArrowUpRight className="size-3.5" />
               </Link>
             </>
           )}
           <button
             aria-label="Menu"
             onClick={() => setMenuOpen((v) => !v)}
-            className="ml-1 grid size-9 place-items-center rounded-lg border border-purple-900/60 text-slate-300 md:hidden"
+            className="ml-1 grid size-9 place-items-center rounded-sm border border-white/10 text-white/70 md:hidden"
           >
             {menuOpen ? <X className="size-4" /> : <Menu className="size-4" />}
           </button>
         </div>
       </div>
       {menuOpen && (
-        <div className="border-t border-purple-900/40 bg-slate-950 md:hidden">
-          <div className="mx-auto flex max-w-7xl flex-col gap-1 px-4 py-3 text-sm">
-            <a href="#planos" onClick={() => setMenuOpen(false)} className="rounded-lg px-3 py-2 text-slate-200 hover:bg-purple-900/30">Planos</a>
-            <a href="#gamificacao" onClick={() => setMenuOpen(false)} className="rounded-lg px-3 py-2 text-slate-200 hover:bg-purple-900/30">Recompensas</a>
-            <a href="#recursos" onClick={() => setMenuOpen(false)} className="rounded-lg px-3 py-2 text-slate-200 hover:bg-purple-900/30">Recursos</a>
-            <a href="#faq" onClick={() => setMenuOpen(false)} className="rounded-lg px-3 py-2 text-slate-200 hover:bg-purple-900/30">FAQ</a>
-          </div>
+        <div className="border-t border-white/[0.06] bg-[color:var(--color-vinyl)] md:hidden">
+          <ul className="mx-auto flex max-w-[1400px] flex-col gap-1 px-4 py-3">
+            {links.map((l) => (
+              <li key={l.href}>
+                <a
+                  href={l.href}
+                  onClick={() => setMenuOpen(false)}
+                  className="flex items-baseline gap-3 rounded-sm px-3 py-2.5 font-body-b text-sm text-white/80 hover:bg-white/5"
+                >
+                  <span className="font-mono-b text-[10px] text-white/30">{l.n}</span>
+                  {l.label}
+                </a>
+              </li>
+            ))}
+          </ul>
         </div>
       )}
     </nav>
   );
 }
 
+/* --------------------------------- Hero --------------------------------- */
+
 function Hero() {
   return (
     <section className="relative overflow-hidden">
-      <div aria-hidden className="absolute inset-0 bg-[radial-gradient(1200px_600px_at_20%_-10%,rgba(147,51,234,0.35),transparent_60%),radial-gradient(900px_500px_at_90%_10%,rgba(236,72,153,0.25),transparent_60%)]" />
-      <div aria-hidden className="absolute -left-20 top-32 size-72 rounded-full bg-purple-600/30 blur-3xl" />
-      <div aria-hidden className="absolute right-0 top-64 size-96 rounded-full bg-pink-500/20 blur-3xl" />
-      <div className="relative mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-24 lg:py-32">
-        <div className="grid items-center gap-12 lg:grid-cols-2">
-          <div>
-            <span className="inline-flex items-center gap-2 rounded-full border border-purple-500/40 bg-purple-500/10 px-3 py-1 text-xs font-bold uppercase tracking-widest text-pink-300">
-              <Sparkles className="size-3.5" /> Streaming + Programa VIP
-            </span>
-            <h1 className="mt-5 font-display text-4xl font-black leading-[1.05] tracking-tight text-white sm:text-5xl lg:text-6xl">
-              Assista sem limites e{" "}
-              <span className="bg-gradient-to-r from-purple-400 via-fuchsia-400 to-pink-400 bg-clip-text text-transparent">
-                ganhe prêmios reais
-              </span>{" "}
-              a cada uso.
-            </h1>
-            <p className="mt-5 max-w-xl text-base leading-relaxed text-slate-300 sm:text-lg">
-              +50.000 canais, filmes e séries em 4K com programa de fidelidade que te recompensa por indicações e conquistas.
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 bg-[radial-gradient(1000px_600px_at_15%_-10%,rgba(123,44,255,0.28),transparent_65%),radial-gradient(700px_500px_at_100%_20%,rgba(255,45,85,0.12),transparent_60%)]"
+      />
+      <div className="relative mx-auto grid max-w-[1400px] grid-cols-12 gap-6 px-4 pb-16 pt-10 sm:px-8 sm:pt-14 lg:gap-8 lg:pb-24 lg:pt-20">
+        {/* Left column — thesis */}
+        <div className="col-span-12 lg:col-span-7">
+          <TimecodeBar ch="CH.001" label="ENTRADA" />
+
+          <h1 className="mt-8 font-broadcast text-[64px] leading-[0.86] tracking-[0.005em] text-white sm:text-[92px] lg:text-[120px] xl:text-[136px]">
+            TUDO
+            <br />
+            NO AR.
+            <br />
+            <span className="text-[color:var(--color-tally)]">SEM CORTAR.</span>
+          </h1>
+
+          <div className="mt-8 grid max-w-2xl grid-cols-12 gap-x-6 gap-y-3">
+            <p className="col-span-12 font-body-b text-[15px] leading-relaxed text-white/70 sm:col-span-9 sm:text-[16px]">
+              Mais de <span className="text-white">50.000 canais</span>, filmes e séries transmitindo agora. Assista em qualquer tela e receba pontos toda vez que trouxer alguém para dentro do sinal.
             </p>
-            <div className="mt-8 flex flex-wrap items-center gap-3">
-              <Link
-                to="/auth"
-                className="group inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-purple-600 to-pink-500 px-6 py-3.5 text-sm font-bold text-white shadow-[0_0_30px_rgba(236,72,153,0.5)] transition hover:shadow-[0_0_50px_rgba(236,72,153,0.8)]"
-              >
-                Ganhe 100 pts ao criar conta
-                <ArrowRight className="size-4 transition group-hover:translate-x-1" />
-              </Link>
-              <a href="#planos" className="inline-flex items-center gap-2 rounded-full border border-purple-500/40 bg-white/5 px-6 py-3.5 text-sm font-bold text-white backdrop-blur transition hover:bg-white/10">
-                <Play className="size-4" /> Ver planos
-              </a>
-            </div>
-            <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-3 text-xs text-slate-400">
-              <span className="inline-flex items-center gap-1.5"><ShieldCheck className="size-4 text-emerald-400" /> Pagamento seguro</span>
-              <span className="inline-flex items-center gap-1.5"><Wifi className="size-4 text-purple-400" /> Sem travamento</span>
-              <span className="inline-flex items-center gap-1.5"><Award className="size-4 text-pink-400" /> Suporte 24/7</span>
+            <div className="col-span-12 flex items-center gap-2 sm:col-span-3 sm:justify-end">
+              <span className="font-mono-b text-[10px] uppercase tracking-[0.2em] text-white/40">
+                Sinal 4K · 99,9% up
+              </span>
             </div>
           </div>
 
-          <div className="relative">
-            <div className="relative rounded-3xl border border-purple-500/30 bg-gradient-to-br from-purple-900/40 via-slate-900/60 to-pink-900/30 p-6 backdrop-blur-xl shadow-[0_0_60px_rgba(147,51,234,0.35)]">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-xs font-bold uppercase tracking-widest text-pink-300">Painel VIP</p>
-                  <p className="mt-1 font-display text-2xl font-black text-white">💠 Diamante</p>
-                </div>
-                <div className="grid size-14 place-items-center rounded-2xl bg-gradient-to-br from-purple-600 to-pink-500 shadow-[0_0_25px_rgba(236,72,153,0.6)]">
-                  <Trophy className="size-6 text-white" />
-                </div>
-              </div>
-              <div className="mt-6 rounded-2xl bg-slate-950/60 p-5">
-                <p className="text-xs font-bold uppercase tracking-widest text-slate-400">Seus pontos</p>
-                <p className="mt-1 font-display text-4xl font-black text-white">12.480</p>
-                <div className="mt-3 h-2 overflow-hidden rounded-full bg-slate-800">
-                  <div className="h-full w-3/4 bg-gradient-to-r from-purple-500 to-pink-500" />
-                </div>
-              </div>
-              <div className="mt-4 grid grid-cols-3 gap-3 text-center">
-                {[
-                  { k: "Indicações", v: "24" },
-                  { k: "Streak", v: "18d" },
-                  { k: "Prêmios", v: "6" },
-                ].map((s) => (
-                  <div key={s.k} className="rounded-xl bg-white/5 p-3">
-                    <p className="font-display text-lg font-black text-white">{s.v}</p>
-                    <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400 break-normal hyphens-none [word-break:keep-all]">{s.k}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-            {/* Floating badges */}
-            <div className="absolute -left-4 top-8 hidden rounded-2xl border border-emerald-500/30 bg-slate-900/90 px-3 py-2 shadow-lg backdrop-blur sm:block">
-              <p className="text-[10px] font-bold uppercase tracking-widest text-emerald-400">+50 pts</p>
-              <p className="text-xs text-white">Indicação confirmada</p>
-            </div>
-            <div className="absolute -right-4 bottom-10 hidden rounded-2xl border border-pink-500/30 bg-slate-900/90 px-3 py-2 shadow-lg backdrop-blur sm:block">
-              <p className="text-[10px] font-bold uppercase tracking-widest text-pink-400">Novo prêmio</p>
-              <p className="text-xs text-white">🎁 Fire TV Stick</p>
-            </div>
+          <div className="mt-10 flex flex-wrap items-center gap-3">
+            <Link
+              to="/auth"
+              className="group inline-flex items-center gap-3 rounded-sm bg-[color:var(--color-tally)] px-6 py-4 font-mono-b text-xs font-bold uppercase tracking-[0.22em] text-white transition hover:bg-white hover:text-black"
+            >
+              Entrar no ar
+              <ArrowUpRight className="size-4 transition group-hover:rotate-45" />
+            </Link>
+            <a
+              href="#planos"
+              className="inline-flex items-center gap-3 rounded-sm border border-white/15 bg-white/[0.03] px-6 py-4 font-mono-b text-xs font-bold uppercase tracking-[0.22em] text-white/85 backdrop-blur transition hover:border-white/40 hover:bg-white/[0.06]"
+            >
+              Ver a grade
+            </a>
           </div>
+
+          {/* Meta strip */}
+          <dl className="mt-14 grid max-w-2xl grid-cols-3 gap-6 border-t border-white/10 pt-6">
+            {[
+              { k: "Canais no ar", v: "50.128" },
+              { k: "Assinantes", v: "12.4k" },
+              { k: "Uptime · 30d", v: "99,97%" },
+            ].map((s) => (
+              <div key={s.k}>
+                <dt className="font-mono-b text-[10px] uppercase tracking-[0.2em] text-white/40">{s.k}</dt>
+                <dd className="mt-1 font-broadcast text-3xl leading-none text-white sm:text-4xl">{s.v}</dd>
+              </div>
+            ))}
+          </dl>
         </div>
+
+        {/* Right column — monitor wall */}
+        <aside className="col-span-12 lg:col-span-5">
+          <figure className="relative crt-frame overflow-hidden">
+            <img
+              src={broadcastWall}
+              alt="Parede de monitores em uma sala de controle transmitindo canais simultaneamente."
+              width={1280}
+              height={1280}
+              className="h-full w-full object-cover"
+            />
+            <div aria-hidden className="pointer-events-none absolute inset-0 scanlines" />
+            <div aria-hidden className="pointer-events-none absolute inset-x-0 -top-1/2 h-32 animate-scan bg-gradient-to-b from-transparent via-white/8 to-transparent" />
+            {/* Overlay UI */}
+            <div className="pointer-events-none absolute inset-0 flex flex-col justify-between p-4">
+              <div className="flex items-start justify-between">
+                <div className="rounded-sm bg-black/60 px-2 py-1 font-mono-b text-[10px] uppercase tracking-[0.2em] text-white/80 backdrop-blur">
+                  REC · 4K · HDR
+                </div>
+                <TallyDot label="LIVE" />
+              </div>
+              <div className="flex items-end justify-between gap-3">
+                <div className="rounded-sm bg-black/60 px-2 py-1.5 font-mono-b text-[10px] uppercase tracking-[0.18em] text-white/80 backdrop-blur">
+                  CH.042 · FUTEBOL AO VIVO
+                </div>
+                <div className="rounded-sm bg-black/60 px-2 py-1.5 font-mono-b text-[10px] uppercase tracking-[0.18em] text-white/80 backdrop-blur">
+                  +9 CANAIS SIMULTÂNEOS
+                </div>
+              </div>
+            </div>
+          </figure>
+          {/* Below-figure caption */}
+          <figcaption className="mt-3 flex items-center justify-between font-mono-b text-[10px] uppercase tracking-[0.2em] text-white/40">
+            <span>Fig. 01 — Master control · São Paulo</span>
+            <span>25 fps</span>
+          </figcaption>
+        </aside>
       </div>
+
+      {/* Ticker */}
+      <Ticker />
     </section>
   );
 }
 
-function Features() {
+function Ticker() {
   const items = [
-    { icon: Tv, title: "+50.000 canais", desc: "TV ao vivo, filmes, séries e esportes em qualidade 4K." },
-    { icon: Smartphone, title: "Multi-dispositivo", desc: "Smart TV, Android, iOS, Fire Stick, computador." },
-    { icon: Zap, title: "Servidor turbo", desc: "Sem buffering. Baixa latência, uptime 99,9%." },
-    { icon: ShieldCheck, title: "100% seguro", desc: "Pagamento criptografado e ativação instantânea." },
-    { icon: Award, title: "Programa VIP", desc: "Ganhe pontos por login, indicação e resgate prêmios." },
-    { icon: Users, title: "Suporte 24/7", desc: "Time humano por WhatsApp e chat, sempre online." },
+    "Futebol · Brasileirão",
+    "F1 · GP Interlagos",
+    "UFC · Card Principal",
+    "NBA · Regular Season",
+    "Filmes · Estreias 4K",
+    "Séries · HBO · Netflix · Prime",
+    "Infantil · Cartoon · Disney",
+    "Notícias 24h",
+    "PPV · Grandes eventos",
+    "Documentários",
+  ];
+  const loop = [...items, ...items];
+  return (
+    <div className="relative border-y border-white/[0.08] bg-black/40 py-3">
+      <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-24 bg-gradient-to-r from-[color:var(--color-vinyl)] to-transparent" />
+      <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-24 bg-gradient-to-l from-[color:var(--color-vinyl)] to-transparent" />
+      <div className="flex w-max animate-ticker items-center gap-10 font-mono-b text-[11px] uppercase tracking-[0.22em] text-white/60">
+        {loop.map((it, i) => (
+          <span key={i} className="inline-flex items-center gap-3">
+            <span className="size-1.5 rounded-full bg-[color:var(--color-tally)]" />
+            {it}
+          </span>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/* -------------------------------- Grade -------------------------------- */
+
+function Grade() {
+  const channels = [
+    { n: "CH.001", cat: "Futebol", tag: "Brasileirão · ao vivo", accent: true },
+    { n: "CH.014", cat: "Filmes", tag: "Estreia · Ação 4K" },
+    { n: "CH.027", cat: "Séries", tag: "Novo episódio" },
+    { n: "CH.041", cat: "F1", tag: "Volta rápida" },
+    { n: "CH.058", cat: "UFC", tag: "Card principal", accent: true },
+    { n: "CH.072", cat: "Notícias", tag: "Ao vivo · 24h" },
+    { n: "CH.089", cat: "Infantil", tag: "Sessão da tarde" },
+    { n: "CH.103", cat: "Documentário", tag: "Natureza 4K" },
   ];
   return (
-    <section id="recursos" className="relative py-20 sm:py-28">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6">
-        <div className="mx-auto max-w-2xl text-center">
-          <span className="text-xs font-bold uppercase tracking-widest text-pink-400">Recursos</span>
-          <h2 className="mt-2 font-display text-3xl font-black tracking-tight text-white sm:text-4xl">
-            Tudo o que você precisa em uma assinatura
+    <section id="grade" className="relative border-b border-white/[0.06] py-24 sm:py-32">
+      <div className="mx-auto grid max-w-[1400px] grid-cols-12 gap-6 px-4 sm:px-8">
+        <header className="col-span-12 lg:col-span-4">
+          <span className="font-mono-b text-[10px] uppercase tracking-[0.24em] text-white/40">§ 02 — Grade</span>
+          <h2 className="mt-4 font-broadcast text-5xl leading-[0.9] text-white sm:text-6xl lg:text-7xl">
+            Uma grade que <span className="text-[color:var(--color-tally)]">não dorme</span>.
           </h2>
-        </div>
-        <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {items.map((it) => (
-            <div
-              key={it.title}
-              className="group rounded-3xl border border-purple-900/40 bg-white/[0.03] p-6 backdrop-blur transition hover:border-pink-500/40 hover:bg-white/[0.06]"
+          <p className="mt-5 max-w-md font-body-b text-[15px] leading-relaxed text-white/60">
+            Do apito inicial ao último frame. Assista simultaneamente do celular, TV, tablet ou notebook — sem congelar, sem trava, sem publicidade fora do ar.
+          </p>
+        </header>
+        <ul className="col-span-12 grid grid-cols-2 gap-px overflow-hidden rounded-sm border border-white/[0.08] bg-white/[0.06] md:grid-cols-4 lg:col-span-8">
+          {channels.map((c) => (
+            <li
+              key={c.n}
+              className="group relative flex aspect-square flex-col justify-between bg-[color:var(--color-vinyl)] p-4 transition hover:bg-black"
             >
-              <div className="grid size-11 place-items-center rounded-2xl bg-gradient-to-br from-purple-600/30 to-pink-500/30 text-pink-300 transition group-hover:scale-110">
-                <it.icon className="size-5" />
+              <div className="flex items-start justify-between">
+                <span className="font-mono-b text-[11px] tracking-[0.18em] text-white/40 group-hover:text-white/80">
+                  {c.n}
+                </span>
+                {c.accent && <TallyDot label="LIVE" />}
               </div>
-              <h3 className="mt-4 font-display text-lg font-bold text-white">{it.title}</h3>
-              <p className="mt-1 text-sm text-slate-400">{it.desc}</p>
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function Gamification({ rewards }: { rewards: any[] }) {
-  return (
-    <section id="gamificacao" className="relative border-y border-purple-900/40 bg-gradient-to-b from-slate-950 via-purple-950/30 to-slate-950 py-20 sm:py-28">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6">
-        <div className="grid items-center gap-10 lg:grid-cols-2">
-          <div>
-            <span className="text-xs font-bold uppercase tracking-widest text-pink-400">Programa VIP</span>
-            <h2 className="mt-2 font-display text-3xl font-black tracking-tight text-white sm:text-4xl">
-              Quanto mais você usa,{" "}
-              <span className="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
-                mais você ganha
-              </span>
-            </h2>
-            <p className="mt-4 text-base text-slate-300">
-              Ganhe pontos automaticamente por ,compartilhamento, indicações e conquistas. Troque por meses grátis, descontos ou prêmios físicos.
-            </p>
-            <ul className="mt-6 space-y-3">
-              {[
-                { icon: Sparkles, label: "+100 pts de boas-vindas ao criar conta" },
-                { icon: Zap, label: "+5 pts por compartilhar seu link (até 5x/dia)" },
-                { icon: Users, label: "+50 pts por indicação confirmada" },
-                { icon: Trophy, label: "5 níveis VIP: Bronze → Diamante" },
-              ].map((r) => (
-                <li key={r.label} className="flex items-start gap-3 text-sm text-slate-200">
-                  <span className="mt-0.5 grid size-6 shrink-0 place-items-center rounded-md bg-gradient-to-br from-purple-600 to-pink-500 text-white">
-                    <r.icon className="size-3.5" />
-                  </span>
-                  {r.label}
-                </li>
-              ))}
-            </ul>
-          </div>
-          <div className="grid grid-cols-2 gap-4">
-            {rewards.slice(0, 4).map((r, i) => (
+              <div>
+                <p className="font-mono-b text-[10px] uppercase tracking-[0.2em] text-white/40">{c.tag}</p>
+                <p className="mt-1 font-broadcast text-3xl leading-none text-white sm:text-4xl">{c.cat}</p>
+              </div>
               <div
+                aria-hidden
+                className="absolute inset-x-4 bottom-2 h-px bg-gradient-to-r from-[color:var(--color-tally)]/0 via-[color:var(--color-tally)]/60 to-[color:var(--color-tally)]/0 opacity-0 transition group-hover:opacity-100"
+              />
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+  );
+}
+
+/* ---------------------------- Recompensas ---------------------------- */
+
+function Recompensas({ rewards }: { rewards: any[] }) {
+  const items = rewards.slice(0, 6);
+  return (
+    <section id="recompensas" className="relative border-b border-white/[0.06] py-24 sm:py-32">
+      <div className="mx-auto max-w-[1400px] px-4 sm:px-8">
+        <div className="grid grid-cols-12 gap-6">
+          <header className="col-span-12 lg:col-span-5">
+            <span className="font-mono-b text-[10px] uppercase tracking-[0.24em] text-white/40">§ 03 — Recompensas</span>
+            <h2 className="mt-4 font-broadcast text-5xl leading-[0.9] text-white sm:text-6xl lg:text-7xl">
+              Cada indicação<br />
+              vale um <span className="text-[color:var(--color-tally)]">crédito no ar</span>.
+            </h2>
+            <p className="mt-5 max-w-md font-body-b text-[15px] leading-relaxed text-white/60">
+              Traga alguém para o sinal e recebe pontos assim que a assinatura confirma. Troque por meses grátis, Fire TV Stick, Mi TV Stick e outras peças da linha KMKZ.
+            </p>
+
+            <dl className="mt-10 grid grid-cols-2 gap-x-6 gap-y-4">
+              {[
+                { k: "Boas-vindas", v: "+100" },
+                { k: "Indicação paga", v: "+50" },
+                { k: "Renovação anual", v: "+120" },
+                { k: "Níveis VIP", v: "Bronze → Diamante" },
+              ].map((r) => (
+                <div key={r.k} className="border-t border-white/10 pt-3">
+                  <dt className="font-mono-b text-[10px] uppercase tracking-[0.2em] text-white/40">{r.k}</dt>
+                  <dd className="mt-1 font-broadcast text-2xl leading-none text-white">{r.v}</dd>
+                </div>
+              ))}
+            </dl>
+          </header>
+
+          <ul className="col-span-12 lg:col-span-7">
+            {items.map((r, i) => (
+              <li
                 key={r.id}
-                className={`group relative overflow-hidden rounded-3xl border border-purple-500/30 bg-slate-900/60 p-5 backdrop-blur transition hover:border-pink-500/50 hover:shadow-[0_0_30px_rgba(236,72,153,0.35)] ${
-                  i === 0 ? "sm:col-span-2" : ""
-                }`}
+                className="group grid grid-cols-12 items-center gap-4 border-t border-white/10 py-6 transition hover:bg-white/[0.02]"
               >
-                <div className="mb-3 inline-flex items-center gap-1.5 rounded-full bg-pink-500/15 px-2 py-0.5 text-[10px] font-bold uppercase tracking-widest text-pink-300">
-                  <Gift className="size-3" /> Prêmio
+                <span className="col-span-2 font-mono-b text-[11px] tracking-[0.18em] text-white/40 group-hover:text-[color:var(--color-tally)]">
+                  RW.{String(i + 1).padStart(3, "0")}
+                </span>
+                <div className="col-span-7">
+                  <p className="font-broadcast text-2xl leading-tight text-white sm:text-3xl">{r.name}</p>
+                  <p className="mt-1 font-body-b text-[13px] text-white/50">{r.description}</p>
                 </div>
-                <p className="font-display text-lg font-bold text-white">{r.name}</p>
-                <p className="mt-1 line-clamp-2 text-xs text-slate-400">{r.description}</p>
-                <div className="mt-3 inline-flex items-center gap-1 text-sm font-black text-pink-400">
-                  <Sparkles className="size-3.5" /> {formatPoints(r.points_cost)} pts
+                <div className="col-span-3 text-right">
+                  <p className="font-broadcast text-3xl leading-none text-[color:var(--color-tally)] sm:text-4xl">
+                    {formatPoints(r.points_cost)}
+                  </p>
+                  <p className="font-mono-b text-[10px] uppercase tracking-[0.2em] text-white/40">pontos</p>
                 </div>
-              </div>
+              </li>
             ))}
-          </div>
+            <li className="border-t border-white/10" />
+          </ul>
         </div>
       </div>
     </section>
   );
 }
 
-function Pricing({ plans }: { plans: any[] }) {
-  const [billing, setBilling] = useState<"monthly" | "annual">("monthly");
+/* -------------------------------- Planos ------------------------------- */
+
+function Planos({ plans }: { plans: any[] }) {
+  const [billing, setBilling] = useState<"curto" | "longo">("curto");
   const filtered = plans.filter((p) =>
-    billing === "annual" ? p.period === "annual" || p.period === "semiannual" : p.period === "monthly" || p.period === "quarterly",
+    billing === "longo"
+      ? p.period === "annual" || p.period === "semiannual"
+      : p.period === "monthly" || p.period === "quarterly",
   );
 
   return (
-    <section id="planos" className="relative py-20 sm:py-28">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6">
-        <div className="mx-auto max-w-2xl text-center">
-          <span className="text-xs font-bold uppercase tracking-widest text-pink-400">Planos</span>
-          <h2 className="mt-2 font-display text-3xl font-black tracking-tight text-white sm:text-4xl">
-            Escolha o plano ideal
-          </h2>
-          <p className="mt-3 text-slate-300">Cancele quando quiser. Ativação imediata após o pagamento.</p>
-
-          <div className="mt-6 inline-flex rounded-full border border-purple-500/40 bg-slate-900/50 p-1">
-            {(["monthly", "annual"] as const).map((b) => (
-              <button
-                key={b}
-                onClick={() => setBilling(b)}
-                className={`rounded-full px-5 py-2 text-xs font-bold uppercase tracking-widest transition ${
-                  billing === b
-                    ? "bg-gradient-to-r from-purple-600 to-pink-500 text-white shadow-[0_0_20px_rgba(236,72,153,0.5)]"
-                    : "text-slate-400 hover:text-white"
-                }`}
-              >
-                {b === "monthly" ? "Curto prazo" : "Longo prazo"}
-              </button>
-            ))}
+    <section id="planos" className="relative border-b border-white/[0.06] py-24 sm:py-32">
+      <div className="mx-auto max-w-[1400px] px-4 sm:px-8">
+        <div className="grid grid-cols-12 items-end gap-6">
+          <header className="col-span-12 lg:col-span-7">
+            <span className="font-mono-b text-[10px] uppercase tracking-[0.24em] text-white/40">§ 04 — Planos</span>
+            <h2 className="mt-4 font-broadcast text-5xl leading-[0.9] text-white sm:text-6xl lg:text-7xl">
+              Escolha a duração<br />da sua <span className="text-[color:var(--color-tally)]">transmissão</span>.
+            </h2>
+          </header>
+          <div className="col-span-12 lg:col-span-5 lg:text-right">
+            <div className="inline-flex rounded-sm border border-white/10 bg-white/[0.03] p-1">
+              {(["curto", "longo"] as const).map((b) => (
+                <button
+                  key={b}
+                  onClick={() => setBilling(b)}
+                  className={`rounded-sm px-4 py-2 font-mono-b text-[11px] font-bold uppercase tracking-[0.2em] transition ${
+                    billing === b
+                      ? "bg-[color:var(--color-tally)] text-white"
+                      : "text-white/50 hover:text-white"
+                  }`}
+                >
+                  {b === "curto" ? "Curto prazo" : "Longo prazo"}
+                </button>
+              ))}
+            </div>
+            <p className="mt-3 font-mono-b text-[10px] uppercase tracking-[0.2em] text-white/40">
+              Cancele quando quiser · Ativação em minutos
+            </p>
           </div>
         </div>
 
-        <div className="mx-auto mt-12 grid max-w-6xl gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {filtered.map((plan) => {
+        <div className="mt-14 grid grid-cols-12 gap-px overflow-hidden rounded-sm border border-white/[0.08] bg-white/[0.06]">
+          {filtered.map((plan, i) => {
             const monthly = plan.price_cents / Math.max(1, Math.round(plan.duration_days / 30));
             return (
-              <div
+              <article
                 key={plan.id}
-                className={`relative flex flex-col rounded-3xl border p-7 backdrop-blur transition hover:-translate-y-1 ${
-                  plan.is_popular
-                    ? "border-pink-500/60 bg-gradient-to-b from-purple-900/40 to-slate-900/60 shadow-[0_0_50px_rgba(236,72,153,0.4)]"
-                    : "border-purple-900/50 bg-slate-900/40 hover:border-purple-500/60"
+                className={`col-span-12 flex flex-col bg-[color:var(--color-vinyl)] p-8 md:col-span-6 lg:col-span-4 ${
+                  plan.is_popular ? "relative" : ""
                 }`}
               >
                 {plan.is_popular && (
-                  <span className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-gradient-to-r from-purple-600 to-pink-500 px-3 py-1 text-[10px] font-black uppercase tracking-widest text-white shadow-[0_0_20px_rgba(236,72,153,0.6)]">
-                    ⭐ Mais popular
+                  <span className="absolute right-4 top-4 rounded-sm bg-[color:var(--color-tally)] px-2 py-1 font-mono-b text-[10px] font-bold uppercase tracking-[0.2em] text-white">
+                    Recomendado
                   </span>
                 )}
-                <p className="font-display text-xl font-black text-white">{plan.name}</p>
-                <div className="mt-4 flex items-baseline gap-2">
-                  <span className="font-display text-4xl font-black text-white">{formatCurrencyBRL(plan.price_cents)}</span>
+                <div className="flex items-baseline justify-between">
+                  <span className="font-mono-b text-[11px] tracking-[0.2em] text-white/40">
+                    PL.{String(i + 1).padStart(2, "0")}
+                  </span>
+                  <span className="font-mono-b text-[10px] uppercase tracking-[0.2em] text-white/40">
+                    {plan.quality ?? "HD"} · {plan.screen_limit ?? 1} tela{(plan.screen_limit ?? 1) > 1 ? "s" : ""}
+                  </span>
                 </div>
-                <p className="mt-1 text-xs text-slate-400">
-                  {formatCurrencyBRL(monthly)}/mês equivalente
-                </p>
-                <div className="mt-5 flex flex-wrap gap-2 text-[10px] font-bold uppercase tracking-widest">
-                  <span className="rounded-full bg-purple-500/15 px-2 py-1 text-purple-300">📺 {plan.screen_limit ?? 1} tela{(plan.screen_limit ?? 1) > 1 ? "s" : ""}</span>
-                  <span className="rounded-full bg-pink-500/15 px-2 py-1 text-pink-300">🎬 {plan.quality ?? "HD"}</span>
-                  <span className="rounded-full bg-emerald-500/15 px-2 py-1 text-emerald-300">+{plan.referral_points} pts/indic.</span>
+
+                <h3 className="mt-5 font-broadcast text-4xl leading-none text-white sm:text-5xl">{plan.name}</h3>
+
+                <div className="mt-8 border-t border-white/10 pt-6">
+                  <div className="flex items-baseline gap-2">
+                    <span className="font-broadcast text-6xl leading-none text-white sm:text-7xl">
+                      {formatCurrencyBRL(plan.price_cents).replace("R$", "").trim()}
+                    </span>
+                    <span className="font-mono-b text-[11px] uppercase tracking-[0.2em] text-white/40">BRL</span>
+                  </div>
+                  <p className="mt-2 font-mono-b text-[11px] uppercase tracking-[0.18em] text-white/40">
+                    {formatCurrencyBRL(monthly)}/mês equivalente
+                  </p>
                 </div>
-                <ul className="mt-6 flex-1 space-y-2 text-sm text-slate-300">
+
+                <ul className="mt-6 flex-1 space-y-2.5">
                   {(plan.features ?? []).map((f: string) => (
-                    <li key={f} className="flex gap-2">
-                      <Check className="mt-0.5 size-4 shrink-0 text-pink-400" /> {f}
+                    <li key={f} className="flex items-start gap-2 font-body-b text-[14px] text-white/75">
+                      <Check className="mt-0.5 size-4 shrink-0 text-[color:var(--color-tally)]" />
+                      {f}
                     </li>
                   ))}
                 </ul>
+
                 <Link
                   to="/auth"
-                  className={`mt-6 inline-flex items-center justify-center rounded-full py-3 text-sm font-bold transition ${
-                    plan.is_popular
-                      ? "bg-gradient-to-r from-purple-600 to-pink-500 text-white shadow-[0_0_25px_rgba(236,72,153,0.5)] hover:shadow-[0_0_40px_rgba(236,72,153,0.8)]"
-                      : "border border-purple-500/40 bg-white/5 text-white hover:bg-white/10"
-                  }`}
+                  className="group mt-8 inline-flex items-center justify-between rounded-sm border border-white/15 bg-white/[0.03] px-5 py-4 font-mono-b text-[11px] font-bold uppercase tracking-[0.22em] text-white transition hover:border-[color:var(--color-tally)] hover:bg-[color:var(--color-tally)]"
                 >
-                  Assinar agora
+                  Assinar {plan.name}
+                  <ArrowUpRight className="size-4 transition group-hover:rotate-45" />
                 </Link>
-              </div>
+              </article>
             );
           })}
         </div>
@@ -378,110 +519,211 @@ function Pricing({ plans }: { plans: any[] }) {
   );
 }
 
-function Testimonials() {
+/* ---------------------------- Depoimentos ----------------------------- */
+
+function Depoimentos() {
   const items = [
-    { name: "Rafael M.", text: "Zero travamento. Assisto na TV, tablet e celular. Já ganhei um Fire Stick só indicando amigos!", rating: 5 },
-    { name: "Camila S.", text: "Suporte responde na hora pelo WhatsApp. Assinei o anual e já estou no nível Ouro.", rating: 5 },
-    { name: "João P.", text: "Melhor custo-benefício que já testei. Qualidade 4K de verdade em canais de esportes.", rating: 5 },
+    { name: "Rafael M.", role: "Assinante · 14 meses", text: "Assisto quatro jogos ao mesmo tempo no domingo. Não trava um segundo. Já resgatei um Fire Stick só indicando o pessoal do trabalho." },
+    { name: "Camila S.", role: "Assinante · 8 meses", text: "Suporte responde no WhatsApp em minutos. Assinei o anual, subi para Ouro no mês seguinte e nunca mais mexi." },
+    { name: "João P.", role: "Assinante · 22 meses", text: "Testei três serviços antes. 4K real só aqui, especialmente em esportes. Custo-benefício ridículo de bom." },
   ];
   return (
-    <section className="relative py-20 sm:py-28">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6">
-        <div className="mx-auto max-w-2xl text-center">
-          <span className="text-xs font-bold uppercase tracking-widest text-pink-400">Depoimentos</span>
-          <h2 className="mt-2 font-display text-3xl font-black tracking-tight text-white sm:text-4xl">
-            +12.000 assinantes satisfeitos
+    <section className="relative border-b border-white/[0.06] py-24 sm:py-32">
+      <div className="mx-auto max-w-[1400px] px-4 sm:px-8">
+        <header className="mb-14">
+          <span className="font-mono-b text-[10px] uppercase tracking-[0.24em] text-white/40">§ 05 — Assinantes</span>
+          <h2 className="mt-4 font-broadcast text-5xl leading-[0.9] text-white sm:text-6xl">
+            Quem já entrou <span className="text-[color:var(--color-tally)]">no ar</span>.
           </h2>
-        </div>
-        <div className="mt-12 grid gap-6 md:grid-cols-3">
-          {items.map((t) => (
-            <div key={t.name} className="rounded-3xl border border-purple-900/40 bg-white/[0.03] p-6 backdrop-blur">
-              <div className="flex gap-0.5 text-pink-400">
-                {Array.from({ length: t.rating }).map((_, i) => (
-                  <Star key={i} className="size-4 fill-current" />
-                ))}
+        </header>
+        <div className="grid gap-px overflow-hidden rounded-sm border border-white/[0.08] bg-white/[0.06] md:grid-cols-3">
+          {items.map((t, i) => (
+            <blockquote key={t.name} className="flex flex-col justify-between bg-[color:var(--color-vinyl)] p-8">
+              <div className="flex items-center gap-2">
+                <span className="font-mono-b text-[11px] tracking-[0.2em] text-white/40">
+                  TX.{String(i + 1).padStart(2, "0")}
+                </span>
+                <TallyDot label="VERIFICADO" />
               </div>
-              <p className="mt-3 text-sm text-slate-200">"{t.text}"</p>
-              <p className="mt-4 text-xs font-bold uppercase tracking-widest text-slate-400">— {t.name}</p>
-            </div>
+              <p className="mt-8 font-broadcast text-2xl leading-tight text-white">
+                &ldquo;{t.text}&rdquo;
+              </p>
+              <footer className="mt-8 border-t border-white/10 pt-4">
+                <p className="font-body-b text-sm font-semibold text-white">{t.name}</p>
+                <p className="font-mono-b text-[10px] uppercase tracking-[0.2em] text-white/40">{t.role}</p>
+              </footer>
+            </blockquote>
           ))}
         </div>
       </div>
     </section>
   );
 }
+
+/* ---------------------------------- FAQ --------------------------------- */
 
 function FAQ() {
   const [open, setOpen] = useState<number | null>(0);
   const items = [
-    { q: "Como funciona a ativação?", a: "Após confirmar o pagamento, sua assinatura é ativada instantaneamente. Você recebe o acesso por e-mail e WhatsApp." },
-    { q: "Em quantos aparelhos posso assistir?", a: "Depende do plano. Do plano Básico (1 tela) ao Premium (4 telas simultâneas em 4K)." },
-    { q: "Como funcionam os pontos VIP?", a: "Você ganha 100 pontos de boas-vindas, +5 por ,+50 por indicação confirmada, e mais por conquistas. Troque no catálogo por meses grátis ou prêmios físicos." },
+    { q: "Como funciona a ativação?", a: "Confirmação do pagamento e o sinal entra no ar em minutos. Você recebe o acesso por e-mail e WhatsApp." },
+    { q: "Em quantos aparelhos posso assistir?", a: "Depende do plano. Vai do Básico (1 tela) ao Premium (4 telas simultâneas em 4K)." },
+    { q: "Como funcionam os pontos VIP?", a: "Você recebe 100 pontos ao criar conta e +50 por indicação confirmada. Troque por meses grátis ou prêmios físicos no catálogo." },
     { q: "Posso cancelar quando quiser?", a: "Sim. Sem multa, sem burocracia. Cancele direto pelo painel do assinante." },
-    { q: "Aceitam PIX?", a: "Sim, aceitamos PIX (aprovação instantânea), cartão de crédito e Mercado Pago." },
+    { q: "Aceitam PIX?", a: "Sim: PIX (aprovação imediata), cartão de crédito e Mercado Pago." },
   ];
   return (
-    <section id="faq" className="relative border-t border-purple-900/40 py-20 sm:py-28">
-      <div className="mx-auto max-w-3xl px-4 sm:px-6">
-        <div className="text-center">
-          <span className="text-xs font-bold uppercase tracking-widest text-pink-400">Perguntas frequentes</span>
-          <h2 className="mt-2 font-display text-3xl font-black tracking-tight text-white sm:text-4xl">FAQ</h2>
-        </div>
-        <div className="mt-10 space-y-3">
-          {items.map((it, i) => (
-            <div key={it.q} className="overflow-hidden rounded-2xl border border-purple-900/50 bg-slate-900/40 backdrop-blur">
-              <button
-                onClick={() => setOpen(open === i ? null : i)}
-                className="flex w-full items-center justify-between gap-3 px-5 py-4 text-left"
-              >
-                <span className="font-semibold text-white">{it.q}</span>
-                <ChevronDown className={`size-4 shrink-0 text-pink-400 transition ${open === i ? "rotate-180" : ""}`} />
-              </button>
-              {open === i && <p className="px-5 pb-5 text-sm text-slate-300">{it.a}</p>}
-            </div>
-          ))}
+    <section id="faq" className="relative border-b border-white/[0.06] py-24 sm:py-32">
+      <div className="mx-auto grid max-w-[1400px] grid-cols-12 gap-8 px-4 sm:px-8">
+        <header className="col-span-12 lg:col-span-4">
+          <span className="font-mono-b text-[10px] uppercase tracking-[0.24em] text-white/40">§ 06 — Suporte</span>
+          <h2 className="mt-4 font-broadcast text-5xl leading-[0.9] text-white sm:text-6xl">
+            Antes de entrar,<br />o essencial.
+          </h2>
+        </header>
+        <ul className="col-span-12 lg:col-span-8">
+          {items.map((it, i) => {
+            const isOpen = open === i;
+            return (
+              <li key={it.q} className="border-t border-white/10 last:border-b">
+                <button
+                  onClick={() => setOpen(isOpen ? null : i)}
+                  className="flex w-full items-center justify-between gap-6 py-6 text-left"
+                >
+                  <span className="flex items-baseline gap-4">
+                    <span className="font-mono-b text-[11px] tracking-[0.18em] text-white/30">
+                      Q.{String(i + 1).padStart(2, "0")}
+                    </span>
+                    <span className="font-broadcast text-2xl leading-tight text-white sm:text-3xl">
+                      {it.q}
+                    </span>
+                  </span>
+                  <span
+                    className={`grid size-8 shrink-0 place-items-center rounded-sm border border-white/10 text-white/60 transition ${
+                      isOpen ? "rotate-45 border-[color:var(--color-tally)] text-[color:var(--color-tally)]" : ""
+                    }`}
+                  >
+                    <Plus className="size-4" />
+                  </span>
+                </button>
+                {isOpen && (
+                  <p className="max-w-2xl pb-6 pl-14 font-body-b text-[15px] leading-relaxed text-white/70">
+                    {it.a}
+                  </p>
+                )}
+              </li>
+            );
+          })}
+        </ul>
+      </div>
+    </section>
+  );
+}
+
+/* ------------------------------ Final CTA ----------------------------- */
+
+function FinalCTA() {
+  return (
+    <section className="relative overflow-hidden border-b border-white/[0.06] py-24 sm:py-32">
+      <div aria-hidden className="absolute inset-0 bg-[radial-gradient(700px_400px_at_50%_50%,rgba(255,45,85,0.18),transparent_60%)]" />
+      <div className="relative mx-auto max-w-[1400px] px-4 text-center sm:px-8">
+        <TimecodeBar ch="CH.999" label="ENCERRAMENTO" />
+        <h2 className="mx-auto mt-8 max-w-4xl font-broadcast text-6xl leading-[0.88] text-white sm:text-7xl lg:text-[112px]">
+          O sinal está aberto.<br />
+          <span className="text-[color:var(--color-tally)]">Entra?</span>
+        </h2>
+        <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
+          <Link
+            to="/auth"
+            className="group inline-flex items-center gap-3 rounded-sm bg-[color:var(--color-tally)] px-8 py-4 font-mono-b text-xs font-bold uppercase tracking-[0.22em] text-white transition hover:bg-white hover:text-black"
+          >
+            Criar conta agora <ArrowUpRight className="size-4 transition group-hover:rotate-45" />
+          </Link>
+          <a
+            href="#planos"
+            className="inline-flex items-center gap-3 rounded-sm border border-white/15 bg-white/[0.03] px-8 py-4 font-mono-b text-xs font-bold uppercase tracking-[0.22em] text-white/85 hover:border-white/40"
+          >
+            Comparar planos
+          </a>
         </div>
       </div>
     </section>
   );
 }
 
+/* -------------------------------- Footer -------------------------------- */
+
 function Footer() {
   return (
-    <footer className="border-t border-purple-900/40 bg-slate-950 py-12">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6">
-        <div className="flex flex-col items-center justify-between gap-6 text-center sm:flex-row sm:text-left">
-          <div className="flex items-center gap-2">
-            <div className="grid size-8 place-items-center rounded-lg bg-gradient-to-br from-purple-600 to-pink-500 font-black text-white">K</div>
-            <span className="font-display font-black text-white">KMKZ Streaming</span>
+    <footer className="bg-[color:var(--color-vinyl)] py-14">
+      <div className="mx-auto grid max-w-[1400px] grid-cols-12 gap-6 px-4 sm:px-8">
+        <div className="col-span-12 lg:col-span-4">
+          <div className="flex items-center gap-3">
+            <span className="grid size-7 place-items-center rounded-sm bg-[color:var(--color-tally)] font-broadcast text-base leading-none text-white">
+              K
+            </span>
+            <span className="font-broadcast text-xl leading-none text-white">
+              KMKZ<span className="text-white/40">·</span>STREAMING
+            </span>
           </div>
-          <p className="text-xs text-slate-500">© {new Date().getFullYear()} KMKZ Streaming. Todos os direitos reservados.</p>
-          <div className="flex gap-5 text-xs text-slate-400">
-            <a href="#faq" className="hover:text-pink-400">FAQ</a>
-            <Link to="/auth" className="hover:text-pink-400">Entrar</Link>
-          </div>
+          <p className="mt-5 max-w-xs font-body-b text-[13px] leading-relaxed text-white/50">
+            Master control de streaming premium. Transmitindo desde 2022, sem cortes.
+          </p>
+        </div>
+        <div className="col-span-6 lg:col-span-2">
+          <p className="font-mono-b text-[10px] uppercase tracking-[0.22em] text-white/40">Sinal</p>
+          <ul className="mt-4 space-y-2 font-body-b text-[13px] text-white/70">
+            <li><a href="#grade" className="hover:text-white">A grade</a></li>
+            <li><a href="#planos" className="hover:text-white">Planos</a></li>
+            <li><a href="#recompensas" className="hover:text-white">Recompensas</a></li>
+          </ul>
+        </div>
+        <div className="col-span-6 lg:col-span-2">
+          <p className="font-mono-b text-[10px] uppercase tracking-[0.22em] text-white/40">Conta</p>
+          <ul className="mt-4 space-y-2 font-body-b text-[13px] text-white/70">
+            <li><Link to="/auth" className="hover:text-white">Entrar</Link></li>
+            <li><Link to="/auth" className="hover:text-white">Criar conta</Link></li>
+            <li><a href="#faq" className="hover:text-white">Suporte</a></li>
+          </ul>
+        </div>
+        <div className="col-span-12 lg:col-span-4">
+          <p className="font-mono-b text-[10px] uppercase tracking-[0.22em] text-white/40">Colofão</p>
+          <p className="mt-4 font-body-b text-[13px] leading-relaxed text-white/50">
+            Composto em Bebas Neue e Inter Tight. Tally light #FF2D55. Transmissão 25 fps.
+          </p>
+        </div>
+        <div className="col-span-12 mt-8 flex flex-col items-start justify-between gap-3 border-t border-white/10 pt-6 sm:flex-row sm:items-center">
+          <TallyDot label="ON AIR · 24/7" />
+          <p className="font-mono-b text-[10px] uppercase tracking-[0.22em] text-white/40">
+            © {new Date().getFullYear()} KMKZ Streaming · Todos os direitos reservados
+          </p>
         </div>
       </div>
     </footer>
   );
 }
 
+/* --------------------------------- Page --------------------------------- */
+
 function LandingPage() {
   const { data: plans } = useSuspenseQuery(plansQO);
   const { data: rewards } = useSuspenseQuery(rewardsQO);
   return (
-    <div className="min-h-dvh bg-slate-950 text-white">
-      <a href="#main" className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-lg focus:bg-pink-500 focus:px-4 focus:py-2 focus:text-sm focus:font-bold focus:text-white">
+    <div className="min-h-dvh bg-[color:var(--color-vinyl)] text-white font-body-b">
+      <a
+        href="#main"
+        className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-sm focus:bg-[color:var(--color-tally)] focus:px-4 focus:py-2 focus:font-mono-b focus:text-xs focus:font-bold focus:uppercase focus:tracking-[0.2em] focus:text-white"
+      >
         Pular para o conteúdo
       </a>
-      <DarkNav />
+      <Nav />
       <main id="main">
         <Hero />
-        <Features />
-        <Gamification rewards={rewards} />
-        <Pricing plans={plans} />
-        <Testimonials />
+        <Grade />
+        <Recompensas rewards={rewards} />
+        <Planos plans={plans} />
+        <Depoimentos />
         <FAQ />
+        <FinalCTA />
       </main>
       <Footer />
     </div>
