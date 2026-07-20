@@ -41,7 +41,7 @@ export const adminUpdatePlan = createServerFn({ method: "POST" })
     price_cents?: number;
     referral_points?: number;
     purchase_points?: number;
-    points_multiplier?: number;
+    
     screen_limit?: number;
     quality?: string;
     is_popular?: boolean;

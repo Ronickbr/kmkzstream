@@ -132,12 +132,6 @@ function PlanosPage() {
                   <Sparkles className="mt-0.5 size-4 shrink-0" aria-hidden="true" />
                   <span>Ganhe {(p as any).purchase_points ?? 0} pts ao assinar</span>
                 </li>
-                {Number((p as any).points_multiplier ?? 1) > 1 && (
-                  <li className="flex items-start gap-2 rounded-xl bg-primary/10 px-2 py-1.5 font-bold text-primary">
-                    <Zap className="mt-0.5 size-4 shrink-0" aria-hidden="true" />
-                    <span>Multiplicador {Number((p as any).points_multiplier).toFixed(2).replace(/\.00$/, "")}× em indicações</span>
-                  </li>
-                )}
               </ul>
 
               {isCurrent ? (

@@ -99,7 +99,6 @@ export type Database = {
           is_popular: boolean
           name: string
           period: Database["public"]["Enums"]["plan_period"]
-          points_multiplier: number
           price_cents: number
           purchase_points: number
           quality: string
@@ -117,7 +116,6 @@ export type Database = {
           is_popular?: boolean
           name: string
           period: Database["public"]["Enums"]["plan_period"]
-          points_multiplier?: number
           price_cents: number
           purchase_points?: number
           quality?: string
@@ -135,7 +133,6 @@ export type Database = {
           is_popular?: boolean
           name?: string
           period?: Database["public"]["Enums"]["plan_period"]
-          points_multiplier?: number
           price_cents?: number
           purchase_points?: number
           quality?: string
@@ -520,7 +517,6 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      active_plan_multiplier: { Args: { _user_id: string }; Returns: number }
       admin_analytics: { Args: never; Returns: Json }
       admin_stats: { Args: never; Returns: Json }
       check_and_award_achievements: { Args: never; Returns: Json }
