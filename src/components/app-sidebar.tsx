@@ -68,7 +68,7 @@ export function AppSidebar({ isAdmin }: { isAdmin: boolean }) {
           </span>
           {!collapsed && (
             <span className="font-display text-lg font-black tracking-tight text-sidebar-foreground">
-              KMKZ <span className="bg-gradient-brand bg-clip-text text-transparent">IPTV</span>
+              KMKZ <span className="bg-gradient-brand bg-clip-text text-transparent">Streaming</span>
             </span>
           )}
         </Link>
