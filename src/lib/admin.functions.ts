@@ -35,7 +35,17 @@ export const adminListPlans = createServerFn({ method: "GET" })
 
 export const adminUpdatePlan = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .validator((d: { id: string; name?: string; price_cents?: number; referral_points?: number; active?: boolean }) => d)
+  .validator((d: {
+    id: string;
+    name?: string;
+    price_cents?: number;
+    referral_points?: number;
+    purchase_points?: number;
+    screen_limit?: number;
+    quality?: string;
+    is_popular?: boolean;
+    active?: boolean;
+  }) => d)
   .handler(async ({ data, context }) => {
     const { supabase, userId } = context;
     await assertAdmin(supabase, userId);
@@ -57,7 +67,18 @@ export const adminListRewards = createServerFn({ method: "GET" })
 
 export const adminUpsertReward = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .validator((d: { id?: string; name: string; description?: string; image_url?: string; points_cost: number; stock: number; active: boolean; sort_order?: number }) => d)
+  .validator((d: {
+    id?: string;
+    name: string;
+    description?: string;
+    image_url?: string;
+    points_cost: number;
+    stock: number;
+    active: boolean;
+    sort_order?: number;
+    kind?: "subscription" | "device";
+    subscription_months?: number | null;
+  }) => d)
   .handler(async ({ data, context }) => {
     const { supabase, userId } = context;
     await assertAdmin(supabase, userId);
@@ -71,6 +92,7 @@ export const adminUpsertReward = createServerFn({ method: "POST" })
     }
     return { ok: true };
   });
+
 
 export const adminDeleteReward = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])

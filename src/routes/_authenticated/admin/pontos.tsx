@@ -160,23 +160,68 @@ function RuleCard({
   onCancel?: () => void;
 }) {
   return (
-    <div className="card-surface p-5">
-      <div className="grid gap-3 md:grid-cols-[minmax(0,1.5fr)_minmax(0,2fr)_100px_120px_100px_auto] md:items-end">
-        <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground">
-          ID
-          <div className="mt-1 flex items-center gap-1">
+    <div className={`card-surface p-5 ${draft.active ? "" : "opacity-70"}`}>
+      <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
+        <div className="flex items-center gap-2">
+          <span className="rounded-md bg-brand/15 px-2 py-0.5 font-mono text-xs font-bold text-brand">
+            {draft.id || "novo"}
+          </span>
+          {reserved && (
+            <span className="inline-flex items-center gap-1 rounded-full bg-muted px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+              <Lock className="size-3" /> Reservada
+            </span>
+          )}
+          {!draft.active && (
+            <span className="rounded-full bg-destructive/15 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-destructive">
+              Inativa
+            </span>
+          )}
+        </div>
+        <div className="flex items-center gap-2">
+          {onCancel && (
+            <button
+              type="button"
+              onClick={onCancel}
+              className="rounded-lg border border-border/60 px-3 py-1.5 text-xs font-bold text-muted-foreground hover:text-foreground"
+            >
+              Cancelar
+            </button>
+          )}
+          <button
+            type="button"
+            onClick={onSave}
+            disabled={!isNew && !dirty}
+            className="inline-flex items-center gap-1.5 rounded-lg bg-primary px-3 py-1.5 text-xs font-bold text-primary-foreground hover:opacity-90 disabled:opacity-40"
+          >
+            <Save className="size-3.5" aria-hidden="true" /> Salvar
+          </button>
+          {onDelete && (
+            <button
+              type="button"
+              onClick={onDelete}
+              aria-label="Remover regra"
+              className="rounded-lg border border-border/60 p-1.5 text-muted-foreground hover:border-destructive/60 hover:text-destructive"
+            >
+              <Trash2 className="size-4" aria-hidden="true" />
+            </button>
+          )}
+        </div>
+      </div>
+
+      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        {isNew && (
+          <label className="text-[11px] font-bold uppercase tracking-widest text-muted-foreground lg:col-span-2">
+            ID
             <input
               value={draft.id}
-              disabled={!isNew}
-              onChange={(e) => onChange({ id: e.target.value.toLowerCase() })}
+              onChange={(e) => onChange({ id: e.target.value.toLowerCase().replace(/\s+/g, "_") })}
               placeholder="ex.: signup_bonus"
-              className="w-full min-w-0 rounded-lg border border-border/60 bg-background/60 px-3 py-2 font-mono text-sm text-foreground normal-case disabled:opacity-70"
+              className="mt-1 w-full min-w-0 rounded-lg border border-border/60 bg-background/60 px-3 py-2 font-mono text-sm text-foreground"
             />
-            {reserved && <Lock className="size-3.5 shrink-0 text-muted-foreground" aria-label="Reservado" />}
-          </div>
-        </label>
+          </label>
+        )}
 
-        <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground">
+        <label className="text-[11px] font-bold uppercase tracking-widest text-muted-foreground lg:col-span-2">
           Nome
           <input
             value={draft.name}
@@ -185,7 +230,7 @@ function RuleCard({
           />
         </label>
 
-        <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground">
+        <label className="text-[11px] font-bold uppercase tracking-widest text-muted-foreground">
           Pontos
           <input
             type="number"
@@ -196,7 +241,7 @@ function RuleCard({
           />
         </label>
 
-        <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground">
+        <label className="text-[11px] font-bold uppercase tracking-widest text-muted-foreground">
           Limite/dia
           <input
             type="number"
@@ -210,46 +255,17 @@ function RuleCard({
           />
         </label>
 
-        <label className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-muted-foreground">
+        <label className="inline-flex items-center gap-2 text-xs font-bold text-foreground">
           <input
             type="checkbox"
             checked={draft.active}
             onChange={(e) => onChange({ active: e.target.checked })}
             className="size-4 accent-primary"
           />
-          Ativa
+          Regra ativa
         </label>
-
-        <div className="flex items-center justify-end gap-2">
-          {onCancel && (
-            <button
-              type="button"
-              onClick={onCancel}
-              className="rounded-lg border border-border/60 px-3 py-2 text-xs font-bold text-muted-foreground hover:text-foreground"
-            >
-              Cancelar
-            </button>
-          )}
-          <button
-            type="button"
-            onClick={onSave}
-            disabled={!isNew && !dirty}
-            className="inline-flex items-center gap-1.5 rounded-lg bg-primary px-3 py-2 text-xs font-bold text-primary-foreground hover:opacity-90 disabled:opacity-40"
-          >
-            <Save className="size-3.5" aria-hidden="true" /> Salvar
-          </button>
-          {onDelete && (
-            <button
-              type="button"
-              onClick={onDelete}
-              aria-label="Remover regra"
-              className="rounded-lg border border-border/60 p-2 text-muted-foreground hover:border-destructive/60 hover:text-destructive"
-            >
-              <Trash2 className="size-4" aria-hidden="true" />
-            </button>
-          )}
-        </div>
       </div>
     </div>
   );
 }
+
