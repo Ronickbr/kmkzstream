@@ -644,7 +644,7 @@ function Footer() {
             </span>
           </div>
           <p className="mt-5 max-w-xs font-body-b text-[13px] leading-relaxed text-white/50">
-            Master control de streaming premium. Transmitindo desde 2022, sem cortes.
+            Master control de streaming premium. Transmitindo desde 2020, sem cortes.
           </p>
         </div>
         <div className="col-span-6 lg:col-span-2">
