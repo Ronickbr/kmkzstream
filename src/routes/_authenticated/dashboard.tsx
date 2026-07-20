@@ -212,7 +212,7 @@ function DashboardPage() {
                 {data.referrals.slice(0, 5).map((r) => (
                   <li key={r.id} className="flex items-center justify-between py-3 text-sm">
                     <span className="truncate font-medium">
-                      {(r.referred as any)?.display_name ?? "Usuário"}
+                      {r.referred_display_name ?? "Usuário"}
                     </span>
                     <div className="flex shrink-0 items-center gap-3">
                       {r.status === "confirmed" ? (
