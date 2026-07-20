@@ -14,7 +14,7 @@ const searchSchema = z.object({
 
 export const Route = createFileRoute("/auth")({
   validateSearch: searchSchema,
-  head: () => ({ meta: [{ title: "Entrar — Nexus" }, { name: "robots", content: "noindex" }] }),
+  head: () => ({ meta: [{ title: "Entrar — KMKZ IPTV" }, { name: "robots", content: "noindex" }] }),
   component: AuthPage,
 });
 
@@ -99,9 +99,9 @@ function AuthPage() {
     <div className="flex min-h-dvh items-center justify-center bg-surface-50 px-4 py-12">
       <a href="#auth-main" className="skip-link">Pular para o conteúdo</a>
       <main id="auth-main" className="w-full max-w-md">
-        <Link to="/" aria-label="Nexus — página inicial" className="mb-8 flex items-center justify-center gap-2">
+        <Link to="/" aria-label="KMKZ IPTV — página inicial" className="mb-8 flex items-center justify-center gap-2">
           <span aria-hidden="true" className="size-8 rounded-lg bg-brand" />
-          <span className="font-display text-xl font-bold tracking-tight">NEXUS</span>
+          <span className="font-display text-xl font-bold tracking-tight">KMKZ IPTV</span>
         </Link>
         <div className="rounded-3xl border border-surface-200 bg-card p-5 shadow-xl sm:p-8">
           <h1 className="font-display text-2xl font-bold">
