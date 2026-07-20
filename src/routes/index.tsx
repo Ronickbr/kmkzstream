@@ -633,7 +633,7 @@ function FinalCTA() {
 function Footer() {
   return (
     <footer className="bg-[color:var(--color-vinyl)] py-14">
-      <div className="mx-auto grid max-w-[1400px] grid-cols-12 gap-6 px-4 sm:px-8">
+      <div className="mx-auto grid max-w-[1400px] grid-cols-12 gap-8 px-4 sm:px-8">
         <div className="col-span-12 lg:col-span-4">
           <div className="flex items-center gap-3">
             <span className="grid size-7 place-items-center rounded-sm bg-[color:var(--color-tally)] font-broadcast text-base leading-none text-white">
@@ -646,34 +646,79 @@ function Footer() {
           <p className="mt-5 max-w-xs font-body-b text-[13px] leading-relaxed text-white/50">
             Master control de streaming premium. Transmitindo desde 2020, sem cortes.
           </p>
+          <div className="mt-5 flex items-center gap-3">
+            <TallyDot label="ON AIR · 24/7" />
+          </div>
         </div>
+
         <div className="col-span-6 lg:col-span-2">
           <p className="font-mono-b text-[10px] uppercase tracking-[0.22em] text-white/40">Sinal</p>
           <ul className="mt-4 space-y-2 font-body-b text-[13px] text-white/70">
             <li><a href="#grade" className="hover:text-white">A grade</a></li>
             <li><a href="#planos" className="hover:text-white">Planos</a></li>
             <li><a href="#recompensas" className="hover:text-white">Recompensas</a></li>
+            <li><a href="#faq" className="hover:text-white">Perguntas frequentes</a></li>
           </ul>
         </div>
+
         <div className="col-span-6 lg:col-span-2">
           <p className="font-mono-b text-[10px] uppercase tracking-[0.22em] text-white/40">Conta</p>
           <ul className="mt-4 space-y-2 font-body-b text-[13px] text-white/70">
             <li><Link to="/auth" className="hover:text-white">Entrar</Link></li>
-            <li><Link to="/auth" className="hover:text-white">Criar conta</Link></li>
-            <li><a href="#faq" className="hover:text-white">Suporte</a></li>
+            <li><Link to="/auth" search={{ mode: "signup" }} className="hover:text-white">Criar conta</Link></li>
+            <li>
+              <a href="mailto:suporte@kmkzstream.lovable.app" className="hover:text-white">
+                Suporte
+              </a>
+            </li>
           </ul>
         </div>
+
         <div className="col-span-12 lg:col-span-4">
-          <p className="font-mono-b text-[10px] uppercase tracking-[0.22em] text-white/40">Colofão</p>
-          <p className="mt-4 font-body-b text-[13px] leading-relaxed text-white/50">
-            Composto em Bebas Neue e Inter Tight. Tally light #FF2D55. Transmissão 25 fps.
+          <p className="font-mono-b text-[10px] uppercase tracking-[0.22em] text-white/40">Legal</p>
+          <ul className="mt-4 space-y-2 font-body-b text-[13px] text-white/70">
+            <li>
+              <Link to="/termos" className="hover:text-white">
+                Termos e Condições de Uso
+              </Link>
+            </li>
+            <li>
+              <Link to="/privacidade" className="hover:text-white">
+                Política de Privacidade (LGPD)
+              </Link>
+            </li>
+            <li>
+              <a href="mailto:privacidade@kmkzstream.lovable.app" className="hover:text-white">
+                Encarregado (DPO)
+              </a>
+            </li>
+          </ul>
+          <p className="mt-4 font-body-b text-[12px] leading-relaxed text-white/40">
+            KMKZ atua como intermediadora tecnológica. O catálogo pode variar
+            conforme decisões de licenciantes e titulares de direitos.
           </p>
         </div>
-        <div className="col-span-12 mt-8 flex flex-col items-start justify-between gap-3 border-t border-white/10 pt-6 sm:flex-row sm:items-center">
-          <TallyDot label="ON AIR · 24/7" />
-          <p className="font-mono-b text-[10px] uppercase tracking-[0.22em] text-white/40">
-            © {new Date().getFullYear()} KMKZ Streaming · Todos os direitos reservados
+
+        <div className="col-span-12 mt-4 border-t border-white/10 pt-6">
+          <p className="font-body-b text-[12px] leading-relaxed text-white/40">
+            <strong className="text-white/60">Aviso legal:</strong> os planos
+            comercializados dão acesso a conteúdo digital licenciado e/ou
+            disponibilizado por terceiros. É vedada a redistribuição,
+            regravação, revenda ou uso comercial não autorizado. Marcas
+            citadas (TV Stick, Mi TV Stick e outras) pertencem aos seus
+            respectivos titulares e são mencionadas apenas para fins
+            descritivos de prêmios do programa de fidelidade, sem qualquer
+            vínculo, patrocínio ou endosso.
           </p>
+          <div className="mt-6 flex flex-col items-start justify-between gap-3 sm:flex-row sm:items-center">
+            <p className="font-mono-b text-[10px] uppercase tracking-[0.22em] text-white/40">
+              © {new Date().getFullYear()} KMKZ Streaming · Todos os direitos reservados
+            </p>
+            <div className="flex gap-4 font-mono-b text-[10px] uppercase tracking-[0.22em] text-white/40">
+              <Link to="/termos" className="hover:text-white">Termos</Link>
+              <Link to="/privacidade" className="hover:text-white">Privacidade</Link>
+            </div>
+          </div>
         </div>
       </div>
     </footer>
