@@ -160,11 +160,23 @@ export const adminListRedemptions = createServerFn({ method: "GET" })
     await assertAdmin(supabase, userId);
     const { data, error } = await supabase
       .from("reward_redemptions")
-      .select("id, status, points_spent, created_at, user:profiles(display_name), reward:rewards(name)")
+      .select("id, user_id, status, points_spent, created_at, reward:rewards(name)")
       .order("created_at", { ascending: false });
     if (error) throw new Error(error.message);
-    return data ?? [];
+    const rows = data ?? [];
+    const userIds = Array.from(new Set(rows.map((r: any) => r.user_id).filter(Boolean)));
+    let profileMap = new Map<string, { display_name: string | null }>();
+    if (userIds.length) {
+      const { data: profiles, error: pErr } = await supabase
+        .from("profiles")
+        .select("id, display_name")
+        .in("id", userIds);
+      if (pErr) throw new Error(pErr.message);
+      profileMap = new Map((profiles ?? []).map((p: any) => [p.id, { display_name: p.display_name }]));
+    }
+    return rows.map((r: any) => ({ ...r, user: profileMap.get(r.user_id) ?? null }));
   });
+
 
 export const adminUpdateRedemption = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
