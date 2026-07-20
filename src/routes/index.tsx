@@ -417,54 +417,31 @@ function Recompensas({ rewards }: { rewards: any[] }) {
 /* -------------------------------- Planos ------------------------------- */
 
 function Planos({ plans }: { plans: any[] }) {
-  const [billing, setBilling] = useState<"curto" | "longo">("curto");
-  const filtered = plans.filter((p) =>
-    billing === "longo"
-      ? p.period === "annual" || p.period === "semiannual"
-      : p.period === "monthly" || p.period === "quarterly",
-  );
-
   return (
     <section id="planos" className="relative border-b border-white/[0.06] py-24 sm:py-32">
       <div className="mx-auto max-w-[1400px] px-4 sm:px-8">
         <div className="grid grid-cols-12 items-end gap-6">
-          <header className="col-span-12 lg:col-span-7">
+          <header className="col-span-12 lg:col-span-8">
             <span className="font-mono-b text-[10px] uppercase tracking-[0.24em] text-white/40">§ 04 — Planos</span>
             <h2 className="mt-4 font-broadcast text-5xl leading-[0.9] text-white sm:text-6xl lg:text-7xl">
               Escolha a duração<br />da sua <span className="text-[color:var(--color-tally)]">transmissão</span>.
             </h2>
           </header>
-          <div className="col-span-12 lg:col-span-5 lg:text-right">
-            <div className="inline-flex rounded-sm border border-white/10 bg-white/[0.03] p-1">
-              {(["curto", "longo"] as const).map((b) => (
-                <button
-                  key={b}
-                  onClick={() => setBilling(b)}
-                  className={`rounded-sm px-4 py-2 font-mono-b text-[11px] font-bold uppercase tracking-[0.2em] transition ${
-                    billing === b
-                      ? "bg-[color:var(--color-tally)] text-white"
-                      : "text-white/50 hover:text-white"
-                  }`}
-                >
-                  {b === "curto" ? "Curto prazo" : "Longo prazo"}
-                </button>
-              ))}
-            </div>
-            <p className="mt-3 font-mono-b text-[10px] uppercase tracking-[0.2em] text-white/40">
+          <div className="col-span-12 lg:col-span-4 lg:text-right">
+            <p className="font-mono-b text-[10px] uppercase tracking-[0.2em] text-white/40">
               Cancele quando quiser · Ativação em minutos
             </p>
           </div>
         </div>
 
-        <div className="mt-14 grid grid-cols-12 gap-px overflow-hidden rounded-sm border border-white/[0.08] bg-white/[0.06]">
-          {filtered.map((plan, i) => {
+        <div className="mt-14 grid gap-px overflow-hidden rounded-sm border border-white/[0.08] bg-white/[0.06] sm:grid-cols-2 xl:grid-cols-4">
+          {plans.map((plan, i) => {
             const monthly = plan.price_cents / Math.max(1, Math.round(plan.duration_days / 30));
+            const isMonthly = plan.period === "monthly";
             return (
               <article
                 key={plan.id}
-                className={`col-span-12 flex flex-col bg-[color:var(--color-vinyl)] p-8 md:col-span-6 lg:col-span-4 ${
-                  plan.is_popular ? "relative" : ""
-                }`}
+                className={`relative flex h-full flex-col bg-[color:var(--color-vinyl)] p-8`}
               >
                 {plan.is_popular && (
                   <span className="absolute right-4 top-4 rounded-sm bg-[color:var(--color-tally)] px-2 py-1 font-mono-b text-[10px] font-bold uppercase tracking-[0.2em] text-white">
@@ -484,13 +461,13 @@ function Planos({ plans }: { plans: any[] }) {
 
                 <div className="mt-8 border-t border-white/10 pt-6">
                   <div className="flex items-baseline gap-2">
-                    <span className="font-broadcast text-6xl leading-none text-white sm:text-7xl">
+                    <span className="font-broadcast text-5xl leading-none text-white sm:text-6xl">
                       {formatCurrencyBRL(plan.price_cents).replace("R$", "").trim()}
                     </span>
                     <span className="font-mono-b text-[11px] uppercase tracking-[0.2em] text-white/40">BRL</span>
                   </div>
                   <p className="mt-2 font-mono-b text-[11px] uppercase tracking-[0.18em] text-white/40">
-                    {formatCurrencyBRL(monthly)}/mês equivalente
+                    {isMonthly ? "\u00A0" : `${formatCurrencyBRL(monthly)}/mês equivalente`}
                   </p>
                 </div>
 
@@ -518,6 +495,7 @@ function Planos({ plans }: { plans: any[] }) {
     </section>
   );
 }
+
 
 /* ---------------------------- Depoimentos ----------------------------- */
 
