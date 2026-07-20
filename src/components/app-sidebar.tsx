@@ -74,26 +74,29 @@ export function AppSidebar({ isAdmin }: { isAdmin: boolean }) {
         </Link>
       </SidebarHeader>
       <SidebarContent>
-        <SidebarGroup>
-          <SidebarGroupLabel>Conta</SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              {userItems.map((it) => {
-                const active = isActive(it.to);
-                return (
-                  <SidebarMenuItem key={it.to}>
-                    <SidebarMenuButton asChild isActive={active} tooltip={it.label}>
-                      <Link to={it.to} aria-current={active ? "page" : undefined}>
-                        <it.icon aria-hidden="true" />
-                        <span>{it.label}</span>
-                      </Link>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                );
-              })}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
+        {!isAdmin && (
+          <SidebarGroup>
+            <SidebarGroupLabel>Conta</SidebarGroupLabel>
+            <SidebarGroupContent>
+              <SidebarMenu>
+                {userItems.map((it) => {
+                  const active = isActive(it.to);
+                  return (
+                    <SidebarMenuItem key={it.to}>
+                      <SidebarMenuButton asChild isActive={active} tooltip={it.label}>
+                        <Link to={it.to} aria-current={active ? "page" : undefined}>
+                          <it.icon aria-hidden="true" />
+                          <span>{it.label}</span>
+                        </Link>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  );
+                })}
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
+        )}
+
 
         {isAdmin && (
           <SidebarGroup>
