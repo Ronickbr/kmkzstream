@@ -18,7 +18,7 @@ import {
 } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/suporte")({
-  head: () => ({ meta: [{ title: "Suporte — KMKZ IPTV" }] }),
+  head: () => ({ meta: [{ title: "Suporte — KMKZ Streaming" }] }),
   component: SupportPage,
 });
 

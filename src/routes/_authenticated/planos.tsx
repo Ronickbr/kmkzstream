@@ -9,7 +9,7 @@ const plansQO = queryOptions({ queryKey: ["public", "plans"], queryFn: () => lis
 const overviewQO = queryOptions({ queryKey: ["me", "overview"], queryFn: () => getMyOverview() });
 
 export const Route = createFileRoute("/_authenticated/planos")({
-  head: () => ({ meta: [{ title: "Planos — KMKZ IPTV" }] }),
+  head: () => ({ meta: [{ title: "Planos — KMKZ Streaming" }] }),
   loader: ({ context }) => Promise.all([
     context.queryClient.ensureQueryData(plansQO),
     context.queryClient.ensureQueryData(overviewQO),

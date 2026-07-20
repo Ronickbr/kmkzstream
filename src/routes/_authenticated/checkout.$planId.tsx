@@ -449,7 +449,7 @@ function PixPreview({ plan }: { plan: any }) {
   const [seconds, setSeconds] = useState(15 * 60);
   const code = useMemo(
     () =>
-      `00020126580014BR.GOV.BCB.PIX0136kmkz-${plan.id.slice(0, 8)}-${Date.now().toString(36)}5204000053039865802BR5910KMKZ IPTV6009SAO PAULO62070503***6304ABCD`,
+      `00020126580014BR.GOV.BCB.PIX0136kmkz-${plan.id.slice(0, 8)}-${Date.now().toString(36)}5204000053039865802BR5910KMKZ Streaming6009SAO PAULO62070503***6304ABCD`,
     [plan.id],
   );
 

@@ -19,7 +19,7 @@ type Step = {
 const STEPS: Step[] = [
   {
     icon: Rocket,
-    title: "Bem-vindo ao KMKZ IPTV! 🎉",
+    title: "Bem-vindo ao KMKZ Streaming! 🎉",
     description:
       "Sua jornada premium começa agora. Em menos de 1 minuto você vai conhecer tudo que preparamos para você aproveitar ao máximo.",
     highlight: "Vamos lá?",
