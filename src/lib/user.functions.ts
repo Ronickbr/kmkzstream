@@ -16,11 +16,8 @@ export const getMyOverview = createServerFn({ method: "GET" })
         .order("created_at", { ascending: false })
         .limit(1)
         .maybeSingle(),
-      supabase
-        .from("referrals")
-        .select("id, status, points_awarded, confirmed_at, created_at, referred:profiles!referrals_referred_id_fkey(display_name)")
-        .eq("referrer_id", userId)
-        .order("created_at", { ascending: false }),
+      supabase.rpc("get_my_referrals"),
+
       supabase
         .from("reward_redemptions")
         .select("id, status, points_spent, created_at, tracking_code, shipping_recipient, shipping_address, shipping_city, shipping_state, shipping_zip, reward:rewards(name, kind, subscription_months)")

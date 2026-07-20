@@ -247,7 +247,7 @@ function IndicacoesPage() {
                   {data.referrals.map((r) => (
                     <tr key={r.id} className="border-b border-border/40 last:border-0">
                       <td className="py-3 text-foreground">
-                        {(r.referred as any)?.display_name ?? "Usuário"}
+                        {r.referred_display_name ?? "Usuário"}
                       </td>
                       <td>
                         <StatusBadge status={r.status} />
@@ -272,7 +272,7 @@ function IndicacoesPage() {
                   <div className="flex items-start justify-between gap-3">
                     <div className="min-w-0">
                       <p className="truncate font-semibold text-foreground">
-                        {(r.referred as any)?.display_name ?? "Usuário"}
+                        {r.referred_display_name ?? "Usuário"}
                       </p>
                       <p className="mt-1 text-xs text-muted-foreground">
                         {formatDateBR(r.confirmed_at ?? r.created_at)}
