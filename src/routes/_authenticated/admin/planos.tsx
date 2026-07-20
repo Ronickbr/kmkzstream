@@ -19,7 +19,7 @@ type PlanEdit = {
   price_cents?: number;
   purchase_points?: number;
   referral_points?: number;
-  points_multiplier?: number;
+  
   screen_limit?: number;
   quality?: string;
   is_popular?: boolean;
@@ -70,7 +70,7 @@ function AdminPlansPage() {
           const price = e.price_cents ?? p.price_cents;
           const purchase = e.purchase_points ?? p.purchase_points ?? 0;
           const referral = e.referral_points ?? p.referral_points ?? 0;
-          const multiplier = e.points_multiplier ?? p.points_multiplier ?? 1;
+          
           const screens = e.screen_limit ?? p.screen_limit ?? 1;
           const quality = e.quality ?? p.quality ?? "HD";
           const popular = e.is_popular ?? p.is_popular ?? false;
