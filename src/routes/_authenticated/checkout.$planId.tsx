@@ -25,7 +25,12 @@ import {
   Wallet,
   Clock,
   Globe,
+  Loader2,
+  XCircle,
+  RefreshCw,
+  LifeBuoy,
 } from "lucide-react";
+
 
 
 export const Route = createFileRoute("/_authenticated/checkout/$planId")({
