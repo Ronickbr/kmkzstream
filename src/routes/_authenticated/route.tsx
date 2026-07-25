@@ -13,6 +13,13 @@ const overviewQO = queryOptions({ queryKey: ["me", "overview"], queryFn: () => g
 export const Route = createFileRoute("/_authenticated")({
   ssr: false,
   beforeLoad: async ({ location }) => {
+    // Aguarda a sessão do Supabase hidratar do localStorage antes de validar,
+    // evitando flash de redirecionamento em recargas com sessão válida.
+    const { data: sessionData } = await supabase.auth.getSession();
+    if (!sessionData.session) {
+      throw redirect({ to: "/auth", search: { redirect: location.href } });
+    }
+    // Revalida o usuário com o servidor Auth (mais seguro que getSession).
     const { data, error } = await supabase.auth.getUser();
     if (error || !data.user) {
       throw redirect({ to: "/auth", search: { redirect: location.href } });
@@ -21,7 +28,23 @@ export const Route = createFileRoute("/_authenticated")({
   },
   loader: async ({ context }) => context.queryClient.ensureQueryData(overviewQO),
   component: AuthenticatedLayout,
+  pendingMs: 0,
+  pendingComponent: AuthPending,
 });
+
+function AuthPending() {
+  return (
+    <div className="flex min-h-screen items-center justify-center bg-background">
+      <div className="flex flex-col items-center gap-3 text-muted-foreground">
+        <div
+          className="size-10 animate-spin rounded-full border-2 border-brand/30 border-t-brand"
+          aria-hidden="true"
+        />
+        <span className="text-sm">Carregando sua área…</span>
+      </div>
+    </div>
+  );
+}
 
 function AuthenticatedLayout() {
   const data = Route.useLoaderData();
