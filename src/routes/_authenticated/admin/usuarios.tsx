@@ -664,7 +664,7 @@ function UserModal({
           )}
         </div>
 
-        <div className="flex justify-end gap-2 border-t border-surface-200 px-6 py-4">
+        <div className="flex shrink-0 justify-end gap-2 border-t border-surface-200 px-6 py-4">
           <button
             onClick={onClose}
             className="rounded-lg border border-surface-200 px-4 py-2 text-sm font-semibold hover:bg-surface-50"
