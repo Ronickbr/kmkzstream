@@ -182,7 +182,7 @@ function Hero() {
         <div className="col-span-12 lg:col-span-7">
           <TimecodeBar ch="CH.001" label="ENTRADA" />
 
-          <h1 className="mt-8 font-broadcast text-[64px] leading-[0.86] tracking-[0.005em] text-white sm:text-[92px] lg:text-[120px] xl:text-[136px]">
+          <h1 className="mt-8 font-broadcast text-[clamp(3.25rem,13vw,8.5rem)] leading-[0.86] tracking-[0.005em] text-white">
             TUDO
             <br />
             NO AR.
