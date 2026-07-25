@@ -176,6 +176,91 @@ export const adminSetUserRole = createServerFn({ method: "POST" })
     return { ok: true };
   });
 
+export const adminGetUser = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .validator((d: { userId: string }) => d)
+  .handler(async ({ data, context }) => {
+    const { supabase, userId } = context;
+    await assertAdmin(supabase, userId);
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+
+    const [profileRes, pointsRes, rolesRes, subsRes, refsRes, redemptionsRes, authRes] = await Promise.all([
+      supabase.from("profiles").select("*").eq("id", data.userId).maybeSingle(),
+      supabase.from("user_points").select("total_points").eq("user_id", data.userId).maybeSingle(),
+      supabase.from("user_roles").select("role").eq("user_id", data.userId),
+      supabase.from("subscriptions").select("id, status, starts_at, ends_at, plan:plans(name, period)").eq("user_id", data.userId).order("starts_at", { ascending: false }),
+      supabase.from("referrals").select("id, status, created_at, points_awarded").eq("referrer_id", data.userId),
+      supabase.from("reward_redemptions").select("id, status, points_spent, created_at, reward:rewards(name)").eq("user_id", data.userId).order("created_at", { ascending: false }),
+      supabaseAdmin.auth.admin.getUserById(data.userId),
+    ]);
+
+    if (profileRes.error) throw new Error(profileRes.error.message);
+    if (!profileRes.data) throw new Error("Usuário não encontrado");
+
+    return {
+      profile: profileRes.data,
+      email: authRes.data?.user?.email ?? null,
+      last_sign_in_at: authRes.data?.user?.last_sign_in_at ?? null,
+      total_points: pointsRes.data?.total_points ?? 0,
+      roles: (rolesRes.data ?? []).map((r: any) => r.role),
+      subscriptions: subsRes.data ?? [],
+      referrals: refsRes.data ?? [],
+      redemptions: redemptionsRes.data ?? [],
+    };
+  });
+
+export const adminUpdateUser = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .validator((d: {
+    userId: string;
+    display_name?: string;
+    whatsapp?: string | null;
+    phone?: string | null;
+    city?: string | null;
+    state?: string | null;
+    bio?: string | null;
+    total_points?: number;
+  }) => d)
+  .handler(async ({ data, context }) => {
+    const { supabase, userId } = context;
+    await assertAdmin(supabase, userId);
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+
+    const { userId: targetId, total_points, ...profilePatch } = data;
+    const cleanPatch = Object.fromEntries(
+      Object.entries(profilePatch).filter(([, v]) => v !== undefined),
+    );
+
+    if (Object.keys(cleanPatch).length > 0) {
+      const { error } = await supabaseAdmin.from("profiles").update(cleanPatch as any).eq("id", targetId);
+      if (error) throw new Error(error.message);
+    }
+
+    if (typeof total_points === "number") {
+      if (total_points < 0) throw new Error("Pontos não podem ser negativos");
+      const { error } = await supabaseAdmin
+        .from("user_points")
+        .upsert({ user_id: targetId, total_points }, { onConflict: "user_id" });
+      if (error) throw new Error(error.message);
+    }
+
+    return { ok: true };
+  });
+
+export const adminDeleteUser = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .validator((d: { userId: string }) => d)
+  .handler(async ({ data, context }) => {
+    const { supabase, userId } = context;
+    await assertAdmin(supabase, userId);
+    if (data.userId === userId) throw new Error("Você não pode excluir a própria conta");
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { error } = await supabaseAdmin.auth.admin.deleteUser(data.userId);
+    if (error) throw new Error(error.message);
+    return { ok: true };
+  });
+
+
 export const adminListRedemptions = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
