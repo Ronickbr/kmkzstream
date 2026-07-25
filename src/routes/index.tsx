@@ -538,8 +538,8 @@ function Depoimentos() {
           </h2>
         </header>
         <div className="grid gap-px overflow-hidden rounded-sm border border-white/[0.08] bg-white/[0.06] md:grid-cols-3">
-          {items.map((t, i) => (
-            <blockquote key={t.name} className="flex flex-col justify-between bg-[color:var(--color-vinyl)] p-8">
+          {items.map((item, i) => (
+            <blockquote key={item.name} className="flex flex-col justify-between bg-[color:var(--color-vinyl)] p-8">
               <div className="flex items-center gap-2">
                 <span className="font-mono-b text-[11px] tracking-[0.2em] text-white/40">
                   TX.{String(i + 1).padStart(2, "0")}
@@ -547,11 +547,11 @@ function Depoimentos() {
                 <TallyDot label={t("testimonials.verified")} />
               </div>
               <p className="mt-8 font-broadcast text-2xl leading-tight text-white">
-                &ldquo;{t.text}&rdquo;
+                &ldquo;{item.text}&rdquo;
               </p>
               <footer className="mt-8 border-t border-white/10 pt-4">
-                <p className="font-body-b text-sm font-semibold text-white">{t.name}</p>
-                <p className="font-mono-b text-[10px] uppercase tracking-[0.2em] text-white/40">{t.role}</p>
+                <p className="font-body-b text-sm font-semibold text-white">{item.name}</p>
+                <p className="font-mono-b text-[10px] uppercase tracking-[0.2em] text-white/40">{item.role}</p>
               </footer>
             </blockquote>
           ))}
