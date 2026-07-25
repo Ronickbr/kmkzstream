@@ -45,6 +45,7 @@ export const Route = createFileRoute("/_authenticated/checkout/$planId")({
 });
 
 type Step = 1 | 2 | 3;
+type PayState = "idle" | "verifying" | "confirmed" | "failed";
 type PayMethod = "card" | "pix" | "mercadopago" | "gateway";
 
 const METHOD_LABEL: Record<PayMethod, string> = {
@@ -106,7 +107,7 @@ function CheckoutPage() {
   useEffect(() => {
     if (payState !== "verifying") return;
     const timeout = setTimeout(() => {
-      setPayState((s) => {
+      setPayState((s: PayState) => {
         if (s !== "verifying") return s;
         setPayError(
           "Não recebemos a confirmação do pagamento a tempo. Seu cadastro está salvo — você pode tentar novamente ou concluir mais tarde.",
