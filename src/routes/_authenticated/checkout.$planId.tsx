@@ -115,8 +115,10 @@ function CheckoutPage() {
         window.open(url, "_blank", "noopener,noreferrer");
       }
       await subscribeFn({ data: { planId: plan.id } });
+      localStorage.removeItem("kmkz_pending_plan");
       celebrate();
       toast.success(`Assinatura ${plan.name} ativada! 🎉`);
+
       setTimeout(() => navigate({ to: "/dashboard" }), 900);
     } catch (e) {
       const msg = e instanceof Error ? e.message : "Erro ao ativar plano";
