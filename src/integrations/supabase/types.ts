@@ -596,6 +596,7 @@ export type Database = {
       redeem_reward:
         | { Args: { _reward_id: string }; Returns: string }
         | { Args: { _reward_id: string; _shipping?: Json }; Returns: string }
+      referral_code_exists: { Args: { _code: string }; Returns: boolean }
       run_expiry_reminders: { Args: never; Returns: number }
     }
     Enums: {
