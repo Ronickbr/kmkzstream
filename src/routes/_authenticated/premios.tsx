@@ -5,6 +5,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { listActiveRewards } from "@/lib/plans.functions";
 import { redeemReward, type ShippingInput } from "@/lib/redemptions.functions";
 import { overviewQueryOptions as overviewQO, rewardsQueryOptions as rewardsQO } from "@/lib/queries";
+import { useI18n } from "@/lib/i18n";
 import { formatPoints, formatDateBR } from "@/lib/format";
 import { Gift, Sparkles, Package, CalendarPlus, Truck, CheckCircle2, Clock } from "lucide-react";
 import { toast } from "sonner";
@@ -43,6 +44,7 @@ const emptyShipping: ShippingInput = {
 };
 
 function PremiosPage() {
+  const { tc } = useI18n();
   const { data: overview, refetch: refetchOverview } = useSuspenseQuery(overviewQO);
   const { data: rewards, refetch: refetchRewards } = useSuspenseQuery(rewardsQO);
   const redeemFn = useServerFn(redeemReward);
@@ -120,8 +122,8 @@ function PremiosPage() {
                     {isDevice ? "Aparelho" : "Assinatura"}
                   </span>
                 </div>
-                <h3 className="font-display text-lg font-bold">{r.name}</h3>
-                <p className="mt-1 line-clamp-2 flex-1 text-sm text-surface-900/70">{r.description}</p>
+                <h3 className="font-display text-lg font-bold">{tc(r.name)}</h3>
+                <p className="mt-1 line-clamp-2 flex-1 text-sm text-surface-900/70">{tc(r.description)}</p>
                 <div className="mt-4 flex items-center justify-between text-xs">
                   <span className="inline-flex items-center gap-1 rounded-full bg-accent/10 px-3 py-1 font-bold text-accent">
                     <Sparkles className="size-3" aria-hidden="true" /> {formatPoints(r.points_cost)} pts

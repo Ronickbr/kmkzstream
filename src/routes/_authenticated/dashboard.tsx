@@ -22,7 +22,7 @@ export const Route = createFileRoute("/_authenticated/dashboard")({
 });
 
 function DashboardPage() {
-  const { planPrice } = useI18n();
+  const { planPrice, tc } = useI18n();
   const { data, refetch } = useSuspenseQuery(overviewQO);
   const { data: history } = useSuspenseQuery(historyQO);
   const cancelFn = useServerFn(cancelMySubscription);
@@ -154,7 +154,7 @@ function DashboardPage() {
             {activeSub && activeSub.plan ? (
               <>
                 <div className="flex flex-wrap items-baseline gap-2">
-                  <p className="text-2xl font-bold">{activeSub.plan.name}</p>
+                  <p className="text-2xl font-bold">{tc(activeSub.plan.name)}</p>
                   <span className="rounded-full bg-emerald-500/15 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-emerald-400 ring-1 ring-inset ring-emerald-500/30">
                     Ativa
                   </span>
