@@ -3,7 +3,7 @@ import { useEffect, useId, useState } from "react";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { z } from "zod";
 import { toast } from "sonner";
-import { Loader2 } from "lucide-react";
+import { Loader2, Check, X, AlertCircle } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { updateMyProfile } from "@/lib/user.functions";
 import { plansQueryOptions } from "@/lib/queries";
@@ -47,6 +47,40 @@ function maskPhone(v: string) {
   return d.replace(/(\d{2})(\d)/, "($1) $2").replace(/(\d{5})(\d)/, "$1-$2");
 }
 
+/** Valida CPF pelos dígitos verificadores. */
+function isValidCpf(value: string) {
+  const d = onlyDigits(value);
+  if (d.length !== 11 || /^(\d)\1{10}$/.test(d)) return false;
+  const calc = (len: number) => {
+    let sum = 0;
+    for (let i = 0; i < len; i++) sum += Number(d[i]) * (len + 1 - i);
+    const rest = (sum * 10) % 11;
+    return rest === 10 ? 0 : rest;
+  };
+  return calc(9) === Number(d[9]) && calc(10) === Number(d[10]);
+}
+
+/** Valida número de WhatsApp brasileiro (DDD + 8/9 dígitos). */
+function validateWhats(value: string): "ok" | "digits" | "ddd" | "mobile" {
+  const d = onlyDigits(value);
+  if (d.length < 10 || d.length > 11) return "digits";
+  const ddd = Number(d.slice(0, 2));
+  if (ddd < 11 || ddd > 99) return "ddd";
+  if (d.length === 11 && d[2] !== "9") return "mobile";
+  return "ok";
+}
+
+type PwdChecks = { len: boolean; caseMix: boolean; num: boolean; sym: boolean };
+
+function checkPassword(v: string): PwdChecks {
+  return {
+    len: v.length >= 8,
+    caseMix: /[a-z]/.test(v) && /[A-Z]/.test(v),
+    num: /\d/.test(v),
+    sym: /[^A-Za-z0-9]/.test(v),
+  };
+}
+
 function CadastroPage() {
   const { t, tc, planPrice } = useI18n();
   const search = Route.useSearch();
@@ -60,7 +94,9 @@ function CadastroPage() {
   const [refCode, setRefCode] = useState(search.ref ?? "");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [password2, setPassword2] = useState("");
   const [loading, setLoading] = useState(false);
+  const [refStatus, setRefStatus] = useState<"idle" | "checking" | "valid" | "invalid">("idle");
 
   const ids = {
     plan: useId(),
@@ -70,6 +106,7 @@ function CadastroPage() {
     ref: useId(),
     email: useId(),
     pass: useId(),
+    pass2: useId(),
   };
 
   useEffect(() => {
@@ -82,15 +119,49 @@ function CadastroPage() {
     }
   }, [search.ref]);
 
+  // Valida o código de indicação (opcional) contra a base, com debounce.
+  useEffect(() => {
+    const code = refCode.trim();
+    if (!code) {
+      setRefStatus("idle");
+      return;
+    }
+    setRefStatus("checking");
+    let active = true;
+    const timer = setTimeout(async () => {
+      const { data, error } = await supabase.rpc("referral_code_exists", { _code: code });
+      if (!active) return;
+      setRefStatus(error ? "idle" : data ? "valid" : "invalid");
+    }, 450);
+    return () => {
+      active = false;
+      clearTimeout(timer);
+    };
+  }, [refCode]);
+
+  const pwd = checkPassword(password);
+  const pwdScore = Number(pwd.len) + Number(pwd.caseMix) + Number(pwd.num) + Number(pwd.sym);
+  const pwdOk = pwd.len && pwd.caseMix && (pwd.num || pwd.sym);
+  const confirmOk = password2.length > 0 && password === password2;
+  const canSubmit =
+    !loading && pwdOk && confirmOk && refStatus !== "invalid" && refStatus !== "checking";
+
   const selected = plans.find((p) => p.id === planId);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!planId) return toast.error(t("signup.errPlan"));
     if (name.trim().length < 2) return toast.error(t("signup.errName"));
-    if (onlyDigits(cpf).length !== 11) return toast.error(t("signup.errCpf"));
-    if (onlyDigits(whatsapp).length < 10) return toast.error(t("signup.errWhats"));
-    if (password.length < 6) return toast.error(t("signup.errPassword"));
+    if (onlyDigits(cpf).length !== 11) return toast.error(t("signup.errCpfDigits"));
+    if (!isValidCpf(cpf)) return toast.error(t("signup.errCpfInvalid"));
+    const whatsCheck = validateWhats(whatsapp);
+    if (whatsCheck === "digits") return toast.error(t("signup.errWhatsDigits"));
+    if (whatsCheck === "ddd") return toast.error(t("signup.errWhatsDdd"));
+    if (whatsCheck === "mobile") return toast.error(t("signup.errWhatsMobile"));
+    if (!pwd.len) return toast.error(t("signup.errPassword"));
+    if (!pwdOk) return toast.error(t("signup.errPasswordWeak"));
+    if (!confirmOk) return toast.error(t("signup.errConfirm"));
+    if (refStatus === "invalid") return toast.error(t("signup.errRef"));
 
     setLoading(true);
     try {
@@ -101,7 +172,7 @@ function CadastroPage() {
           emailRedirectTo: window.location.origin,
           data: {
             display_name: name.trim(),
-            referral_code: refCode.trim() || undefined,
+            referral_code: refStatus === "valid" ? refCode.trim() : undefined,
           },
         },
       });
