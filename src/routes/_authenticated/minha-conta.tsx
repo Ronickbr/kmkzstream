@@ -35,12 +35,12 @@ function MinhaContaPage() {
   const p = data.profile;
   const [name, setName] = useState(p?.display_name ?? "");
   const [avatar, setAvatar] = useState(p?.avatar_url ?? "");
-  const [whatsapp, setWhatsapp] = useState((p as any)?.whatsapp ?? "");
-  const [phone, setPhone] = useState((p as any)?.phone ?? "");
-  const [bio, setBio] = useState((p as any)?.bio ?? "");
-  const [city, setCity] = useState((p as any)?.city ?? "");
-  const [state, setState] = useState((p as any)?.state ?? "");
-  const [cpf, setCpf] = useState(formatCpf((p as any)?.cpf ?? ""));
+  const [whatsapp, setWhatsapp] = useState(p?.whatsapp ?? "");
+  const [phone, setPhone] = useState(p?.phone ?? "");
+  const [bio, setBio] = useState(p?.bio ?? "");
+  const [city, setCity] = useState(p?.city ?? "");
+  const [state, setState] = useState(p?.state ?? "");
+  const [cpf, setCpf] = useState(formatCpf(p?.cpf ?? ""));
   const [saving, setSaving] = useState(false);
 
   const [pwd, setPwd] = useState("");
