@@ -3,6 +3,7 @@ import { useSuspenseQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { subscribeToPlan } from "@/lib/subscriptions.functions";
 import { plansQueryOptions as plansQO, overviewQueryOptions as overviewQO } from "@/lib/queries";
+import { useI18n } from "@/lib/i18n";
 import { PLAN_PERIOD_LABEL, PLAN_ECONOMY_LABEL } from "@/lib/format";
 import { celebrate } from "@/lib/confetti";
 import { toast } from "sonner";
@@ -42,6 +43,7 @@ const METHOD_LABEL: Record<PayMethod, string> = {
 };
 
 function CheckoutPage() {
+  const { planPrice } = useI18n();
   const { planId } = Route.useParams();
   const { data: plans } = useSuspenseQuery(plansQO);
   useSuspenseQuery(overviewQO);
@@ -248,6 +250,7 @@ function Stepper({ current }: { current: Step }) {
 }
 
 function StepReview({ plan }: { plan: any }) {
+  const { planPrice } = useI18n();
   return (
     <div>
       <h2 className="font-display text-xl font-black">Revise seu plano</h2>
@@ -442,6 +445,7 @@ function PayOption({
 }
 
 function PixPreview({ plan }: { plan: any }) {
+  const { planPrice } = useI18n();
   const [copied, setCopied] = useState(false);
   const [seconds, setSeconds] = useState(15 * 60);
   const code = useMemo(

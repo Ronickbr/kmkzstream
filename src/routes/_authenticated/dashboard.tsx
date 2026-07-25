@@ -1,6 +1,7 @@
 import { confirmAction } from "@/lib/confirm";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useSuspenseQuery } from "@tanstack/react-query";
+import { useI18n } from "@/lib/i18n";
 import { useServerFn } from "@tanstack/react-start";
 import { cancelMySubscription } from "@/lib/subscriptions.functions";
 import { overviewQueryOptions as overviewQO, pointsHistoryQueryOptions as historyQO } from "@/lib/queries";
@@ -21,6 +22,7 @@ export const Route = createFileRoute("/_authenticated/dashboard")({
 });
 
 function DashboardPage() {
+  const { planPrice } = useI18n();
   const { data, refetch } = useSuspenseQuery(overviewQO);
   const { data: history } = useSuspenseQuery(historyQO);
   const cancelFn = useServerFn(cancelMySubscription);
