@@ -1,10 +1,11 @@
 import { confirmAction } from "@/lib/confirm";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useSuspenseQuery } from "@tanstack/react-query";
+import { useI18n } from "@/lib/i18n";
 import { useServerFn } from "@tanstack/react-start";
 import { cancelMySubscription } from "@/lib/subscriptions.functions";
 import { overviewQueryOptions as overviewQO, pointsHistoryQueryOptions as historyQO } from "@/lib/queries";
-import { formatCurrencyBRL, formatDateBR, formatPoints, PLAN_PERIOD_LABEL } from "@/lib/format";
+import { formatDateBR, formatPoints, PLAN_PERIOD_LABEL } from "@/lib/format";
 import { toast } from "sonner";
 import { Sparkles, Users, Gift, CreditCard, History, TrendingUp, TrendingDown, Trophy } from "lucide-react";
 import { getVipLevel } from "@/lib/vip";
@@ -21,6 +22,7 @@ export const Route = createFileRoute("/_authenticated/dashboard")({
 });
 
 function DashboardPage() {
+  const { planPrice, tc } = useI18n();
   const { data, refetch } = useSuspenseQuery(overviewQO);
   const { data: history } = useSuspenseQuery(historyQO);
   const cancelFn = useServerFn(cancelMySubscription);
@@ -152,13 +154,13 @@ function DashboardPage() {
             {activeSub && activeSub.plan ? (
               <>
                 <div className="flex flex-wrap items-baseline gap-2">
-                  <p className="text-2xl font-bold">{activeSub.plan.name}</p>
+                  <p className="text-2xl font-bold">{tc(activeSub.plan.name)}</p>
                   <span className="rounded-full bg-emerald-500/15 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-emerald-400 ring-1 ring-inset ring-emerald-500/30">
                     Ativa
                   </span>
                 </div>
                 <p className="mt-1 text-sm text-muted-foreground">
-                  {formatCurrencyBRL(activeSub.plan.price_cents)} · {PLAN_PERIOD_LABEL[activeSub.plan.period]}
+                  {planPrice(activeSub.plan)} · {PLAN_PERIOD_LABEL[activeSub.plan.period]}
                 </p>
                 <p className="mt-2 text-xs text-muted-foreground">
                   Renova em {formatDateBR(activeSub.ends_at)}

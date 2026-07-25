@@ -1,7 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { plansQueryOptions as plansQO, overviewQueryOptions as overviewQO } from "@/lib/queries";
-import { formatCurrencyBRL, formatDateBR, PLAN_ECONOMY_LABEL, PLAN_PERIOD_SHORT } from "@/lib/format";
+import { formatDateBR, PLAN_ECONOMY_LABEL, PLAN_PERIOD_SHORT } from "@/lib/format";
+import { useI18n } from "@/lib/i18n";
 import { Check, Sparkles, CalendarClock, CheckCircle2, ArrowRight, Zap } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/planos")({
@@ -14,6 +15,7 @@ export const Route = createFileRoute("/_authenticated/planos")({
 });
 
 function PlanosPage() {
+  const { planPrice, tc } = useI18n();
   const { data: plans } = useSuspenseQuery(plansQO);
   const { data: overview } = useSuspenseQuery(overviewQO);
   const sub = overview.subscription;
@@ -47,7 +49,7 @@ function PlanosPage() {
               </div>
               <div>
                 <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Plano atual</p>
-                <p className="mt-1 font-display text-lg font-bold text-foreground">{sub?.plan?.name}</p>
+                <p className="mt-1 font-display text-lg font-bold text-foreground">{tc(sub?.plan?.name)}</p>
                 {sub?.ends_at && (
                   <p className="mt-1 flex items-center gap-1.5 text-xs text-muted-foreground">
                     <CalendarClock className="size-3.5" aria-hidden="true" />
@@ -108,10 +110,10 @@ function PlanosPage() {
                   Mais popular
                 </div>
               )}
-              <h3 className="text-xs font-bold uppercase tracking-widest text-muted-foreground">{p.name}</h3>
+              <h3 className="text-xs font-bold uppercase tracking-widest text-muted-foreground">{tc(p.name)}</h3>
               <div className="mt-3 flex items-baseline gap-1">
                 <span className="text-2xl font-bold tracking-tight text-foreground sm:text-[1.75rem]">
-                  {formatCurrencyBRL(p.price_cents)}
+                  {planPrice(p)}
                 </span>
                 <span className="text-xs text-muted-foreground">{PLAN_PERIOD_SHORT[p.period]}</span>
               </div>
@@ -121,7 +123,7 @@ function PlanosPage() {
                 {(p.features as string[]).map((f) => (
                   <li key={f} className="flex items-start gap-2">
                     <Check className="mt-0.5 size-4 shrink-0 text-primary" aria-hidden="true" />
-                    <span>{f}</span>
+                    <span>{tc(f)}</span>
                   </li>
                 ))}
                 <li className="flex items-start gap-2 rounded-xl bg-accent/10 px-2 py-1.5 font-medium text-accent">

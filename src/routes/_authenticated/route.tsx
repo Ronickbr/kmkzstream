@@ -6,6 +6,7 @@ import { AppSidebar } from "@/components/app-sidebar";
 import { NotificationBell } from "@/components/notification-bell";
 import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { LogOut } from "lucide-react";
+import { LanguageSwitcher } from "@/components/language-switcher";
 
 export const Route = createFileRoute("/_authenticated")({
   ssr: false,
@@ -69,6 +70,7 @@ function AuthenticatedLayout() {
             </span>
           </div>
           <div className="flex items-center gap-2">
+            <LanguageSwitcher variant="light" />
             <NotificationBell />
             <button
               onClick={handleSignOut}

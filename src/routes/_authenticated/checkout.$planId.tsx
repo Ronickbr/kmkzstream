@@ -3,7 +3,8 @@ import { useSuspenseQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { subscribeToPlan } from "@/lib/subscriptions.functions";
 import { plansQueryOptions as plansQO, overviewQueryOptions as overviewQO } from "@/lib/queries";
-import { formatCurrencyBRL, PLAN_PERIOD_LABEL, PLAN_ECONOMY_LABEL } from "@/lib/format";
+import { useI18n } from "@/lib/i18n";
+import { PLAN_PERIOD_LABEL, PLAN_ECONOMY_LABEL } from "@/lib/format";
 import { celebrate } from "@/lib/confetti";
 import { toast } from "sonner";
 import { useId, useMemo, useState, useEffect } from "react";
@@ -42,6 +43,7 @@ const METHOD_LABEL: Record<PayMethod, string> = {
 };
 
 function CheckoutPage() {
+  const { planPrice } = useI18n();
   const { planId } = Route.useParams();
   const { data: plans } = useSuspenseQuery(plansQO);
   useSuspenseQuery(overviewQO);
@@ -175,7 +177,7 @@ function CheckoutPage() {
               <dl className="space-y-2 text-sm">
                 <div className="flex justify-between text-white/80">
                   <dt>Subtotal</dt>
-                  <dd>{formatCurrencyBRL(plan.price_cents)}</dd>
+                  <dd>{planPrice(plan)}</dd>
                 </div>
                 <div className="flex justify-between text-white/80">
                   <dt>Taxas</dt>
@@ -185,7 +187,7 @@ function CheckoutPage() {
               <div className="my-5 h-px bg-white/20" />
               <div className="flex items-baseline justify-between">
                 <span className="text-sm text-white/80">Total</span>
-                <span className="font-display text-3xl font-black">{formatCurrencyBRL(plan.price_cents)}</span>
+                <span className="font-display text-3xl font-black">{planPrice(plan)}</span>
               </div>
               <p className="mt-2 text-xs text-white/70">Cobrança única · +{plan.referral_points} pts por indicação</p>
             </div>
@@ -248,6 +250,7 @@ function Stepper({ current }: { current: Step }) {
 }
 
 function StepReview({ plan }: { plan: any }) {
+  const { planPrice } = useI18n();
   return (
     <div>
       <h2 className="font-display text-xl font-black">Revise seu plano</h2>
@@ -442,6 +445,7 @@ function PayOption({
 }
 
 function PixPreview({ plan }: { plan: any }) {
+  const { planPrice } = useI18n();
   const [copied, setCopied] = useState(false);
   const [seconds, setSeconds] = useState(15 * 60);
   const code = useMemo(
@@ -480,7 +484,7 @@ function PixPreview({ plan }: { plan: any }) {
         <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-accent">
           <Clock className="size-3.5" /> Expira em {mm}:{ss}
         </div>
-        <p className="mt-2 font-display text-xl font-black">{formatCurrencyBRL(plan.price_cents)}</p>
+        <p className="mt-2 font-display text-xl font-black">{planPrice(plan)}</p>
         <p className="mt-1 text-xs text-muted-foreground">
           Escaneie o QR Code no seu app do banco ou copie o código abaixo.
         </p>
@@ -548,6 +552,8 @@ function StepConfirm({
   setAccept: (v: boolean) => void;
 }) {
   const termsId = useId();
+  const { planPrice } = useI18n();
+
   return (
     <div>
       <h2 className="font-display text-xl font-black">Quase lá!</h2>
@@ -570,7 +576,7 @@ function StepConfirm({
         </div>
         <div className="flex justify-between border-t border-border/60 pt-3">
           <dt className="text-muted-foreground">Total</dt>
-          <dd className="font-display text-lg font-black text-accent">{formatCurrencyBRL(plan.price_cents)}</dd>
+          <dd className="font-display text-lg font-black text-accent">{planPrice(plan)}</dd>
         </div>
       </dl>
 

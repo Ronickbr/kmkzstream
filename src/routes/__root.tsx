@@ -14,6 +14,8 @@ import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { supabase } from "@/integrations/supabase/client";
 import { Toaster } from "@/components/ui/sonner";
+import { I18nProvider } from "@/lib/i18n";
+
 
 function NotFoundComponent() {
   return (
@@ -135,10 +137,13 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <Outlet />
-      <ClientOnly fallback={null}>
-        <Toaster richColors position="top-right" />
-      </ClientOnly>
+      <I18nProvider>
+        <Outlet />
+        <ClientOnly fallback={null}>
+          <Toaster richColors position="top-right" />
+        </ClientOnly>
+      </I18nProvider>
     </QueryClientProvider>
   );
 }
+
