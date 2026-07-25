@@ -9,6 +9,7 @@ import { useI18n } from "@/lib/i18n";
 import { useQuery } from "@tanstack/react-query";
 import { getCheckoutSettings } from "@/lib/settings.functions";
 import { checkoutUrl, gatewayForLocale, GATEWAY_LABEL, type Gateway } from "@/lib/payments";
+import { supabase } from "@/integrations/supabase/client";
 import { PLAN_PERIOD_LABEL, PLAN_ECONOMY_LABEL } from "@/lib/format";
 import { celebrate } from "@/lib/confetti";
 import { toast } from "sonner";
@@ -88,12 +89,44 @@ function CheckoutPage() {
     queryKey: ["checkout", "status", planId, attempts],
     queryFn: () => statusFn({ data: { planId } }),
     enabled: payState === "verifying",
-    refetchInterval: payState === "verifying" ? 3000 : false,
+    // Fallback: o webhook é a fonte principal; o polling lento só cobre falhas de realtime.
+    refetchInterval: payState === "verifying" ? 15000 : false,
     staleTime: 0,
   });
 
+  // Realtime: o webhook atualiza a assinatura no banco e recebemos o evento na hora.
   useEffect(() => {
     if (payState !== "verifying") return;
+    let channel: ReturnType<typeof supabase.channel> | null = null;
+    let cancelled = false;
+    (async () => {
+      const { data: auth } = await supabase.auth.getUser();
+      const uid = auth.user?.id;
+      if (!uid || cancelled) return;
+      channel = supabase
+        .channel(`checkout-sub-${uid}`)
+        .on(
+          "postgres_changes",
+          { event: "*", schema: "public", table: "subscriptions", filter: `user_id=eq.${uid}` },
+          () => {
+            queryClient.invalidateQueries({ queryKey: ["checkout", "status"] });
+          },
+        )
+        .subscribe();
+    })();
+    return () => {
+      cancelled = true;
+      if (channel) supabase.removeChannel(channel);
+    };
+  }, [payState, queryClient]);
+
+  useEffect(() => {
+    if (payState !== "verifying") return;
+    if (payStatus?.state === "failed") {
+      setPayError("O pagamento foi recusado pelo provedor. Seu cadastro está salvo — tente novamente.");
+      setPayState("failed");
+      return;
+    }
     if (payStatus?.state === "confirmed") {
       setPayState("confirmed");
       localStorage.removeItem("kmkz_pending_plan");
@@ -148,14 +181,16 @@ function CheckoutPage() {
     setBusy(true);
     setPayError(null);
     try {
+      let paymentRef: string | undefined;
       if (method === "gateway") {
+        paymentRef = `kmkz-${plan.id.slice(0, 8)}-${Date.now()}`;
         const url = checkoutUrl({
           gateway,
           settings: paySettings,
           planId: plan.id,
           planName: plan.name,
           priceCentsBRL: plan.price_cents,
-          orderRef: `kmkz-${plan.id.slice(0, 8)}-${Date.now()}`,
+          orderRef: paymentRef,
         });
         if (!url) {
           toast.error(`${GATEWAY_LABEL[gateway]} ainda não está configurado. Escolha outro método.`);
@@ -164,7 +199,9 @@ function CheckoutPage() {
         }
         window.open(url, "_blank", "noopener,noreferrer");
       }
-      await subscribeFn({ data: { planId: plan.id } });
+      await subscribeFn({
+        data: { planId: plan.id, paymentRef, provider: paymentRef ? gateway : undefined },
+      });
       // A liberação do acesso só acontece quando a verificação automática confirmar o pagamento.
       setAttempts((n) => n + 1);
       setPayState("verifying");

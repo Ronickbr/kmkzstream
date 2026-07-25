@@ -3,7 +3,7 @@ import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 
 export const subscribeToPlan = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .validator((data: { planId: string }) => data)
+  .validator((data: { planId: string; paymentRef?: string; provider?: string }) => data)
   .handler(async ({ data, context }) => {
     const { supabase, userId } = context;
 
@@ -40,7 +40,13 @@ export const subscribeToPlan = createServerFn({ method: "POST" })
         status: "active",
         starts_at: startsAt.toISOString(),
         ends_at: endsAt.toISOString(),
-      })
+        payment_ref: data.paymentRef ?? null,
+        payment_provider: data.provider ?? null,
+        // Quando há cobrança em gateway, o acesso só é liberado pelo webhook.
+        ...(data.paymentRef
+          ? { payment_status: "pending", payment_confirmed_at: null }
+          : { payment_status: "confirmed", payment_confirmed_at: startsAt.toISOString() }),
+      } as never)
       .select("id")
       .single();
     if (error) throw new Error(error.message);
@@ -69,7 +75,7 @@ export const getMyPaymentStatus = createServerFn({ method: "POST" })
     const { supabase, userId } = context;
     let q = supabase
       .from("subscriptions")
-      .select("id, plan_id, status, starts_at, ends_at, payment_provider")
+      .select("id, plan_id, status, starts_at, ends_at, payment_provider, payment_status, payment_confirmed_at")
       .eq("user_id", userId)
       .order("created_at", { ascending: false })
       .limit(1);
@@ -79,9 +85,15 @@ export const getMyPaymentStatus = createServerFn({ method: "POST" })
     if (error) throw new Error(error.message);
     if (!sub) return { state: "pending" as const, subscription: null };
 
-    const confirmed = sub.status === "active" && new Date(sub.ends_at) > new Date();
+    const row = sub as typeof sub & { payment_status?: string | null };
+    const failed = row.payment_status === "failed" || sub.status === "canceled";
+    const confirmed =
+      sub.status === "active" &&
+      new Date(sub.ends_at) > new Date() &&
+      row.payment_status !== "pending" &&
+      row.payment_status !== "failed";
     return {
-      state: confirmed ? ("confirmed" as const) : ("pending" as const),
+      state: confirmed ? ("confirmed" as const) : failed ? ("failed" as const) : ("pending" as const),
       subscription: sub,
     };
   });

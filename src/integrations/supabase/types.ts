@@ -417,8 +417,10 @@ export type Database = {
           created_at: string
           ends_at: string
           id: string
+          payment_confirmed_at: string | null
           payment_provider: string | null
           payment_ref: string | null
+          payment_status: string
           plan_id: string
           reminder_sent_at: string | null
           starts_at: string
@@ -430,8 +432,10 @@ export type Database = {
           created_at?: string
           ends_at: string
           id?: string
+          payment_confirmed_at?: string | null
           payment_provider?: string | null
           payment_ref?: string | null
+          payment_status?: string
           plan_id: string
           reminder_sent_at?: string | null
           starts_at?: string
@@ -443,8 +447,10 @@ export type Database = {
           created_at?: string
           ends_at?: string
           id?: string
+          payment_confirmed_at?: string | null
           payment_provider?: string | null
           payment_ref?: string | null
+          payment_status?: string
           plan_id?: string
           reminder_sent_at?: string | null
           starts_at?: string
