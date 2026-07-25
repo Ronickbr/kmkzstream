@@ -48,7 +48,7 @@ function maskPhone(v: string) {
 }
 
 function CadastroPage() {
-  const { tc, planPrice } = useI18n();
+  const { t, tc, planPrice } = useI18n();
   const search = Route.useSearch();
   const navigate = useNavigate();
   const { data: plans } = useSuspenseQuery(plansQueryOptions);
@@ -86,11 +86,11 @@ function CadastroPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!planId) return toast.error("Selecione um plano");
-    if (name.trim().length < 2) return toast.error("Informe seu nome completo");
-    if (onlyDigits(cpf).length !== 11) return toast.error("CPF inválido — informe 11 dígitos");
-    if (onlyDigits(whatsapp).length < 10) return toast.error("WhatsApp inválido — informe DDD + número");
-    if (password.length < 6) return toast.error("A senha deve ter ao menos 6 caracteres");
+    if (!planId) return toast.error(t("signup.errPlan"));
+    if (name.trim().length < 2) return toast.error(t("signup.errName"));
+    if (onlyDigits(cpf).length !== 11) return toast.error(t("signup.errCpf"));
+    if (onlyDigits(whatsapp).length < 10) return toast.error(t("signup.errWhats"));
+    if (password.length < 6) return toast.error(t("signup.errPassword"));
 
     setLoading(true);
     try {
@@ -118,16 +118,16 @@ function CadastroPage() {
             },
           });
         } catch (err: any) {
-          toast.error(err?.message ?? "Não foi possível salvar seus dados");
+          toast.error(err?.message ?? t("signup.errProfile"));
         }
-        toast.success("Conta criada! Vamos ao pagamento.");
+        toast.success(t("signup.okPay"));
         navigate({ to: "/checkout/$planId", params: { planId }, replace: true });
       } else {
-        toast.success("Conta criada! Confirme seu e-mail para continuar.");
+        toast.success(t("signup.okConfirm"));
         navigate({ to: "/auth", search: { mode: "signin", redirect: `/checkout/${planId}` }, replace: true });
       }
     } catch (err: any) {
-      toast.error(err?.message ?? "Não foi possível criar sua conta");
+      toast.error(err?.message ?? t("signup.errGeneric"));
     } finally {
       setLoading(false);
     }
@@ -139,7 +139,7 @@ function CadastroPage() {
 
   return (
     <div className="min-h-dvh bg-[#0a0a0c] px-4 py-10 sm:py-16">
-      <a href="#cadastro-main" className="skip-link">Ir para o conteúdo</a>
+      <a href="#cadastro-main" className="skip-link">{t("common.skip")}</a>
       <main id="cadastro-main" className="mx-auto w-full max-w-xl">
         <div className="mb-6 flex items-center justify-between gap-3">
           <Link to="/" className="flex items-center gap-2">
@@ -150,14 +150,14 @@ function CadastroPage() {
         </div>
 
         <div className="rounded-sm border border-white/10 bg-white/[0.02] p-5 sm:p-8">
-          <h1 className="font-broadcast text-3xl text-white sm:text-4xl">Criar conta</h1>
+          <h1 className="font-broadcast text-3xl text-white sm:text-4xl">{t("signup.title")}</h1>
           <p className="mt-2 font-body-b text-[14px] text-white/60">
-            Preencha seus dados para ativar o plano escolhido.
+            {t("signup.subtitle")}
           </p>
 
           <form onSubmit={handleSubmit} className="mt-7 space-y-4" noValidate>
             <div>
-              <label htmlFor={ids.plan} className={label}>Plano selecionado</label>
+              <label htmlFor={ids.plan} className={label}>{t("signup.plan")}</label>
               <select
                 id={ids.plan}
                 value={planId}
@@ -172,46 +172,46 @@ function CadastroPage() {
               </select>
               {selected && (
                 <p className="mt-2 font-mono-b text-[11px] uppercase tracking-[0.18em] text-white/45">
-                  {selected.quality ?? "HD"} · {selected.screen_limit ?? 1} tela(s) · {planPrice(selected)}
+                  {selected.quality ?? "HD"} · {selected.screen_limit ?? 1} {t("signup.screens")} · {planPrice(selected)}
                 </p>
               )}
             </div>
 
             <div>
-              <label htmlFor={ids.name} className={label}>Nome completo</label>
+              <label htmlFor={ids.name} className={label}>{t("signup.name")}</label>
               <input id={ids.name} className={field} autoComplete="name" value={name}
-                onChange={(e) => setName(e.target.value)} placeholder="Seu nome" required />
+                onChange={(e) => setName(e.target.value)} placeholder={t("signup.namePlaceholder")} required />
             </div>
 
             <div className="grid gap-4 sm:grid-cols-2">
               <div>
-                <label htmlFor={ids.cpf} className={label}>CPF</label>
+                <label htmlFor={ids.cpf} className={label}>{t("signup.cpf")}</label>
                 <input id={ids.cpf} className={field} inputMode="numeric" value={cpf}
                   onChange={(e) => setCpf(maskCpf(e.target.value))} placeholder="000.000.000-00" required />
               </div>
               <div>
-                <label htmlFor={ids.whats} className={label}>WhatsApp</label>
+                <label htmlFor={ids.whats} className={label}>{t("signup.whatsapp")}</label>
                 <input id={ids.whats} className={field} inputMode="tel" autoComplete="tel" value={whatsapp}
                   onChange={(e) => setWhatsapp(maskPhone(e.target.value))} placeholder="(11) 99999-9999" required />
               </div>
             </div>
 
             <div>
-              <label htmlFor={ids.ref} className={label}>Código de indicação (opcional)</label>
+              <label htmlFor={ids.ref} className={label}>{t("signup.ref")}</label>
               <input id={ids.ref} className={field} value={refCode}
-                onChange={(e) => setRefCode(e.target.value.toUpperCase())} placeholder="Ex.: KMKZ1234" />
+                onChange={(e) => setRefCode(e.target.value.toUpperCase())} placeholder={t("signup.refPlaceholder")} />
             </div>
 
             <div>
-              <label htmlFor={ids.email} className={label}>Usuário (e-mail)</label>
+              <label htmlFor={ids.email} className={label}>{t("signup.email")}</label>
               <input id={ids.email} className={field} type="email" autoComplete="email" value={email}
                 onChange={(e) => setEmail(e.target.value)} placeholder="voce@email.com" required />
             </div>
 
             <div>
-              <label htmlFor={ids.pass} className={label}>Senha</label>
+              <label htmlFor={ids.pass} className={label}>{t("signup.password")}</label>
               <input id={ids.pass} className={field} type="password" autoComplete="new-password" minLength={6}
-                value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Mínimo 6 caracteres" required />
+                value={password} onChange={(e) => setPassword(e.target.value)} placeholder={t("signup.passwordPlaceholder")} required />
             </div>
 
             <button
@@ -221,14 +221,14 @@ function CadastroPage() {
               className="flex min-h-12 w-full items-center justify-center gap-2 rounded-sm bg-[color:var(--color-tally)] px-5 py-3 font-mono-b text-[11px] font-bold uppercase tracking-[0.22em] text-white transition hover:opacity-90 disabled:opacity-60"
             >
               {loading && <Loader2 className="size-4 animate-spin" aria-hidden="true" />}
-              Criar conta e continuar
+              {t("signup.submit")}
             </button>
           </form>
 
           <p className="mt-6 text-center font-body-b text-[13px] text-white/60">
-            Já tem conta?{" "}
+            {t("signup.hasAccount")}{" "}
             <Link to="/auth" search={{ mode: "signin" }} className="font-semibold text-white underline-offset-2 hover:underline">
-              Entrar
+              {t("signup.signin")}
             </Link>
           </p>
         </div>
