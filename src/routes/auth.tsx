@@ -18,9 +18,17 @@ export const Route = createFileRoute("/auth")({
   component: AuthPage,
 });
 
+function safeRedirect(path?: string): string {
+  if (!path) return "/dashboard";
+  // only allow same-origin absolute paths, block protocol-relative and external URLs
+  if (!path.startsWith("/") || path.startsWith("//") || path.startsWith("/\\")) return "/dashboard";
+  return path;
+}
+
 function AuthPage() {
   const search = Route.useSearch();
   const navigate = useNavigate();
+  const redirectTo = safeRedirect(search.redirect);
   const [mode, setMode] = useState<"signin" | "signup">(search.mode ?? "signin");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
