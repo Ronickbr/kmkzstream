@@ -319,7 +319,7 @@ function AdminUsersPage() {
             </tr>
           </thead>
           <tbody>
-            {filtered.map((u: any) => {
+            {pageRows.map((u: any) => {
               const isAdmin = (u.roles as string[]).includes("admin");
               const checked = selectedIds.has(u.id);
               return (
