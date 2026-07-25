@@ -165,31 +165,39 @@ function CadastroPage() {
 
     setLoading(true);
     try {
+      const cpfDigits = onlyDigits(cpf);
+      const whatsDigits = onlyDigits(whatsapp);
       const { data, error } = await supabase.auth.signUp({
         email: email.trim(),
         password,
         options: {
-          emailRedirectTo: window.location.origin,
+          emailRedirectTo: `${window.location.origin}/checkout/${planId}`,
           data: {
             display_name: name.trim(),
+            cpf: cpfDigits,
+            whatsapp: whatsDigits,
+            selected_plan_id: planId,
             referral_code: refStatus === "valid" ? refCode.trim() : undefined,
           },
         },
       });
       if (error) throw error;
       localStorage.removeItem("nexus_ref");
+      // Guarda o plano escolhido para retomar o pagamento após a confirmação do e-mail.
+      localStorage.setItem("kmkz_pending_plan", planId);
 
       if (data.session) {
         try {
           await updateMyProfile({
             data: {
               display_name: name.trim(),
-              whatsapp: onlyDigits(whatsapp),
-              cpf: onlyDigits(cpf),
+              whatsapp: whatsDigits,
+              cpf: cpfDigits,
             },
           });
         } catch (err: any) {
-          toast.error(err?.message ?? t("signup.errProfile"));
+          // Perfil já é criado pelo backend no cadastro; falha aqui não bloqueia o pagamento.
+          console.warn("profile sync", err);
         }
         toast.success(t("signup.okPay"));
         navigate({ to: "/checkout/$planId", params: { planId }, replace: true });
@@ -197,6 +205,7 @@ function CadastroPage() {
         toast.success(t("signup.okConfirm"));
         navigate({ to: "/auth", search: { mode: "signin", redirect: `/checkout/${planId}` }, replace: true });
       }
+
     } catch (err: any) {
       toast.error(err?.message ?? t("signup.errGeneric"));
     } finally {
