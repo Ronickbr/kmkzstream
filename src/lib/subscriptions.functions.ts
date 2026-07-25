@@ -60,3 +60,28 @@ export const cancelMySubscription = createServerFn({ method: "POST" })
     if (error) throw new Error(error.message);
     return { ok: true };
   });
+
+/** Consulta o status atual do pagamento/assinatura do usuário logado. */
+export const getMyPaymentStatus = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .validator((data: { planId?: string }) => data ?? {})
+  .handler(async ({ data, context }) => {
+    const { supabase, userId } = context;
+    let q = supabase
+      .from("subscriptions")
+      .select("id, plan_id, status, starts_at, ends_at, payment_provider")
+      .eq("user_id", userId)
+      .order("created_at", { ascending: false })
+      .limit(1);
+    if (data?.planId) q = q.eq("plan_id", data.planId);
+
+    const { data: sub, error } = await q.maybeSingle();
+    if (error) throw new Error(error.message);
+    if (!sub) return { state: "pending" as const, subscription: null };
+
+    const confirmed = sub.status === "active" && new Date(sub.ends_at) > new Date();
+    return {
+      state: confirmed ? ("confirmed" as const) : ("pending" as const),
+      subscription: sub,
+    };
+  });
