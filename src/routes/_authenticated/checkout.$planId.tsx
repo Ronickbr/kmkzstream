@@ -146,6 +146,7 @@ function CheckoutPage() {
   const handleConfirm = async () => {
     if (!accept) return;
     setBusy(true);
+    setPayError(null);
     try {
       if (method === "gateway") {
         const url = checkoutUrl({
@@ -164,19 +165,48 @@ function CheckoutPage() {
         window.open(url, "_blank", "noopener,noreferrer");
       }
       await subscribeFn({ data: { planId: plan.id } });
-      localStorage.removeItem("kmkz_pending_plan");
-      celebrate();
-      toast.success(`Assinatura ${plan.name} ativada! 🎉`);
-
-      setTimeout(() => navigate({ to: "/dashboard" }), 900);
+      // A liberação do acesso só acontece quando a verificação automática confirmar o pagamento.
+      setAttempts((n) => n + 1);
+      setPayState("verifying");
     } catch (e) {
-      const msg = e instanceof Error ? e.message : "Erro ao ativar plano";
+      const msg = e instanceof Error ? e.message : "Não foi possível processar o pagamento.";
+      setPayError(msg);
+      setPayState("failed");
       toast.error(msg);
+    } finally {
       setBusy(false);
     }
   };
 
+  const retryPayment = () => {
+    setPayError(null);
+    setPayState("idle");
+    setStep(2);
+  };
+
+  const checkNow = () => {
+    setAttempts((n) => n + 1);
+    setPayError(null);
+    setPayState("verifying");
+  };
+
+  if (payState !== "idle") {
+    return (
+      <PaymentResultScreen
+        state={payState}
+        planName={plan.name}
+        priceLabel={planPrice(plan)}
+        methodLabel={METHOD_LABEL[method]}
+        error={payError}
+        onRetry={retryPayment}
+        onCheckNow={checkNow}
+        onEnter={() => navigate({ to: "/dashboard" })}
+      />
+    );
+  }
+
   const economy = PLAN_ECONOMY_LABEL[plan.period];
+
 
   return (
     <div className="min-h-dvh">
