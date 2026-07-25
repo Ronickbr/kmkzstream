@@ -130,7 +130,7 @@ function PlanosPage() {
                 ))}
                 <li className="flex items-start gap-2 rounded-xl bg-accent/10 px-2 py-1.5 font-medium text-accent">
                   <Sparkles className="mt-0.5 size-4 shrink-0" aria-hidden="true" />
-                  <span>Ganhe {(p as any).purchase_points ?? 0} pts ao assinar</span>
+                  <span>Ganhe {p.purchase_points ?? 0} pts ao assinar</span>
                 </li>
               </ul>
 
