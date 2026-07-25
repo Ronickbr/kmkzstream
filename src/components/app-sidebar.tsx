@@ -45,7 +45,8 @@ const adminItems = [
   { to: "/admin/pontos", label: "Regras de pontos", icon: Sparkles },
   { to: "/admin/usuarios", label: "Usuários", icon: Users },
   { to: "/admin/resgates", label: "Resgates", icon: Package },
-  { to: "/admin/resgates", label: "Resgates", icon: Ticket, hidden: true },
+  { to: "/admin/configuracoes", label: "Configurações", icon: Settings },
+
 ];
 
 export function AppSidebar({ isAdmin }: { isAdmin: boolean }) {
