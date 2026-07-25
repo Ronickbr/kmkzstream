@@ -4,6 +4,9 @@ import { useServerFn } from "@tanstack/react-start";
 import { subscribeToPlan } from "@/lib/subscriptions.functions";
 import { plansQueryOptions as plansQO, overviewQueryOptions as overviewQO } from "@/lib/queries";
 import { useI18n } from "@/lib/i18n";
+import { useQuery } from "@tanstack/react-query";
+import { getCheckoutSettings } from "@/lib/settings.functions";
+import { checkoutUrl, gatewayForLocale, GATEWAY_LABEL, type Gateway } from "@/lib/payments";
 import { PLAN_PERIOD_LABEL, PLAN_ECONOMY_LABEL } from "@/lib/format";
 import { celebrate } from "@/lib/confetti";
 import { toast } from "sonner";
@@ -21,6 +24,7 @@ import {
   Copy,
   Wallet,
   Clock,
+  Globe,
 } from "lucide-react";
 
 
@@ -34,16 +38,24 @@ export const Route = createFileRoute("/_authenticated/checkout/$planId")({
 });
 
 type Step = 1 | 2 | 3;
-type PayMethod = "card" | "pix" | "mercadopago";
+type PayMethod = "card" | "pix" | "mercadopago" | "gateway";
 
 const METHOD_LABEL: Record<PayMethod, string> = {
   card: "Cartão de crédito",
   pix: "Pix",
   mercadopago: "Mercado Pago",
+  gateway: "Gateway online",
 };
 
 function CheckoutPage() {
-  const { planPrice } = useI18n();
+  const { planPrice, locale } = useI18n();
+  const getSettings = useServerFn(getCheckoutSettings);
+  const { data: paySettings } = useQuery({
+    queryKey: ["checkout", "settings"],
+    queryFn: () => getSettings(),
+    staleTime: 5 * 60_000,
+  });
+  const gateway = gatewayForLocale(locale, paySettings);
   const { planId } = Route.useParams();
   const { data: plans } = useSuspenseQuery(plansQO);
   useSuspenseQuery(overviewQO);
@@ -51,7 +63,7 @@ function CheckoutPage() {
   const navigate = useNavigate();
 
   const [step, setStep] = useState<Step>(1);
-  const [method, setMethod] = useState<PayMethod>("pix");
+  const [method, setMethod] = useState<PayMethod>(locale === "pt" ? "pix" : "gateway");
   const [busy, setBusy] = useState(false);
   const [card, setCard] = useState({ number: "", name: "", exp: "", cvc: "" });
   const [accept, setAccept] = useState(false);
@@ -86,6 +98,22 @@ function CheckoutPage() {
     if (!accept) return;
     setBusy(true);
     try {
+      if (method === "gateway") {
+        const url = checkoutUrl({
+          gateway,
+          settings: paySettings,
+          planId: plan.id,
+          planName: plan.name,
+          priceCentsBRL: plan.price_cents,
+          orderRef: `kmkz-${plan.id.slice(0, 8)}-${Date.now()}`,
+        });
+        if (!url) {
+          toast.error(`${GATEWAY_LABEL[gateway]} ainda não está configurado. Escolha outro método.`);
+          setBusy(false);
+          return;
+        }
+        window.open(url, "_blank", "noopener,noreferrer");
+      }
       await subscribeFn({ data: { planId: plan.id } });
       celebrate();
       toast.success(`Assinatura ${plan.name} ativada! 🎉`);
@@ -121,7 +149,27 @@ function CheckoutPage() {
         <div className="mt-8 grid gap-8 lg:grid-cols-[1fr_360px]">
           <section className="card-surface p-6 sm:p-8">
             {step === 1 && <StepReview plan={plan} />}
-            {step === 2 && <StepPayment method={method} setMethod={setMethod} card={card} setCard={setCard} plan={plan} />}
+            {step === 2 && (
+              <StepPayment
+                method={method}
+                setMethod={setMethod}
+                card={card}
+                setCard={setCard}
+                plan={plan}
+                gateway={gateway}
+                gatewayReady={
+                  !!checkoutUrl({
+                    gateway,
+                    settings: paySettings,
+                    planId: plan.id,
+                    planName: plan.name,
+                    priceCentsBRL: plan.price_cents,
+                    orderRef: "preview",
+                  })
+                }
+                isBR={locale === "pt"}
+              />
+            )}
             {step === 3 && <StepConfirm plan={plan} method={method} accept={accept} setAccept={setAccept} />}
 
             <div className="mt-8 flex items-center justify-between border-t border-border/60 pt-6">
@@ -286,12 +334,18 @@ function StepPayment({
   card,
   setCard,
   plan,
+  gateway,
+  gatewayReady,
+  isBR,
 }: {
   method: PayMethod;
   setMethod: (m: PayMethod) => void;
   card: { number: string; name: string; exp: string; cvc: string };
   setCard: (c: { number: string; name: string; exp: string; cvc: string }) => void;
   plan: any;
+  gateway: Gateway;
+  gatewayReady: boolean;
+  isBR: boolean;
 }) {
   const numId = useId();
   const nameId = useId();
@@ -308,6 +362,24 @@ function StepPayment({
     <div>
       <h2 className="font-display text-xl font-black">Método de pagamento</h2>
       <p className="mt-1 text-sm text-muted-foreground">Ambiente de demonstração — nenhum valor será cobrado.</p>
+
+      <div className="mt-5 grid gap-3 sm:grid-cols-2">
+        <PayOption
+          id="gateway"
+          current={method}
+          onClick={() => setMethod("gateway")}
+          icon={Globe}
+          title={GATEWAY_LABEL[gateway]}
+          hint={gatewayReady ? "Pagamento online seguro" : "Não configurado"}
+          recommended
+        />
+      </div>
+
+      {!isBR && (
+        <p className="mt-3 text-xs text-muted-foreground">
+          International payments are processed by {GATEWAY_LABEL[gateway]} in US dollars.
+        </p>
+      )}
 
       <div className="mt-5 grid gap-3 sm:grid-cols-3">
         <PayOption id="pix" current={method} onClick={() => setMethod("pix")} icon={QrCode} title="Pix" hint="Aprovação imediata" recommended />
