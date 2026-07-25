@@ -67,15 +67,55 @@ function CheckoutPage() {
   const { data: plans } = useSuspenseQuery(plansQO);
   useSuspenseQuery(overviewQO);
   const subscribeFn = useServerFn(subscribeToPlan);
+  const statusFn = useServerFn(getMyPaymentStatus);
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
 
   const [step, setStep] = useState<Step>(1);
   const [method, setMethod] = useState<PayMethod>(locale === "pt" ? "pix" : "gateway");
   const [busy, setBusy] = useState(false);
   const [card, setCard] = useState({ number: "", name: "", exp: "", cvc: "" });
   const [accept, setAccept] = useState(false);
+  const [payState, setPayState] = useState<PayState>("idle");
+  const [payError, setPayError] = useState<string | null>(null);
+  const [attempts, setAttempts] = useState(0);
 
   const plan = plans.find((p) => p.id === planId);
+
+  // Verificação automática do status do pagamento enquanto aguardamos a confirmação.
+  const { data: payStatus } = useQuery({
+    queryKey: ["checkout", "status", planId, attempts],
+    queryFn: () => statusFn({ data: { planId } }),
+    enabled: payState === "verifying",
+    refetchInterval: payState === "verifying" ? 3000 : false,
+    staleTime: 0,
+  });
+
+  useEffect(() => {
+    if (payState !== "verifying") return;
+    if (payStatus?.state === "confirmed") {
+      setPayState("confirmed");
+      localStorage.removeItem("kmkz_pending_plan");
+      queryClient.invalidateQueries();
+      celebrate();
+      toast.success("Pagamento confirmado! Acesso liberado 🎉");
+    }
+  }, [payStatus, payState, queryClient]);
+
+  // Se a confirmação demorar demais, mostramos a tela de falha com opção de tentar novamente.
+  useEffect(() => {
+    if (payState !== "verifying") return;
+    const timeout = setTimeout(() => {
+      setPayState((s) => {
+        if (s !== "verifying") return s;
+        setPayError(
+          "Não recebemos a confirmação do pagamento a tempo. Seu cadastro está salvo — você pode tentar novamente ou concluir mais tarde.",
+        );
+        return "failed";
+      });
+    }, 90_000);
+    return () => clearTimeout(timeout);
+  }, [payState, attempts]);
 
   const cardValid = useMemo(
     () =>
@@ -85,6 +125,7 @@ function CheckoutPage() {
       /^\d{3,4}$/.test(card.cvc),
     [card],
   );
+
 
   if (!plan) {
     return (
