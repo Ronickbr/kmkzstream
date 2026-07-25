@@ -8,7 +8,6 @@ import {
   UserCircle,
   ShieldCheck,
   Package,
-  Ticket,
   Settings,
   BarChart3,
   Sparkles,

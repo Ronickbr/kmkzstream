@@ -6,6 +6,7 @@ const items = [
   { to: "/admin/premios", label: "Prêmios" },
   { to: "/admin/usuarios", label: "Usuários" },
   { to: "/admin/resgates", label: "Resgates" },
+  { to: "/admin/configuracoes", label: "Configurações" },
 ];
 
 export function AdminNav() {
