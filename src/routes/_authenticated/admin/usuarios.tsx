@@ -51,12 +51,10 @@ function AdminUsersPage() {
   };
 
   const handleDelete = async (userId: string, name: string) => {
-    const ok = await confirmDialog({
-      title: "Excluir usuário",
-      description: `Tem certeza que deseja excluir ${name}? Esta ação é irreversível e removerá conta, perfil, pontos e histórico.`,
-      confirmLabel: "Excluir",
-      variant: "danger",
-    });
+    const ok = await confirmAction(
+      `Excluir ${name}? Esta ação é irreversível.`,
+      { confirmLabel: "Excluir", danger: true },
+    );
     if (!ok) return;
     try {
       await deleteFn({ data: { userId } });
