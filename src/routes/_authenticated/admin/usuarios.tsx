@@ -101,7 +101,7 @@ function AdminUsersPage() {
 
   const runBulk = async (
     label: string,
-    action: (u: any) => Promise<void>,
+    action: (u: any) => Promise<unknown>,
     successMsg: (ok: number, fail: number) => string,
   ) => {
     setBulkRunning(true);
