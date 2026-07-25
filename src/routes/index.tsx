@@ -504,7 +504,8 @@ function Planos({ plans }: { plans: any[] }) {
                 </ul>
 
                 <Link
-                  to="/auth"
+                  to="/cadastro"
+                  search={{ plan: plan.id }}
                   className="group mt-8 inline-flex items-center justify-between rounded-sm border border-white/15 bg-white/[0.03] px-5 py-4 font-mono-b text-[11px] font-bold uppercase tracking-[0.22em] text-white transition hover:border-[color:var(--color-tally)] hover:bg-[color:var(--color-tally)]"
                 >
                   {t("plans.cta")} {tc(plan.name)}
