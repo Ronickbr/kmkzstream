@@ -33,21 +33,38 @@ function AdminUsersPage() {
   const [mode, setMode] = useState<Mode>(null);
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const [bulkRunning, setBulkRunning] = useState(false);
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(20);
 
-  const filtered = users.filter((u: any) => {
+  const filtered = useMemo(() => {
     const q = search.trim().toLowerCase();
-    if (!q) return true;
-    return (
-      (u.display_name ?? "").toLowerCase().includes(q) ||
-      (u.referral_code ?? "").toLowerCase().includes(q)
+    if (!q) return users;
+    return users.filter(
+      (u: any) =>
+        (u.display_name ?? "").toLowerCase().includes(q) ||
+        (u.referral_code ?? "").toLowerCase().includes(q),
     );
-  });
+  }, [users, search]);
 
-  const filteredIds = filtered.map((u: any) => u.id);
-  const allFilteredSelected =
-    filteredIds.length > 0 && filteredIds.every((id) => selectedIds.has(id));
-  const someFilteredSelected =
-    filteredIds.some((id) => selectedIds.has(id)) && !allFilteredSelected;
+  const totalPages = Math.max(1, Math.ceil(filtered.length / pageSize));
+
+  // Reset page when filter/pageSize changes so we don't land on an empty page.
+  useEffect(() => {
+    setPage(1);
+  }, [search, pageSize]);
+  useEffect(() => {
+    if (page > totalPages) setPage(totalPages);
+  }, [page, totalPages]);
+
+  const pageStart = (page - 1) * pageSize;
+  const pageRows = filtered.slice(pageStart, pageStart + pageSize);
+  const pageIds = pageRows.map((u: any) => u.id);
+
+  // Selection is a stable Set of IDs — persists across filter/page changes.
+  const selectedOnPage = pageIds.filter((id) => selectedIds.has(id)).length;
+  const allPageSelected = pageIds.length > 0 && selectedOnPage === pageIds.length;
+  const somePageSelected = selectedOnPage > 0 && !allPageSelected;
+  const selectedOffscreen = selectedIds.size - selectedOnPage;
 
   const toggleOne = (id: string) => {
     setSelectedIds((prev) => {
