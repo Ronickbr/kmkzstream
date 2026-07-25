@@ -35,12 +35,12 @@ function MinhaContaPage() {
   const p = data.profile;
   const [name, setName] = useState(p?.display_name ?? "");
   const [avatar, setAvatar] = useState(p?.avatar_url ?? "");
-  const [whatsapp, setWhatsapp] = useState((p as any)?.whatsapp ?? "");
-  const [phone, setPhone] = useState((p as any)?.phone ?? "");
-  const [bio, setBio] = useState((p as any)?.bio ?? "");
-  const [city, setCity] = useState((p as any)?.city ?? "");
-  const [state, setState] = useState((p as any)?.state ?? "");
-  const [cpf, setCpf] = useState(formatCpf((p as any)?.cpf ?? ""));
+  const [whatsapp, setWhatsapp] = useState(p?.whatsapp ?? "");
+  const [phone, setPhone] = useState(p?.phone ?? "");
+  const [bio, setBio] = useState(p?.bio ?? "");
+  const [city, setCity] = useState(p?.city ?? "");
+  const [state, setState] = useState(p?.state ?? "");
+  const [cpf, setCpf] = useState(formatCpf(p?.cpf ?? ""));
   const [saving, setSaving] = useState(false);
 
   const [pwd, setPwd] = useState("");
@@ -127,9 +127,9 @@ function MinhaContaPage() {
               <span className="inline-flex items-center gap-1 rounded-full bg-brand/15 px-2.5 py-1 text-xs font-semibold text-brand">
                 {data.points} pontos
               </span>
-              {(p as any)?.created_at && (
+              {p?.created_at && (
                 <span className="inline-flex items-center gap-1 rounded-full bg-muted px-2.5 py-1 text-xs text-muted-foreground">
-                  <Calendar className="h-3 w-3" /> Membro desde {new Date((p as any).created_at).toLocaleDateString("pt-BR")}
+                  <Calendar className="h-3 w-3" /> Membro desde {new Date(p.created_at).toLocaleDateString("pt-BR")}
                 </span>
               )}
             </div>
