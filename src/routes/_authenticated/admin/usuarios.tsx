@@ -370,7 +370,7 @@ function AdminUsersPage() {
             })}
             {filtered.length === 0 && (
               <tr>
-                <td colSpan={6} className="px-4 py-10 text-center text-sm text-surface-900/50">
+                <td colSpan={7} className="px-4 py-10 text-center text-sm text-surface-900/50">
                   Nenhum usuário encontrado.
                 </td>
               </tr>
