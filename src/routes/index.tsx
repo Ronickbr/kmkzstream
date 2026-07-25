@@ -182,7 +182,7 @@ function Hero() {
         <div className="col-span-12 lg:col-span-7">
           <TimecodeBar ch="CH.001" label="ENTRADA" />
 
-          <h1 className="mt-8 font-broadcast text-[64px] leading-[0.86] tracking-[0.005em] text-white sm:text-[92px] lg:text-[120px] xl:text-[136px]">
+          <h1 className="mt-8 font-broadcast text-[clamp(3.25rem,13vw,8.5rem)] leading-[0.86] tracking-[0.005em] text-white">
             TUDO
             <br />
             NO AR.
@@ -328,7 +328,7 @@ function Grade() {
       <div className="mx-auto grid max-w-[1400px] grid-cols-12 gap-6 px-4 sm:px-8">
         <header className="col-span-12 lg:col-span-4">
           <span className="font-mono-b text-[10px] uppercase tracking-[0.24em] text-white/40">§ 02 — Grade</span>
-          <h2 className="mt-4 font-broadcast text-5xl leading-[0.9] text-white sm:text-6xl lg:text-7xl">
+          <h2 className="mt-4 font-broadcast text-[clamp(2.5rem,8vw,4.5rem)] leading-[0.9] text-white">
             Uma grade que <span className="text-[color:var(--color-tally)]">não dorme</span>.
           </h2>
           <p className="mt-5 max-w-md font-body-b text-[15px] leading-relaxed text-white/60">
@@ -373,7 +373,7 @@ function Recompensas({ rewards }: { rewards: any[] }) {
         <div className="grid grid-cols-12 gap-6">
           <header className="col-span-12 lg:col-span-5">
             <span className="font-mono-b text-[10px] uppercase tracking-[0.24em] text-white/40">§ 03 — Recompensas</span>
-            <h2 className="mt-4 font-broadcast text-5xl leading-[0.9] text-white sm:text-6xl lg:text-7xl">
+            <h2 className="mt-4 font-broadcast text-[clamp(2.5rem,8vw,4.5rem)] leading-[0.9] text-white">
               Cada indicação<br />
               vale um <span className="text-[color:var(--color-tally)]">crédito no ar</span>.
             </h2>
@@ -434,7 +434,7 @@ function Planos({ plans }: { plans: any[] }) {
         <div className="grid grid-cols-12 items-end gap-6">
           <header className="col-span-12 lg:col-span-8">
             <span className="font-mono-b text-[10px] uppercase tracking-[0.24em] text-white/40">§ 04 — Planos</span>
-            <h2 className="mt-4 font-broadcast text-5xl leading-[0.9] text-white sm:text-6xl lg:text-7xl">
+            <h2 className="mt-4 font-broadcast text-[clamp(2.5rem,8vw,4.5rem)] leading-[0.9] text-white">
               Escolha a duração<br />da sua <span className="text-[color:var(--color-tally)]">transmissão</span>.
             </h2>
           </header>
@@ -521,7 +521,7 @@ function Depoimentos() {
       <div className="mx-auto max-w-[1400px] px-4 sm:px-8">
         <header className="mb-14">
           <span className="font-mono-b text-[10px] uppercase tracking-[0.24em] text-white/40">§ 05 — Assinantes</span>
-          <h2 className="mt-4 font-broadcast text-5xl leading-[0.9] text-white sm:text-6xl">
+          <h2 className="mt-4 font-broadcast text-[clamp(2.5rem,7.5vw,3.75rem)] leading-[0.9] text-white">
             Quem já entrou <span className="text-[color:var(--color-tally)]">no ar</span>.
           </h2>
         </header>
@@ -565,7 +565,7 @@ function FAQ() {
       <div className="mx-auto grid max-w-[1400px] grid-cols-12 gap-8 px-4 sm:px-8">
         <header className="col-span-12 lg:col-span-4">
           <span className="font-mono-b text-[10px] uppercase tracking-[0.24em] text-white/40">§ 06 — Suporte</span>
-          <h2 className="mt-4 font-broadcast text-5xl leading-[0.9] text-white sm:text-6xl">
+          <h2 className="mt-4 font-broadcast text-[clamp(2.5rem,7.5vw,3.75rem)] leading-[0.9] text-white">
             Antes de entrar,<br />o essencial.
           </h2>
         </header>
@@ -576,13 +576,13 @@ function FAQ() {
               <li key={it.q} className="border-t border-white/10 last:border-b">
                 <button
                   onClick={() => setOpen(isOpen ? null : i)}
-                  className="flex w-full items-center justify-between gap-6 py-6 text-left"
+                  className="flex w-full items-center justify-between gap-3 py-5 text-left sm:gap-6 sm:py-6"
                 >
-                  <span className="flex items-baseline gap-4">
-                    <span className="font-mono-b text-[11px] tracking-[0.18em] text-white/30">
+                  <span className="flex min-w-0 items-baseline gap-2 sm:gap-4">
+                    <span className="shrink-0 font-mono-b text-[11px] tracking-[0.18em] text-white/30">
                       Q.{String(i + 1).padStart(2, "0")}
                     </span>
-                    <span className="font-broadcast text-2xl leading-tight text-white sm:text-3xl">
+                    <span className="min-w-0 font-broadcast text-xl leading-tight text-white sm:text-3xl">
                       {it.q}
                     </span>
                   </span>
@@ -595,7 +595,7 @@ function FAQ() {
                   </span>
                 </button>
                 {isOpen && (
-                  <p className="max-w-2xl pb-6 pl-14 font-body-b text-[15px] leading-relaxed text-white/70">
+                  <p className="max-w-2xl pb-6 pl-0 font-body-b text-[15px] leading-relaxed text-white/70 sm:pl-14">
                     {it.a}
                   </p>
                 )}
@@ -616,7 +616,7 @@ function FinalCTA() {
       <div aria-hidden className="absolute inset-0 bg-[radial-gradient(700px_400px_at_50%_50%,rgba(255,45,85,0.18),transparent_60%)]" />
       <div className="relative mx-auto max-w-[1400px] px-4 text-center sm:px-8">
         <TimecodeBar ch="CH.999" label="ENCERRAMENTO" />
-        <h2 className="mx-auto mt-8 max-w-4xl font-broadcast text-6xl leading-[0.88] text-white sm:text-7xl lg:text-[112px]">
+        <h2 className="mx-auto mt-8 max-w-4xl font-broadcast text-[clamp(2.75rem,10vw,7rem)] leading-[0.88] text-white">
           O sinal está aberto.<br />
           <span className="text-[color:var(--color-tally)]">Entra?</span>
         </h2>

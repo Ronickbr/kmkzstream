@@ -230,7 +230,7 @@ function PremiosPage() {
                 <Input id="ship-state" required maxLength={2} value={shipping.state} onChange={(e) => setShipping({ ...shipping, state: e.target.value.toUpperCase() })} />
               </div>
             </div>
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid gap-3 sm:grid-cols-2">
               <div className="grid gap-1">
                 <Label htmlFor="ship-zip">CEP</Label>
                 <Input id="ship-zip" required inputMode="numeric" placeholder="00000-000" value={shipping.zip} onChange={(e) => setShipping({ ...shipping, zip: e.target.value })} />
