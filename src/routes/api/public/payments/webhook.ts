@@ -1,5 +1,4 @@
 import { createFileRoute } from "@tanstack/react-router";
-import type { RouteServerOptions } from "@tanstack/start-client-core";
 import { createHmac, timingSafeEqual } from "crypto";
 import { z } from "zod";
 
@@ -26,10 +25,7 @@ function verifySignature(rawBody: string, header: string | null, secret: string)
   return timingSafeEqual(a, b);
 }
 
-export const Route = createFileRoute("/api/public/payments/webhook")({
-  server: {
-    handlers: {
-      POST: async ({ request }) => {
+async function handleWebhook(request: Request): Promise<Response> {
         const secret = process.env.PAYMENT_WEBHOOK_SECRET;
         if (!secret) {
           console.error("PAYMENT_WEBHOOK_SECRET não configurado");
