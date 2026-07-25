@@ -552,6 +552,8 @@ function StepConfirm({
   setAccept: (v: boolean) => void;
 }) {
   const termsId = useId();
+  const { planPrice } = useI18n();
+
   return (
     <div>
       <h2 className="font-display text-xl font-black">Quase lá!</h2>
