@@ -34,7 +34,7 @@ function DashboardPage() {
 
   const [tourOpen, setTourOpen] = useState(false);
   useEffect(() => {
-    if (!(data.profile as any)?.onboarded_at) {
+    if (!data.profile?.onboarded_at) {
       const t = setTimeout(() => setTourOpen(true), 400);
       return () => clearTimeout(t);
     }
