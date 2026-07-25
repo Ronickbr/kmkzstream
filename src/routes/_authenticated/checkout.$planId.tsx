@@ -752,3 +752,133 @@ function StepConfirm({
     </div>
   );
 }
+
+/** Tela de verificação, confirmação e falha/recusa do pagamento. */
+function PaymentResultScreen({
+  state,
+  planName,
+  priceLabel,
+  methodLabel,
+  error,
+  onRetry,
+  onCheckNow,
+  onEnter,
+}: {
+  state: Exclude<PayState, "idle">;
+  planName: string;
+  priceLabel: string;
+  methodLabel: string;
+  error: string | null;
+  onRetry: () => void;
+  onCheckNow: () => void;
+  onEnter: () => void;
+}) {
+  const config = {
+    verifying: {
+      icon: <Loader2 className="size-8 animate-spin text-brand" aria-hidden="true" />,
+      ring: "border-brand/40 bg-brand/10",
+      title: "Confirmando seu pagamento…",
+      text: "Estamos verificando automaticamente o status junto ao provedor. Isso costuma levar poucos segundos — pode deixar esta tela aberta.",
+    },
+    confirmed: {
+      icon: <CheckCircle2 className="size-8 text-emerald-400" aria-hidden="true" />,
+      ring: "border-emerald-500/40 bg-emerald-500/10",
+      title: "Pagamento confirmado!",
+      text: "Seu acesso foi liberado. Aproveite todos os benefícios do seu plano e comece a indicar amigos para ganhar pontos.",
+    },
+    failed: {
+      icon: <XCircle className="size-8 text-rose-400" aria-hidden="true" />,
+      ring: "border-rose-500/40 bg-rose-500/10",
+      title: "Pagamento não confirmado",
+      text: error ?? "O pagamento foi recusado ou não pôde ser concluído.",
+    },
+  }[state];
+
+  return (
+    <div className="min-h-dvh">
+      <main role="main" id="main" className="mx-auto max-w-xl px-4 py-12 sm:px-6 sm:py-20">
+        <div className="rounded-3xl border border-border bg-card/60 p-6 text-center shadow-glow sm:p-10">
+          <div className={`mx-auto grid size-16 place-items-center rounded-2xl border ${config.ring}`}>
+            {config.icon}
+          </div>
+          <h1 className="mt-5 font-display text-2xl font-black tracking-tight sm:text-3xl">{config.title}</h1>
+          <p className="mx-auto mt-3 max-w-md text-sm text-muted-foreground">{config.text}</p>
+
+          <dl className="mt-6 space-y-2 rounded-2xl border border-border/70 bg-background/40 p-4 text-left text-sm">
+            <div className="flex items-center justify-between gap-4">
+              <dt className="text-muted-foreground">Plano</dt>
+              <dd className="font-semibold">{planName}</dd>
+            </div>
+            <div className="flex items-center justify-between gap-4">
+              <dt className="text-muted-foreground">Valor</dt>
+              <dd className="font-semibold">{priceLabel}</dd>
+            </div>
+            <div className="flex items-center justify-between gap-4">
+              <dt className="text-muted-foreground">Método</dt>
+              <dd className="font-semibold">{methodLabel}</dd>
+            </div>
+          </dl>
+
+          {state === "failed" && (
+            <p className="mt-4 rounded-2xl border border-border/70 bg-background/40 p-3 text-xs text-muted-foreground">
+              <ShieldCheck className="mr-1 inline size-3.5 align-[-2px] text-emerald-400" />
+              Seu cadastro continua salvo — nada foi perdido. Você pode tentar novamente agora ou concluir o pagamento depois pela página de planos.
+            </p>
+          )}
+
+          <div className="mt-7 flex flex-col gap-3 sm:flex-row sm:justify-center">
+            {state === "confirmed" && (
+              <button
+                type="button"
+                onClick={onEnter}
+                className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-gradient-brand px-6 text-sm font-bold text-white shadow-glow transition hover:shadow-neon"
+              >
+                Acessar meu painel
+                <ArrowRight className="size-4" aria-hidden="true" />
+              </button>
+            )}
+
+            {state === "verifying" && (
+              <button
+                type="button"
+                onClick={onCheckNow}
+                className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-border px-6 text-sm font-semibold hover:border-brand/60"
+              >
+                <RefreshCw className="size-4" aria-hidden="true" />
+                Verificar agora
+              </button>
+            )}
+
+            {state === "failed" && (
+              <>
+                <button
+                  type="button"
+                  onClick={onRetry}
+                  className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-gradient-brand px-6 text-sm font-bold text-white shadow-glow transition hover:shadow-neon"
+                >
+                  <RefreshCw className="size-4" aria-hidden="true" />
+                  Tentar novamente
+                </button>
+                <button
+                  type="button"
+                  onClick={onCheckNow}
+                  className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-border px-6 text-sm font-semibold hover:border-brand/60"
+                >
+                  Já paguei, verificar status
+                </button>
+              </>
+            )}
+          </div>
+
+          <div className="mt-6 flex flex-wrap items-center justify-center gap-4 text-xs text-muted-foreground">
+            <Link to="/planos" className="hover:text-foreground">Ver planos</Link>
+            <Link to="/suporte" className="inline-flex items-center gap-1 hover:text-foreground">
+              <LifeBuoy className="size-3.5" aria-hidden="true" />
+              Falar com o suporte
+            </Link>
+          </div>
+        </div>
+      </main>
+    </div>
+  );
+}
