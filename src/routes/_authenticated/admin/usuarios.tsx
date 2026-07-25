@@ -546,7 +546,7 @@ function UserModal({
       aria-modal="true"
     >
       <div
-        className="flex max-h-[85vh] w-full max-w-2xl flex-col overflow-hidden rounded-2xl border border-surface-200 bg-card shadow-xl"
+        className="flex max-h-[85vh] w-[calc(100vw-2rem)] flex-col overflow-hidden rounded-2xl border border-surface-200 bg-card shadow-xl sm:w-full sm:max-w-lg md:max-w-2xl"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex shrink-0 items-center justify-between border-b border-surface-200 px-6 py-4">
