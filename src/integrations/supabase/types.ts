@@ -53,6 +53,24 @@ export type Database = {
         }
         Relationships: []
       }
+      app_settings: {
+        Row: {
+          key: string
+          updated_at: string
+          value: Json
+        }
+        Insert: {
+          key: string
+          updated_at?: string
+          value?: Json
+        }
+        Update: {
+          key?: string
+          updated_at?: string
+          value?: Json
+        }
+        Relationships: []
+      }
       notifications: {
         Row: {
           body: string | null
@@ -399,7 +417,10 @@ export type Database = {
           created_at: string
           ends_at: string
           id: string
+          payment_provider: string | null
+          payment_ref: string | null
           plan_id: string
+          reminder_sent_at: string | null
           starts_at: string
           status: Database["public"]["Enums"]["subscription_status"]
           updated_at: string
@@ -409,7 +430,10 @@ export type Database = {
           created_at?: string
           ends_at: string
           id?: string
+          payment_provider?: string | null
+          payment_ref?: string | null
           plan_id: string
+          reminder_sent_at?: string | null
           starts_at?: string
           status?: Database["public"]["Enums"]["subscription_status"]
           updated_at?: string
@@ -419,7 +443,10 @@ export type Database = {
           created_at?: string
           ends_at?: string
           id?: string
+          payment_provider?: string | null
+          payment_ref?: string | null
           plan_id?: string
+          reminder_sent_at?: string | null
           starts_at?: string
           status?: Database["public"]["Enums"]["subscription_status"]
           updated_at?: string
@@ -518,10 +545,29 @@ export type Database = {
     }
     Functions: {
       admin_analytics: { Args: never; Returns: Json }
+      admin_get_settings: { Args: { _key: string }; Returns: Json }
+      admin_set_settings: {
+        Args: { _key: string; _value: Json }
+        Returns: Json
+      }
       admin_stats: { Args: never; Returns: Json }
       check_and_award_achievements: { Args: never; Returns: Json }
       expire_old_points: { Args: never; Returns: number }
+      expiring_subscriptions: {
+        Args: { _days?: number }
+        Returns: {
+          days_left: number
+          display_name: string
+          ends_at: string
+          plan_name: string
+          reminder_sent_at: string
+          subscription_id: string
+          user_id: string
+          whatsapp: string
+        }[]
+      }
       generate_referral_code: { Args: never; Returns: string }
+      get_checkout_settings: { Args: never; Returns: Json }
       get_my_referrals: {
         Args: never
         Returns: {
@@ -543,9 +589,14 @@ export type Database = {
       }
       leaderboard: { Args: { _period?: string }; Returns: Json }
       mark_all_notifications_read: { Args: never; Returns: number }
+      mark_reminder_sent: {
+        Args: { _subscription_id: string }
+        Returns: boolean
+      }
       redeem_reward:
         | { Args: { _reward_id: string }; Returns: string }
         | { Args: { _reward_id: string; _shipping?: Json }; Returns: string }
+      run_expiry_reminders: { Args: never; Returns: number }
     }
     Enums: {
       app_role: "admin" | "user"
