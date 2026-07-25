@@ -693,7 +693,7 @@ function Footer() {
           <p className="font-mono-b text-[10px] uppercase tracking-[0.22em] text-white/40">Conta</p>
           <ul className="mt-4 space-y-2 font-body-b text-[13px] text-white/70">
             <li><Link to="/auth" className="hover:text-white">Entrar</Link></li>
-            <li><Link to="/auth" search={{ mode: "signup" }} className="hover:text-white">Criar conta</Link></li>
+            <li><Link to="/cadastro" className="hover:text-white">Criar conta</Link></li>
             <li>
               <a href="mailto:suporte@kmkzstream.lovable.app" className="hover:text-white">
                 Suporte
