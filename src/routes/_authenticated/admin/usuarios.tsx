@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useSuspenseQuery, useQuery, queryOptions } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Eye, Pencil, Shield, ShieldOff, Trash2, X } from "lucide-react";
 import {
   adminListUsers,
@@ -33,21 +33,38 @@ function AdminUsersPage() {
   const [mode, setMode] = useState<Mode>(null);
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const [bulkRunning, setBulkRunning] = useState(false);
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(20);
 
-  const filtered = users.filter((u: any) => {
+  const filtered = useMemo(() => {
     const q = search.trim().toLowerCase();
-    if (!q) return true;
-    return (
-      (u.display_name ?? "").toLowerCase().includes(q) ||
-      (u.referral_code ?? "").toLowerCase().includes(q)
+    if (!q) return users;
+    return users.filter(
+      (u: any) =>
+        (u.display_name ?? "").toLowerCase().includes(q) ||
+        (u.referral_code ?? "").toLowerCase().includes(q),
     );
-  });
+  }, [users, search]);
 
-  const filteredIds = filtered.map((u: any) => u.id);
-  const allFilteredSelected =
-    filteredIds.length > 0 && filteredIds.every((id) => selectedIds.has(id));
-  const someFilteredSelected =
-    filteredIds.some((id) => selectedIds.has(id)) && !allFilteredSelected;
+  const totalPages = Math.max(1, Math.ceil(filtered.length / pageSize));
+
+  // Reset page when filter/pageSize changes so we don't land on an empty page.
+  useEffect(() => {
+    setPage(1);
+  }, [search, pageSize]);
+  useEffect(() => {
+    if (page > totalPages) setPage(totalPages);
+  }, [page, totalPages]);
+
+  const pageStart = (page - 1) * pageSize;
+  const pageRows = filtered.slice(pageStart, pageStart + pageSize);
+  const pageIds = pageRows.map((u: any) => u.id);
+
+  // Selection is a stable Set of IDs — persists across filter/page changes.
+  const selectedOnPage = pageIds.filter((id) => selectedIds.has(id)).length;
+  const allPageSelected = pageIds.length > 0 && selectedOnPage === pageIds.length;
+  const somePageSelected = selectedOnPage > 0 && !allPageSelected;
+  const selectedOffscreen = selectedIds.size - selectedOnPage;
 
   const toggleOne = (id: string) => {
     setSelectedIds((prev) => {
@@ -58,11 +75,19 @@ function AdminUsersPage() {
     });
   };
 
-  const toggleAllFiltered = () => {
+  const togglePage = () => {
     setSelectedIds((prev) => {
       const next = new Set(prev);
-      if (allFilteredSelected) filteredIds.forEach((id) => next.delete(id));
-      else filteredIds.forEach((id) => next.add(id));
+      if (allPageSelected) pageIds.forEach((id: string) => next.delete(id));
+      else pageIds.forEach((id: string) => next.add(id));
+      return next;
+    });
+  };
+
+  const selectAllFiltered = () => {
+    setSelectedIds((prev) => {
+      const next = new Set(prev);
+      filtered.forEach((u: any) => next.add(u.id));
       return next;
     });
   };
@@ -235,8 +260,23 @@ function AdminUsersPage() {
             <span className="font-bold text-brand">{selectedIds.size}</span>{" "}
             selecionado(s) · {selectedAdminsCount} admin(s) ·{" "}
             {selectedIds.size - selectedAdminsCount} usuário(s) comum
+            {selectedOffscreen > 0 && (
+              <span className="ml-1 text-surface-900/60">
+                ({selectedOnPage} nesta página, {selectedOffscreen} fora)
+              </span>
+            )}
           </div>
           <div className="flex flex-wrap gap-2">
+            {filtered.length > pageIds.length &&
+              selectedIds.size < filtered.length && (
+                <button
+                  onClick={selectAllFiltered}
+                  disabled={bulkRunning}
+                  className="rounded-lg border border-brand/40 bg-brand/10 px-3 py-1.5 text-xs font-semibold text-brand hover:bg-brand/20 disabled:opacity-50"
+                >
+                  Selecionar todos ({filtered.length})
+                </button>
+              )}
             <button
               onClick={clearSelection}
               disabled={bulkRunning}
@@ -276,12 +316,12 @@ function AdminUsersPage() {
               <th className="w-10 px-4 py-3">
                 <input
                   type="checkbox"
-                  aria-label="Selecionar todos"
-                  checked={allFilteredSelected}
+                  aria-label="Selecionar página"
+                  checked={allPageSelected}
                   ref={(el) => {
-                    if (el) el.indeterminate = someFilteredSelected;
+                    if (el) el.indeterminate = somePageSelected;
                   }}
-                  onChange={toggleAllFiltered}
+                  onChange={togglePage}
                   className="h-4 w-4 cursor-pointer accent-brand"
                 />
               </th>
@@ -294,7 +334,7 @@ function AdminUsersPage() {
             </tr>
           </thead>
           <tbody>
-            {filtered.map((u: any) => {
+            {pageRows.map((u: any) => {
               const isAdmin = (u.roles as string[]).includes("admin");
               const checked = selectedIds.has(u.id);
               return (
@@ -378,6 +418,52 @@ function AdminUsersPage() {
           </tbody>
         </table>
       </div>
+
+      <div className="mt-4 flex flex-col items-center justify-between gap-3 text-xs text-surface-900/70 sm:flex-row">
+        <div>
+          Mostrando{" "}
+          <strong>
+            {filtered.length === 0 ? 0 : pageStart + 1}–
+            {Math.min(pageStart + pageSize, filtered.length)}
+          </strong>{" "}
+          de <strong>{filtered.length}</strong>
+          {search && ` (filtrado de ${users.length})`}
+        </div>
+        <div className="flex items-center gap-2">
+          <label className="flex items-center gap-1">
+            Por página
+            <select
+              value={pageSize}
+              onChange={(e) => setPageSize(Number(e.target.value))}
+              className="rounded-lg border border-surface-200 bg-card px-2 py-1"
+            >
+              {[10, 20, 50, 100].map((n) => (
+                <option key={n} value={n}>
+                  {n}
+                </option>
+              ))}
+            </select>
+          </label>
+          <button
+            onClick={() => setPage((p) => Math.max(1, p - 1))}
+            disabled={page <= 1}
+            className="rounded-lg border border-surface-200 px-2 py-1 font-semibold hover:bg-surface-50 disabled:opacity-40"
+          >
+            ← Anterior
+          </button>
+          <span className="font-mono">
+            {page}/{totalPages}
+          </span>
+          <button
+            onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+            disabled={page >= totalPages}
+            className="rounded-lg border border-surface-200 px-2 py-1 font-semibold hover:bg-surface-50 disabled:opacity-40"
+          >
+            Próxima →
+          </button>
+        </div>
+      </div>
+
 
       {selectedId && mode && (
         <UserModal
