@@ -504,7 +504,8 @@ function Planos({ plans }: { plans: any[] }) {
                 </ul>
 
                 <Link
-                  to="/auth"
+                  to="/cadastro"
+                  search={{ plan: plan.id }}
                   className="group mt-8 inline-flex items-center justify-between rounded-sm border border-white/15 bg-white/[0.03] px-5 py-4 font-mono-b text-[11px] font-bold uppercase tracking-[0.22em] text-white transition hover:border-[color:var(--color-tally)] hover:bg-[color:var(--color-tally)]"
                 >
                   {t("plans.cta")} {tc(plan.name)}
@@ -692,7 +693,7 @@ function Footer() {
           <p className="font-mono-b text-[10px] uppercase tracking-[0.22em] text-white/40">Conta</p>
           <ul className="mt-4 space-y-2 font-body-b text-[13px] text-white/70">
             <li><Link to="/auth" className="hover:text-white">Entrar</Link></li>
-            <li><Link to="/auth" search={{ mode: "signup" }} className="hover:text-white">Criar conta</Link></li>
+            <li><Link to="/cadastro" className="hover:text-white">Criar conta</Link></li>
             <li>
               <a href="mailto:suporte@kmkzstream.lovable.app" className="hover:text-white">
                 Suporte

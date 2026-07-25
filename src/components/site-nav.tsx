@@ -38,8 +38,7 @@ export function SiteNav() {
               <>
                 <Link to="/auth" className="text-sm font-semibold">Entrar</Link>
                 <Link
-                  to="/auth"
-                  search={{ mode: "signup" }}
+                  to="/cadastro"
                   className="inline-flex min-h-11 items-center rounded-full bg-brand px-5 py-2 text-sm font-semibold text-brand-foreground shadow-lg shadow-brand/20 transition hover:bg-brand-dark"
                 >
                   Começar agora
