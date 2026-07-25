@@ -17,6 +17,8 @@ type I18nValue = {
   currency: "BRL" | "USD";
   /** Formata um valor em centavos na moeda do idioma atual (converte de BRL quando necessário). */
   money: (brlCents: number) => string;
+  /** Formata centavos que já estão na moeda ativa. */
+  moneyRaw: (cents: number) => string;
   /** Preço de um plano na moeda do idioma atual. */
   planPrice: (plan: { period?: string | null; price_cents: number }) => string;
   /** Valor bruto em centavos do plano na moeda ativa (para cálculos). */
@@ -92,6 +94,7 @@ export function I18nProvider({ children }: { children: ReactNode }) {
       t,
       tc,
       currency: meta.currency,
+      moneyRaw: (cents: number) => fmt(cents),
       money: (brlCents: number) => fmt(meta.currency === "BRL" ? brlCents : Math.round(brlCents / BRL_TO_USD)),
       planPrice: (plan) => fmt(toCents(plan)),
       planPriceCents: toCents,

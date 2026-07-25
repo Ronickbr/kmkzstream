@@ -437,7 +437,7 @@ function Recompensas({ rewards }: { rewards: any[] }) {
 /* -------------------------------- Planos ------------------------------- */
 
 function Planos({ plans }: { plans: any[] }) {
-  const { t, tc, planPrice, planPriceCents, currency, money } = useI18n();
+  const { t, tc, planPrice, planPriceCents, currency, moneyRaw } = useI18n();
   return (
     <section id="planos" className="relative border-b border-white/[0.06] py-24 sm:py-32">
       <div className="mx-auto max-w-[1400px] px-4 sm:px-8">
