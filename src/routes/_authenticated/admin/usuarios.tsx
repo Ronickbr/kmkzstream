@@ -538,17 +538,18 @@ function UserModal({
     }
   };
 
-  return (
+  const overlay = (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4"
+      className="fixed inset-0 z-[100] flex items-center justify-center overscroll-contain bg-black/70 p-4 backdrop-blur-sm"
       onClick={onClose}
       role="dialog"
       aria-modal="true"
     >
       <div
-        className="flex max-h-[85vh] w-[calc(100vw-2rem)] flex-col overflow-hidden rounded-2xl border border-surface-200 bg-card shadow-xl sm:w-full sm:max-w-lg md:max-w-2xl"
+        className="flex max-h-[85dvh] w-[calc(100vw-2rem)] flex-col overflow-hidden rounded-2xl border border-surface-200 bg-card shadow-xl sm:w-full sm:max-w-lg md:max-w-2xl"
         onClick={(e) => e.stopPropagation()}
       >
+
         <div className="flex shrink-0 items-center justify-between border-b border-surface-200 px-6 py-4">
           <h2 className="font-display text-xl font-bold">
             {mode === "view" ? "Detalhes do usuário" : "Editar usuário"}
