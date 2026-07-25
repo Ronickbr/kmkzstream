@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import type {} from "@tanstack/react-start";
+import type { RouteServerOptions } from "@tanstack/start-client-core";
 import { createHmac, timingSafeEqual } from "crypto";
 import { z } from "zod";
 
