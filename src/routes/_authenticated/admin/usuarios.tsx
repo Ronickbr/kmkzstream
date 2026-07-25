@@ -260,8 +260,23 @@ function AdminUsersPage() {
             <span className="font-bold text-brand">{selectedIds.size}</span>{" "}
             selecionado(s) · {selectedAdminsCount} admin(s) ·{" "}
             {selectedIds.size - selectedAdminsCount} usuário(s) comum
+            {selectedOffscreen > 0 && (
+              <span className="ml-1 text-surface-900/60">
+                ({selectedOnPage} nesta página, {selectedOffscreen} fora)
+              </span>
+            )}
           </div>
           <div className="flex flex-wrap gap-2">
+            {filtered.length > pageIds.length &&
+              selectedIds.size < filtered.length && (
+                <button
+                  onClick={selectAllFiltered}
+                  disabled={bulkRunning}
+                  className="rounded-lg border border-brand/40 bg-brand/10 px-3 py-1.5 text-xs font-semibold text-brand hover:bg-brand/20 disabled:opacity-50"
+                >
+                  Selecionar todos ({filtered.length})
+                </button>
+              )}
             <button
               onClick={clearSelection}
               disabled={bulkRunning}
