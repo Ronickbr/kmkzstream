@@ -229,10 +229,62 @@ function AdminUsersPage() {
         />
       </div>
 
-      <div className="mt-8 overflow-x-auto rounded-3xl border border-surface-200 bg-card">
-        <table className="w-full min-w-[820px] text-sm">
+      {selectedIds.size > 0 && (
+        <div className="mt-6 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-brand/40 bg-brand/5 px-4 py-3">
+          <div className="text-sm">
+            <span className="font-bold text-brand">{selectedIds.size}</span>{" "}
+            selecionado(s) · {selectedAdminsCount} admin(s) ·{" "}
+            {selectedIds.size - selectedAdminsCount} usuário(s) comum
+          </div>
+          <div className="flex flex-wrap gap-2">
+            <button
+              onClick={clearSelection}
+              disabled={bulkRunning}
+              className="rounded-lg border border-surface-200 px-3 py-1.5 text-xs font-semibold hover:bg-surface-50 disabled:opacity-50"
+            >
+              Limpar
+            </button>
+            <button
+              onClick={bulkPromote}
+              disabled={bulkRunning}
+              className="inline-flex items-center gap-1 rounded-lg border border-surface-200 px-3 py-1.5 text-xs font-semibold hover:bg-surface-50 disabled:opacity-50"
+            >
+              <Shield size={14} /> Tornar admin
+            </button>
+            <button
+              onClick={bulkDemote}
+              disabled={bulkRunning}
+              className="inline-flex items-center gap-1 rounded-lg border border-surface-200 px-3 py-1.5 text-xs font-semibold hover:bg-surface-50 disabled:opacity-50"
+            >
+              <ShieldOff size={14} /> Remover admin
+            </button>
+            <button
+              onClick={bulkDelete}
+              disabled={bulkRunning}
+              className="inline-flex items-center gap-1 rounded-lg border border-red-500/30 px-3 py-1.5 text-xs font-semibold text-red-500 hover:bg-red-500/10 disabled:opacity-50"
+            >
+              <Trash2 size={14} /> Excluir
+            </button>
+          </div>
+        </div>
+      )}
+
+      <div className="mt-6 overflow-x-auto rounded-3xl border border-surface-200 bg-card">
+        <table className="w-full min-w-[880px] text-sm">
           <thead className="bg-surface-50 text-xs font-bold uppercase tracking-wider text-surface-900/60">
             <tr>
+              <th className="w-10 px-4 py-3">
+                <input
+                  type="checkbox"
+                  aria-label="Selecionar todos"
+                  checked={allFilteredSelected}
+                  ref={(el) => {
+                    if (el) el.indeterminate = someFilteredSelected;
+                  }}
+                  onChange={toggleAllFiltered}
+                  className="h-4 w-4 cursor-pointer accent-brand"
+                />
+              </th>
               <th className="px-4 py-3 text-left">Usuário</th>
               <th className="px-4 py-3 text-left">Plano</th>
               <th className="px-4 py-3 text-right">Indicações</th>
@@ -244,8 +296,18 @@ function AdminUsersPage() {
           <tbody>
             {filtered.map((u: any) => {
               const isAdmin = (u.roles as string[]).includes("admin");
+              const checked = selectedIds.has(u.id);
               return (
-                <tr key={u.id} className="border-t border-surface-100">
+                <tr key={u.id} className={`border-t border-surface-100 ${checked ? "bg-brand/5" : ""}`}>
+                  <td className="px-4 py-3">
+                    <input
+                      type="checkbox"
+                      aria-label={`Selecionar ${u.display_name ?? "usuário"}`}
+                      checked={checked}
+                      onChange={() => toggleOne(u.id)}
+                      className="h-4 w-4 cursor-pointer accent-brand"
+                    />
+                  </td>
                   <td className="px-4 py-3">
                     <div className="flex items-center gap-2">
                       <div>
