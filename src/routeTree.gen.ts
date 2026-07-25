@@ -31,6 +31,7 @@ import { Route as AuthenticatedAdminPremiosRouteImport } from './routes/_authent
 import { Route as AuthenticatedAdminPontosRouteImport } from './routes/_authenticated/admin/pontos'
 import { Route as AuthenticatedAdminPlanosRouteImport } from './routes/_authenticated/admin/planos'
 import { Route as AuthenticatedAdminCrescimentoRouteImport } from './routes/_authenticated/admin/crescimento'
+import { Route as AuthenticatedAdminConfiguracoesRouteImport } from './routes/_authenticated/admin/configuracoes'
 
 const TermosRoute = TermosRouteImport.update({
   id: '/termos',
@@ -148,6 +149,12 @@ const AuthenticatedAdminCrescimentoRoute =
     path: '/crescimento',
     getParentRoute: () => AuthenticatedAdminRouteRoute,
   } as any)
+const AuthenticatedAdminConfiguracoesRoute =
+  AuthenticatedAdminConfiguracoesRouteImport.update({
+    id: '/configuracoes',
+    path: '/configuracoes',
+    getParentRoute: () => AuthenticatedAdminRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -163,6 +170,7 @@ export interface FileRoutesByFullPath {
   '/premios': typeof AuthenticatedPremiosRoute
   '/ranking': typeof AuthenticatedRankingRoute
   '/suporte': typeof AuthenticatedSuporteRoute
+  '/admin/configuracoes': typeof AuthenticatedAdminConfiguracoesRoute
   '/admin/crescimento': typeof AuthenticatedAdminCrescimentoRoute
   '/admin/planos': typeof AuthenticatedAdminPlanosRoute
   '/admin/pontos': typeof AuthenticatedAdminPontosRoute
@@ -185,6 +193,7 @@ export interface FileRoutesByTo {
   '/premios': typeof AuthenticatedPremiosRoute
   '/ranking': typeof AuthenticatedRankingRoute
   '/suporte': typeof AuthenticatedSuporteRoute
+  '/admin/configuracoes': typeof AuthenticatedAdminConfiguracoesRoute
   '/admin/crescimento': typeof AuthenticatedAdminCrescimentoRoute
   '/admin/planos': typeof AuthenticatedAdminPlanosRoute
   '/admin/pontos': typeof AuthenticatedAdminPontosRoute
@@ -210,6 +219,7 @@ export interface FileRoutesById {
   '/_authenticated/premios': typeof AuthenticatedPremiosRoute
   '/_authenticated/ranking': typeof AuthenticatedRankingRoute
   '/_authenticated/suporte': typeof AuthenticatedSuporteRoute
+  '/_authenticated/admin/configuracoes': typeof AuthenticatedAdminConfiguracoesRoute
   '/_authenticated/admin/crescimento': typeof AuthenticatedAdminCrescimentoRoute
   '/_authenticated/admin/planos': typeof AuthenticatedAdminPlanosRoute
   '/_authenticated/admin/pontos': typeof AuthenticatedAdminPontosRoute
@@ -235,6 +245,7 @@ export interface FileRouteTypes {
     | '/premios'
     | '/ranking'
     | '/suporte'
+    | '/admin/configuracoes'
     | '/admin/crescimento'
     | '/admin/planos'
     | '/admin/pontos'
@@ -257,6 +268,7 @@ export interface FileRouteTypes {
     | '/premios'
     | '/ranking'
     | '/suporte'
+    | '/admin/configuracoes'
     | '/admin/crescimento'
     | '/admin/planos'
     | '/admin/pontos'
@@ -281,6 +293,7 @@ export interface FileRouteTypes {
     | '/_authenticated/premios'
     | '/_authenticated/ranking'
     | '/_authenticated/suporte'
+    | '/_authenticated/admin/configuracoes'
     | '/_authenticated/admin/crescimento'
     | '/_authenticated/admin/planos'
     | '/_authenticated/admin/pontos'
@@ -455,10 +468,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminCrescimentoRouteImport
       parentRoute: typeof AuthenticatedAdminRouteRoute
     }
+    '/_authenticated/admin/configuracoes': {
+      id: '/_authenticated/admin/configuracoes'
+      path: '/configuracoes'
+      fullPath: '/admin/configuracoes'
+      preLoaderRoute: typeof AuthenticatedAdminConfiguracoesRouteImport
+      parentRoute: typeof AuthenticatedAdminRouteRoute
+    }
   }
 }
 
 interface AuthenticatedAdminRouteRouteChildren {
+  AuthenticatedAdminConfiguracoesRoute: typeof AuthenticatedAdminConfiguracoesRoute
   AuthenticatedAdminCrescimentoRoute: typeof AuthenticatedAdminCrescimentoRoute
   AuthenticatedAdminPlanosRoute: typeof AuthenticatedAdminPlanosRoute
   AuthenticatedAdminPontosRoute: typeof AuthenticatedAdminPontosRoute
@@ -470,6 +491,7 @@ interface AuthenticatedAdminRouteRouteChildren {
 
 const AuthenticatedAdminRouteRouteChildren: AuthenticatedAdminRouteRouteChildren =
   {
+    AuthenticatedAdminConfiguracoesRoute: AuthenticatedAdminConfiguracoesRoute,
     AuthenticatedAdminCrescimentoRoute: AuthenticatedAdminCrescimentoRoute,
     AuthenticatedAdminPlanosRoute: AuthenticatedAdminPlanosRoute,
     AuthenticatedAdminPontosRoute: AuthenticatedAdminPontosRoute,
