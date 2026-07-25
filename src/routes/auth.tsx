@@ -52,7 +52,7 @@ function AuthPage() {
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
-      if (data.session) navigate({ to: search.redirect ?? "/dashboard", replace: true });
+      if (data.session) navigate({ to: redirectTo, replace: true });
     });
   }, [navigate, search.redirect]);
 
@@ -80,7 +80,7 @@ function AuthPage() {
         if (error) throw error;
         toast.success("Login realizado");
       }
-      navigate({ to: search.redirect ?? "/dashboard", replace: true });
+      navigate({ to: redirectTo, replace: true });
     } catch (err: any) {
       toast.error(err?.message ?? "Erro na autenticação");
     } finally {
@@ -96,7 +96,7 @@ function AuthPage() {
       });
       if (result.error) throw result.error;
       if (result.redirected) return;
-      navigate({ to: search.redirect ?? "/dashboard", replace: true });
+      navigate({ to: redirectTo, replace: true });
     } catch (err: any) {
       toast.error(err?.message ?? "Erro no login com Google");
       setLoading(false);
