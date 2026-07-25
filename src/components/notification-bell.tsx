@@ -72,20 +72,24 @@ export function NotificationBell() {
 
   // Realtime updates
   useEffect(() => {
-    let userId: string | null = null;
+    let channel: ReturnType<typeof supabase.channel> | null = null;
+    let cancelled = false;
     supabase.auth.getUser().then(({ data }) => {
-      userId = data.user?.id ?? null;
-      if (!userId) return;
-      const channel = supabase
-        .channel(`notifications:${userId}`)
+      const userId = data.user?.id ?? null;
+      if (!userId || cancelled) return;
+      channel = supabase
+        .channel(`notifications:${userId}:${Math.random().toString(36).slice(2)}`)
         .on(
           "postgres_changes",
           { event: "*", schema: "public", table: "notifications", filter: `user_id=eq.${userId}` },
           () => qc.invalidateQueries({ queryKey: ["notifications"] })
         )
         .subscribe();
-      return () => { supabase.removeChannel(channel); };
     });
+    return () => {
+      cancelled = true;
+      if (channel) supabase.removeChannel(channel);
+    };
   }, [qc]);
 
   const readMut = useMutation({
