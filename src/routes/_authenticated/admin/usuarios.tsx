@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useSuspenseQuery, useQuery, queryOptions } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { useState } from "react";
+import { Eye, Pencil, Shield, ShieldOff, Trash2, X } from "lucide-react";
 import {
   adminListUsers,
   adminSetUserRole,
@@ -132,27 +133,35 @@ function AdminUsersPage() {
                     <div className="flex justify-end gap-1">
                       <button
                         onClick={() => open(u.id, "view")}
-                        className="rounded-lg border border-surface-200 px-2.5 py-1 text-xs font-semibold hover:bg-surface-50"
+                        className="rounded-lg border border-surface-200 p-1.5 text-surface-900/70 hover:bg-surface-50 hover:text-surface-900"
+                        aria-label="Ver detalhes"
+                        title="Ver detalhes"
                       >
-                        Ver
+                        <Eye size={16} />
                       </button>
                       <button
                         onClick={() => open(u.id, "edit")}
-                        className="rounded-lg border border-surface-200 px-2.5 py-1 text-xs font-semibold hover:bg-surface-50"
+                        className="rounded-lg border border-surface-200 p-1.5 text-surface-900/70 hover:bg-surface-50 hover:text-surface-900"
+                        aria-label="Editar"
+                        title="Editar"
                       >
-                        Editar
+                        <Pencil size={16} />
                       </button>
                       <button
                         onClick={() => toggle(u.id, isAdmin)}
-                        className="rounded-lg border border-surface-200 px-2.5 py-1 text-xs font-semibold hover:bg-surface-50"
+                        className="rounded-lg border border-surface-200 p-1.5 text-surface-900/70 hover:bg-surface-50 hover:text-surface-900"
+                        aria-label={isAdmin ? "Remover admin" : "Tornar admin"}
+                        title={isAdmin ? "Remover admin" : "Tornar admin"}
                       >
-                        {isAdmin ? "Remover admin" : "Admin"}
+                        {isAdmin ? <ShieldOff size={16} /> : <Shield size={16} />}
                       </button>
                       <button
                         onClick={() => handleDelete(u.id, u.display_name ?? "usuário")}
-                        className="rounded-lg border border-red-500/30 px-2.5 py-1 text-xs font-semibold text-red-500 hover:bg-red-500/10"
+                        className="rounded-lg border border-red-500/30 p-1.5 text-red-500 hover:bg-red-500/10"
+                        aria-label="Excluir"
+                        title="Excluir"
                       >
-                        Excluir
+                        <Trash2 size={16} />
                       </button>
                     </div>
                   </td>
@@ -260,10 +269,10 @@ function UserModal({
           </h2>
           <button
             onClick={onClose}
-            className="rounded-lg px-2 py-1 text-surface-900/60 hover:bg-surface-100"
+            className="rounded-lg p-1.5 text-surface-900/60 hover:bg-surface-100"
             aria-label="Fechar"
           >
-            ✕
+            <X size={18} />
           </button>
         </div>
 
