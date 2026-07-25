@@ -1,3 +1,4 @@
+import { confirmAction } from "@/lib/confirm";
 import { createFileRoute } from "@tanstack/react-router";
 import { useSuspenseQuery, queryOptions } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
@@ -75,7 +76,7 @@ function PremiosPage() {
       setPending(r);
       return;
     }
-    if (!confirm(`Confirmar resgate de ${r.name} por ${formatPoints(r.points_cost)} pontos?`)) return;
+    if (!(await confirmAction(`Confirmar resgate de ${r.name} por ${formatPoints(r.points_cost)} pontos?`))) return;
     void runRedeem(r.id);
   };
 

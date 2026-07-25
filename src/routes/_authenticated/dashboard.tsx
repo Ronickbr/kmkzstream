@@ -1,3 +1,4 @@
+import { confirmAction } from "@/lib/confirm";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useSuspenseQuery, queryOptions } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
@@ -40,7 +41,7 @@ function DashboardPage() {
   }, [data.profile]);
 
   const handleCancel = async () => {
-    if (!confirm("Cancelar assinatura atual?")) return;
+    if (!(await confirmAction("Cancelar assinatura atual?", { danger: true }))) return;
     try {
       await cancelFn();
       toast.success("Assinatura cancelada");
