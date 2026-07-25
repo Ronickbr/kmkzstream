@@ -108,8 +108,8 @@ export function AppSidebar({ isAdmin }: { isAdmin: boolean }) {
             <SidebarGroupContent>
               <SidebarMenu>
                 {adminItems
-                  .filter((i) => !i.hidden)
                   .map((it) => {
+
                     const active = isActive(it.to, it.exact);
                     return (
                       <SidebarMenuItem key={it.to}>
