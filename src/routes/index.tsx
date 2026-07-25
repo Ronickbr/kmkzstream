@@ -576,13 +576,13 @@ function FAQ() {
               <li key={it.q} className="border-t border-white/10 last:border-b">
                 <button
                   onClick={() => setOpen(isOpen ? null : i)}
-                  className="flex w-full items-center justify-between gap-6 py-6 text-left"
+                  className="flex w-full items-center justify-between gap-3 py-5 text-left sm:gap-6 sm:py-6"
                 >
-                  <span className="flex items-baseline gap-4">
-                    <span className="font-mono-b text-[11px] tracking-[0.18em] text-white/30">
+                  <span className="flex min-w-0 items-baseline gap-2 sm:gap-4">
+                    <span className="shrink-0 font-mono-b text-[11px] tracking-[0.18em] text-white/30">
                       Q.{String(i + 1).padStart(2, "0")}
                     </span>
-                    <span className="font-broadcast text-2xl leading-tight text-white sm:text-3xl">
+                    <span className="min-w-0 font-broadcast text-xl leading-tight text-white sm:text-3xl">
                       {it.q}
                     </span>
                   </span>
@@ -595,7 +595,11 @@ function FAQ() {
                   </span>
                 </button>
                 {isOpen && (
-                  <p className="max-w-2xl pb-6 pl-14 font-body-b text-[15px] leading-relaxed text-white/70">
+                  <p className="max-w-2xl pb-6 pl-0 font-body-b text-[15px] leading-relaxed text-white/70 sm:pl-14">
+                    {it.a}
+                  </p>
+                )}
+
                     {it.a}
                   </p>
                 )}
