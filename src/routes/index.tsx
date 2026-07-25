@@ -243,8 +243,12 @@ function Hero() {
               alt="Parede de monitores em uma sala de controle transmitindo canais simultaneamente."
               width={1280}
               height={1280}
+              loading="eager"
+              decoding="async"
+              fetchPriority="high"
               className="h-full w-full object-cover"
             />
+
             <div aria-hidden className="pointer-events-none absolute inset-0 scanlines" />
             <div aria-hidden className="pointer-events-none absolute inset-x-0 -top-1/2 h-32 animate-scan bg-gradient-to-b from-transparent via-white/8 to-transparent" />
             {/* Overlay UI */}
