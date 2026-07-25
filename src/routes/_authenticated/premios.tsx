@@ -70,7 +70,7 @@ function PremiosPage() {
     }
   };
 
-  const handleRedeemClick = (r: Reward) => {
+  const handleRedeemClick = async (r: Reward) => {
     if (r.kind === "device") {
       setShipping(emptyShipping);
       setPending(r);
