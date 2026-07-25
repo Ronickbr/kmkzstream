@@ -3,7 +3,9 @@ import { useSuspenseQuery } from "@tanstack/react-query";
 import { useEffect, useRef, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { plansQueryOptions as plansQO, rewardsQueryOptions as rewardsQO } from "@/lib/queries";
-import { formatCurrencyBRL, formatPoints } from "@/lib/format";
+import { formatPoints } from "@/lib/format";
+import { useI18n } from "@/lib/i18n";
+import { LanguageSwitcher } from "@/components/language-switcher";
 import broadcastWall from "@/assets/broadcast-wall.jpg";
 import { ArrowUpRight, Check, Menu, X, Plus, ChevronDown } from "lucide-react";
 
@@ -19,11 +21,13 @@ export const Route = createFileRoute("/")({
 
 /* ------------------------------- Primitives ------------------------------- */
 
-function TallyDot({ label = "AO VIVO" }: { label?: string }) {
+function TallyDot({ label }: { label?: string }) {
+  const { t } = useI18n();
+  const text = label ?? t("hero.live");
   return (
     <span className="inline-flex items-center gap-2 font-mono-b text-[11px] font-medium uppercase tracking-[0.22em] text-white/80">
       <span className="relative inline-block size-2 rounded-full bg-[color:var(--color-tally)] animate-tally" />
-      {label}
+      {text}
     </span>
   );
 }
@@ -69,6 +73,7 @@ function TimecodeBar({ ch, label }: { ch: string; label: string }) {
 /* --------------------------------- Nav ---------------------------------- */
 
 function Nav() {
+  const { t } = useI18n();
   const [signedIn, setSignedIn] = useState<boolean | null>(null);
   const [menuOpen, setMenuOpen] = useState(false);
   useEffect(() => {
@@ -78,19 +83,19 @@ function Nav() {
   }, []);
 
   const links = [
-    { href: "#grade", n: "01", label: "A grade" },
-    { href: "#recompensas", n: "02", label: "Recompensas" },
-    { href: "#planos", n: "03", label: "Planos" },
-    { href: "#faq", n: "04", label: "Perguntas" },
+    { href: "#grade", n: "01", label: t("nav.grid") },
+    { href: "#recompensas", n: "02", label: t("nav.rewards") },
+    { href: "#planos", n: "03", label: t("nav.plans") },
+    { href: "#faq", n: "04", label: t("nav.faq") },
   ];
 
   return (
     <nav
-      aria-label="Navegação principal"
+      aria-label={t("common.mainNav")}
       className="sticky top-0 z-50 border-b border-white/[0.06] bg-[color:var(--color-vinyl)]/85 backdrop-blur-xl"
     >
       <div className="mx-auto flex h-14 max-w-[1400px] items-center justify-between gap-4 px-4 sm:px-8">
-        <Link to="/" className="flex shrink-0 items-center gap-3" aria-label="KMKZ Streaming - início">
+        <Link to="/" className="flex shrink-0 items-center gap-3" aria-label={t("nav.home")}>
           <span className="grid size-7 place-items-center rounded-sm bg-[color:var(--color-tally)] font-broadcast text-base leading-none text-white">
             K
           </span>
@@ -117,28 +122,29 @@ function Nav() {
         </ul>
 
         <div className="flex items-center gap-2">
+          <LanguageSwitcher />
           {signedIn ? (
             <Link
               to="/dashboard"
               className="inline-flex items-center gap-2 rounded-sm bg-white px-4 py-2 font-mono-b text-[11px] font-bold uppercase tracking-[0.18em] text-black transition hover:bg-[color:var(--color-tally)] hover:text-white"
             >
-              Meu painel <ArrowUpRight className="size-3.5" />
+              {t("nav.dashboard")} <ArrowUpRight className="size-3.5" />
             </Link>
           ) : (
             <>
               <Link to="/auth" className="hidden font-body-b text-[13px] font-medium text-white/70 hover:text-white sm:inline">
-                Entrar
+                {t("nav.signin")}
               </Link>
               <Link
                 to="/auth"
                 className="inline-flex items-center gap-2 rounded-sm bg-[color:var(--color-tally)] px-4 py-2 font-mono-b text-[11px] font-bold uppercase tracking-[0.18em] text-white transition hover:bg-white hover:text-black"
               >
-                Assinar <ArrowUpRight className="size-3.5" />
+                {t("nav.subscribe")} <ArrowUpRight className="size-3.5" />
               </Link>
             </>
           )}
           <button
-            aria-label="Menu"
+            aria-label={t("common.menu")}
             onClick={() => setMenuOpen((v) => !v)}
             className="ml-1 grid size-9 place-items-center rounded-sm border border-white/10 text-white/70 md:hidden"
           >
@@ -171,6 +177,7 @@ function Nav() {
 /* --------------------------------- Hero --------------------------------- */
 
 function Hero() {
+  const { t } = useI18n();
   return (
     <section className="relative overflow-hidden">
       <div
@@ -180,23 +187,23 @@ function Hero() {
       <div className="relative mx-auto grid max-w-[1400px] grid-cols-12 gap-6 px-4 pb-16 pt-10 sm:px-8 sm:pt-14 lg:gap-8 lg:pb-24 lg:pt-20">
         {/* Left column — thesis */}
         <div className="col-span-12 lg:col-span-7">
-          <TimecodeBar ch="CH.001" label="ENTRADA" />
+          <TimecodeBar ch="CH.001" label={t("hero.tc")} />
 
           <h1 className="mt-8 font-broadcast text-[clamp(3.25rem,13vw,8.5rem)] leading-[0.86] tracking-[0.005em] text-white">
-            TUDO
+            {t("hero.title1")}
             <br />
-            NO AR.
+            {t("hero.title2")}
             <br />
-            <span className="text-[color:var(--color-tally)]">SEM CORTAR.</span>
+            <span className="text-[color:var(--color-tally)]">{t("hero.title3")}</span>
           </h1>
 
           <div className="mt-8 grid max-w-2xl grid-cols-12 gap-x-6 gap-y-3">
             <p className="col-span-12 font-body-b text-[15px] leading-relaxed text-white/70 sm:col-span-9 sm:text-[16px]">
-              Mais de <span className="text-white">5.000 canais</span>, filmes e séries transmitindo agora. Assista em qualquer tela e receba pontos toda vez que trouxer alguém para dentro do sinal.
+              {t("hero.lead.pre")} <span className="text-white">{t("hero.lead.channels")}</span>{t("hero.lead.post")}
             </p>
             <div className="col-span-12 flex items-center gap-2 sm:col-span-3 sm:justify-end">
               <span className="font-mono-b text-[10px] uppercase tracking-[0.2em] text-white/40">
-                SINAL UHD · 99,9% UP
+                {t("hero.signal")}
               </span>
             </div>
           </div>
@@ -206,23 +213,23 @@ function Hero() {
               to="/auth"
               className="group inline-flex items-center gap-3 rounded-sm bg-[color:var(--color-tally)] px-6 py-4 font-mono-b text-xs font-bold uppercase tracking-[0.22em] text-white transition hover:bg-white hover:text-black"
             >
-              Entrar no ar
+              {t("hero.cta1")}
               <ArrowUpRight className="size-4 transition group-hover:rotate-45" />
             </Link>
             <a
               href="#planos"
               className="inline-flex items-center gap-3 rounded-sm border border-white/15 bg-white/[0.03] px-6 py-4 font-mono-b text-xs font-bold uppercase tracking-[0.22em] text-white/85 backdrop-blur transition hover:border-white/40 hover:bg-white/[0.06]"
             >
-              Ver a grade
+              {t("hero.cta2")}
             </a>
           </div>
 
           {/* Meta strip */}
           <dl className="mt-14 grid max-w-2xl grid-cols-3 gap-6 border-t border-white/10 pt-6">
             {[
-              { k: "Canais no ar", v: "5.128" },
-              { k: "Assinantes", v: "12.4k" },
-              { k: "Uptime · 30d", v: "99,97%" },
+              { k: t("hero.stat1"), v: "5.128" },
+              { k: t("hero.stat2"), v: "12.4k" },
+              { k: t("hero.stat3"), v: "99,97%" },
             ].map((s) => (
               <div key={s.k}>
                 <dt className="font-mono-b text-[10px] uppercase tracking-[0.2em] text-white/40">{s.k}</dt>
@@ -258,17 +265,17 @@ function Hero() {
               </div>
               <div className="flex items-end justify-between gap-3">
                 <div className="rounded-sm bg-black/60 px-2 py-1.5 font-mono-b text-[10px] uppercase tracking-[0.18em] text-white/80 backdrop-blur">
-                  CH.042 · FUTEBOL AO VIVO
+                  {t("hero.ch42")}
                 </div>
                 <div className="rounded-sm bg-black/60 px-2 py-1.5 font-mono-b text-[10px] uppercase tracking-[0.18em] text-white/80 backdrop-blur">
-                  +9 CANAIS SIMULTÂNEOS
+                  {t("hero.simultaneous")}
                 </div>
               </div>
             </div>
           </figure>
           {/* Below-figure caption */}
           <figcaption className="mt-3 flex items-center justify-between font-mono-b text-[10px] uppercase tracking-[0.2em] text-white/40">
-            <span>Fig. 01 — Master control · São Paulo</span>
+            <span>{t("hero.figcaption")}</span>
             <span>25 fps</span>
           </figcaption>
         </aside>
@@ -313,26 +320,27 @@ function Ticker() {
 /* -------------------------------- Grade -------------------------------- */
 
 function Grade() {
+  const { t } = useI18n();
   const channels = [
-    { n: "CH.001", cat: "Futebol", tag: "Brasileirão · ao vivo", accent: true },
-    { n: "CH.014", cat: "Filmes", tag: "ESTREIA · AÇÃO UHD" },
-    { n: "CH.027", cat: "Séries", tag: "Novo episódio" },
-    { n: "CH.041", cat: "F1", tag: "Volta rápida" },
-    { n: "CH.058", cat: "UFC", tag: "Card principal", accent: true },
-    { n: "CH.072", cat: "Notícias", tag: "Ao vivo · 24h" },
-    { n: "CH.089", cat: "Infantil", tag: "Sessão da tarde" },
-    { n: "CH.103", cat: "Documentário", tag: "NATUREZA UHD" },
+    { n: "CH.001", cat: t("grade.futebol"), tag: t("grade.tag.futebol"), accent: true },
+    { n: "CH.014", cat: t("grade.filmes"), tag: t("grade.tag.filmes") },
+    { n: "CH.027", cat: t("grade.series"), tag: t("grade.tag.series") },
+    { n: "CH.041", cat: t("grade.f1"), tag: t("grade.tag.f1") },
+    { n: "CH.058", cat: t("grade.ufc"), tag: t("grade.tag.ufc"), accent: true },
+    { n: "CH.072", cat: t("grade.noticias"), tag: t("grade.tag.noticias") },
+    { n: "CH.089", cat: t("grade.infantil"), tag: t("grade.tag.infantil") },
+    { n: "CH.103", cat: t("grade.doc"), tag: t("grade.tag.doc") },
   ];
   return (
     <section id="grade" className="relative border-b border-white/[0.06] py-24 sm:py-32">
       <div className="mx-auto grid max-w-[1400px] grid-cols-12 gap-6 px-4 sm:px-8">
         <header className="col-span-12 lg:col-span-4">
-          <span className="font-mono-b text-[10px] uppercase tracking-[0.24em] text-white/40">§ 02 — Grade</span>
+          <span className="font-mono-b text-[10px] uppercase tracking-[0.24em] text-white/40">{t("grade.section")}</span>
           <h2 className="mt-4 font-broadcast text-[clamp(2.5rem,8vw,4.5rem)] leading-[0.9] text-white">
-            Uma grade que <span className="text-[color:var(--color-tally)]">não dorme</span>.
+            {t("grade.title1")} <span className="text-[color:var(--color-tally)]">{t("grade.title2")}</span>.
           </h2>
           <p className="mt-5 max-w-md font-body-b text-[15px] leading-relaxed text-white/60">
-            Do apito inicial ao último frame. Assista simultaneamente do celular, TV ou tablet — sem congelar, sem trava, sem publicidade fora do ar.
+            {t("grade.lead")}
           </p>
         </header>
         <ul className="col-span-12 grid grid-cols-2 gap-px overflow-hidden rounded-sm border border-white/[0.08] bg-white/[0.06] md:grid-cols-4 lg:col-span-8">
@@ -366,27 +374,28 @@ function Grade() {
 /* ---------------------------- Recompensas ---------------------------- */
 
 function Recompensas({ rewards }: { rewards: any[] }) {
+  const { t } = useI18n();
   const items = rewards.slice(0, 6);
   return (
     <section id="recompensas" className="relative border-b border-white/[0.06] py-24 sm:py-32">
       <div className="mx-auto max-w-[1400px] px-4 sm:px-8">
         <div className="grid grid-cols-12 gap-6">
           <header className="col-span-12 lg:col-span-5">
-            <span className="font-mono-b text-[10px] uppercase tracking-[0.24em] text-white/40">§ 03 — Recompensas</span>
+            <span className="font-mono-b text-[10px] uppercase tracking-[0.24em] text-white/40">{t("rewards.section")}</span>
             <h2 className="mt-4 font-broadcast text-[clamp(2.5rem,8vw,4.5rem)] leading-[0.9] text-white">
-              Cada indicação<br />
-              vale um <span className="text-[color:var(--color-tally)]">crédito no ar</span>.
+              {t("rewards.title1")}<br />
+              {t("rewards.title2")} <span className="text-[color:var(--color-tally)]">{t("rewards.title3")}</span>.
             </h2>
             <p className="mt-5 max-w-md font-body-b text-[15px] leading-relaxed text-white/60">
-              Traga alguém para o sinal e recebe pontos assim que a assinatura confirma. Troque por meses grátis, TV Stick, Mi TV Stick e outras peças da linha KMKZ.
+              {t("rewards.lead")}
             </p>
 
             <dl className="mt-10 grid grid-cols-2 gap-x-6 gap-y-4">
               {[
-                { k: "Boas-vindas", v: "+10" },
-                { k: "Indicação paga", v: "+20" },
-                { k: "Renovação anual", v: "+120" },
-                { k: "Níveis VIP", v: "Bronze → Diamante" },
+                { k: t("rewards.k1"), v: "+10" },
+                { k: t("rewards.k2"), v: "+20" },
+                { k: t("rewards.k3"), v: "+120" },
+                { k: t("rewards.k4"), v: t("rewards.v4") },
               ].map((r) => (
                 <div key={r.k} className="border-t border-white/10 pt-3">
                   <dt className="font-mono-b text-[10px] uppercase tracking-[0.2em] text-white/40">{r.k}</dt>
@@ -413,7 +422,7 @@ function Recompensas({ rewards }: { rewards: any[] }) {
                   <p className="font-broadcast text-3xl leading-none text-[color:var(--color-tally)] sm:text-4xl">
                     {formatPoints(r.points_cost)}
                   </p>
-                  <p className="font-mono-b text-[10px] uppercase tracking-[0.2em] text-white/40">pontos</p>
+                  <p className="font-mono-b text-[10px] uppercase tracking-[0.2em] text-white/40">{t("common.points")}</p>
                 </div>
               </li>
             ))}
@@ -428,19 +437,20 @@ function Recompensas({ rewards }: { rewards: any[] }) {
 /* -------------------------------- Planos ------------------------------- */
 
 function Planos({ plans }: { plans: any[] }) {
+  const { t, planPrice, money, currency } = useI18n();
   return (
     <section id="planos" className="relative border-b border-white/[0.06] py-24 sm:py-32">
       <div className="mx-auto max-w-[1400px] px-4 sm:px-8">
         <div className="grid grid-cols-12 items-end gap-6">
           <header className="col-span-12 lg:col-span-8">
-            <span className="font-mono-b text-[10px] uppercase tracking-[0.24em] text-white/40">§ 04 — Planos</span>
+            <span className="font-mono-b text-[10px] uppercase tracking-[0.24em] text-white/40">{t("plans.section")}</span>
             <h2 className="mt-4 font-broadcast text-[clamp(2.5rem,8vw,4.5rem)] leading-[0.9] text-white">
-              Escolha a duração<br />da sua <span className="text-[color:var(--color-tally)]">transmissão</span>.
+              {t("plans.title1")}<br />{t("plans.title2")} <span className="text-[color:var(--color-tally)]">{t("plans.title3")}</span>.
             </h2>
           </header>
           <div className="col-span-12 lg:col-span-4 lg:text-right">
             <p className="font-mono-b text-[10px] uppercase tracking-[0.2em] text-white/40">
-              Cancele quando quiser · Ativação em minutos
+              {t("plans.note")}
             </p>
           </div>
         </div>
@@ -456,7 +466,7 @@ function Planos({ plans }: { plans: any[] }) {
               >
                 {plan.is_popular && (
                   <span className="absolute right-4 top-4 rounded-sm bg-[color:var(--color-tally)] px-2 py-1 font-mono-b text-[10px] font-bold uppercase tracking-[0.2em] text-white">
-                    Recomendado
+                    {t("plans.popular")}
                   </span>
                 )}
                 <div className="flex items-baseline justify-between">
@@ -464,7 +474,8 @@ function Planos({ plans }: { plans: any[] }) {
                     PL.{String(i + 1).padStart(2, "0")}
                   </span>
                   <span className="font-mono-b text-[10px] uppercase tracking-[0.2em] text-white/40">
-                    {plan.quality ?? "HD"} · {plan.screen_limit ?? 1} tela{(plan.screen_limit ?? 1) > 1 ? "s" : ""}
+                    {plan.quality ?? "HD"} · {plan.screen_limit ?? 1}{" "}
+                    {t((plan.screen_limit ?? 1) > 1 ? "common.screens_other" : "common.screens_one")}
                   </span>
                 </div>
 
@@ -473,12 +484,12 @@ function Planos({ plans }: { plans: any[] }) {
                 <div className="mt-8 border-t border-white/10 pt-6">
                   <div className="flex items-baseline gap-2">
                     <span className="font-broadcast text-5xl leading-none text-white sm:text-6xl">
-                      {formatCurrencyBRL(plan.price_cents).replace("R$", "").trim()}
+                      {planPrice(plan).replace(/[^\d.,]/g, "").trim()}
                     </span>
-                    <span className="font-mono-b text-[11px] uppercase tracking-[0.2em] text-white/40">BRL</span>
+                    <span className="font-mono-b text-[11px] uppercase tracking-[0.2em] text-white/40">{currency}</span>
                   </div>
                   <p className="mt-2 font-mono-b text-[11px] uppercase tracking-[0.18em] text-white/40">
-                    {isMonthly ? "\u00A0" : `${formatCurrencyBRL(monthly)}/mês equivalente`}
+                    {isMonthly ? "\u00A0" : `${money(monthly)}${t("common.perMonth")}`}
                   </p>
                 </div>
 
@@ -495,7 +506,7 @@ function Planos({ plans }: { plans: any[] }) {
                   to="/auth"
                   className="group mt-8 inline-flex items-center justify-between rounded-sm border border-white/15 bg-white/[0.03] px-5 py-4 font-mono-b text-[11px] font-bold uppercase tracking-[0.22em] text-white transition hover:border-[color:var(--color-tally)] hover:bg-[color:var(--color-tally)]"
                 >
-                  Assinar {plan.name}
+                  {t("plans.cta")} {plan.name}
                   <ArrowUpRight className="size-4 transition group-hover:rotate-45" />
                 </Link>
               </article>
@@ -511,18 +522,19 @@ function Planos({ plans }: { plans: any[] }) {
 /* ---------------------------- Depoimentos ----------------------------- */
 
 function Depoimentos() {
+  const { t } = useI18n();
   const items = [
-    { name: "Rafael M.", role: "Assinante · 14 meses", text: "Assisto quatro jogos ao mesmo tempo no domingo. Não trava um segundo. Já resgatei um mi tv Stick só indicando o pessoal do trabalho." },
-    { name: "Camila S.", role: "Assinante · 8 meses", text: "Suporte responde no WhatsApp em minutos. Assinei o anual, subi para Ouro no mês seguinte e nunca mais mexi." },
-    { name: "João P.", role: "Assinante · 22 meses", text: "Testei três serviços antes. sem travamento só aqui, especialmente em esportes. Custo-benefício ridículo de bom." },
+    { name: "Rafael M.", role: t("testimonials.role1"), text: t("testimonials.t1") },
+    { name: "Camila S.", role: t("testimonials.role2"), text: t("testimonials.t2") },
+    { name: "João P.", role: t("testimonials.role3"), text: t("testimonials.t3") },
   ];
   return (
     <section className="relative border-b border-white/[0.06] py-24 sm:py-32">
       <div className="mx-auto max-w-[1400px] px-4 sm:px-8">
         <header className="mb-14">
-          <span className="font-mono-b text-[10px] uppercase tracking-[0.24em] text-white/40">§ 05 — Assinantes</span>
+          <span className="font-mono-b text-[10px] uppercase tracking-[0.24em] text-white/40">{t("testimonials.section")}</span>
           <h2 className="mt-4 font-broadcast text-[clamp(2.5rem,7.5vw,3.75rem)] leading-[0.9] text-white">
-            Quem já entrou <span className="text-[color:var(--color-tally)]">no ar</span>.
+            {t("testimonials.title1")} <span className="text-[color:var(--color-tally)]">{t("testimonials.title2")}</span>.
           </h2>
         </header>
         <div className="grid gap-px overflow-hidden rounded-sm border border-white/[0.08] bg-white/[0.06] md:grid-cols-3">
@@ -532,7 +544,7 @@ function Depoimentos() {
                 <span className="font-mono-b text-[11px] tracking-[0.2em] text-white/40">
                   TX.{String(i + 1).padStart(2, "0")}
                 </span>
-                <TallyDot label="VERIFICADO" />
+                <TallyDot label={t("testimonials.verified")} />
               </div>
               <p className="mt-8 font-broadcast text-2xl leading-tight text-white">
                 &ldquo;{t.text}&rdquo;
@@ -552,21 +564,22 @@ function Depoimentos() {
 /* ---------------------------------- FAQ --------------------------------- */
 
 function FAQ() {
+  const { t } = useI18n();
   const [open, setOpen] = useState<number | null>(0);
   const items = [
-    { q: "Como funciona a ativação?", a: "Confirmação do pagamento e o sinal entra no ar em minutos. Você recebe o acesso por e-mail e WhatsApp." },
-    { q: "Em quantos aparelhos posso assistir?", a: "Todos os planos liberam até 2 telas simultâneas — assista no que quiser: TV, celular, tablet ou TV Stick, ao mesmo tempo e sem limite de trocas." },
-    { q: "Como funcionam os pontos VIP?", a: "Você recebe 10 pontos ao criar conta e +20 por indicação confirmada. Troque por meses grátis ou prêmios físicos no catálogo." },
-    { q: "Posso cancelar quando quiser?", a: "Sim. Sem multa, sem burocracia. Cancele direto pelo painel do assinante." },
-    { q: "Aceitam PIX?", a: "Sim: PIX (aprovação imediata), cartão de crédito e Mercado Pago." },
+    { q: t("faq.q1"), a: t("faq.a1") },
+    { q: t("faq.q2"), a: t("faq.a2") },
+    { q: t("faq.q3"), a: t("faq.a3") },
+    { q: t("faq.q4"), a: t("faq.a4") },
+    { q: t("faq.q5"), a: t("faq.a5") },
   ];
   return (
     <section id="faq" className="relative border-b border-white/[0.06] py-24 sm:py-32">
       <div className="mx-auto grid max-w-[1400px] grid-cols-12 gap-8 px-4 sm:px-8">
         <header className="col-span-12 lg:col-span-4">
-          <span className="font-mono-b text-[10px] uppercase tracking-[0.24em] text-white/40">§ 06 — Suporte</span>
+          <span className="font-mono-b text-[10px] uppercase tracking-[0.24em] text-white/40">{t("faq.section")}</span>
           <h2 className="mt-4 font-broadcast text-[clamp(2.5rem,7.5vw,3.75rem)] leading-[0.9] text-white">
-            Antes de entrar,<br />o essencial.
+            {t("faq.title1")}<br />{t("faq.title2")}
           </h2>
         </header>
         <ul className="col-span-12 lg:col-span-8">
@@ -611,27 +624,28 @@ function FAQ() {
 /* ------------------------------ Final CTA ----------------------------- */
 
 function FinalCTA() {
+  const { t } = useI18n();
   return (
     <section className="relative overflow-hidden border-b border-white/[0.06] py-24 sm:py-32">
       <div aria-hidden className="absolute inset-0 bg-[radial-gradient(700px_400px_at_50%_50%,rgba(255,45,85,0.18),transparent_60%)]" />
       <div className="relative mx-auto max-w-[1400px] px-4 text-center sm:px-8">
-        <TimecodeBar ch="CH.999" label="ENCERRAMENTO" />
+        <TimecodeBar ch="CH.999" label={t("cta.tc")} />
         <h2 className="mx-auto mt-8 max-w-4xl font-broadcast text-[clamp(2.75rem,10vw,7rem)] leading-[0.88] text-white">
-          O sinal está aberto.<br />
-          <span className="text-[color:var(--color-tally)]">Entra?</span>
+          {t("cta.title1")}<br />
+          <span className="text-[color:var(--color-tally)]">{t("cta.title2")}</span>
         </h2>
         <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
           <Link
             to="/auth"
             className="group inline-flex items-center gap-3 rounded-sm bg-[color:var(--color-tally)] px-8 py-4 font-mono-b text-xs font-bold uppercase tracking-[0.22em] text-white transition hover:bg-white hover:text-black"
           >
-            Criar conta agora <ArrowUpRight className="size-4 transition group-hover:rotate-45" />
+            {t("cta.primary")} <ArrowUpRight className="size-4 transition group-hover:rotate-45" />
           </Link>
           <a
             href="#planos"
             className="inline-flex items-center gap-3 rounded-sm border border-white/15 bg-white/[0.03] px-8 py-4 font-mono-b text-xs font-bold uppercase tracking-[0.22em] text-white/85 hover:border-white/40"
           >
-            Comparar planos
+            {t("cta.secondary")}
           </a>
         </div>
       </div>
@@ -642,6 +656,7 @@ function FinalCTA() {
 /* -------------------------------- Footer -------------------------------- */
 
 function Footer() {
+  const { t } = useI18n();
   return (
     <footer className="bg-[color:var(--color-vinyl)] py-14">
       <div className="mx-auto grid max-w-[1400px] grid-cols-12 gap-8 px-4 sm:px-8">
@@ -690,44 +705,37 @@ function Footer() {
           <ul className="mt-4 space-y-2 font-body-b text-[13px] text-white/70">
             <li>
               <Link to="/termos" className="hover:text-white">
-                Termos e Condições de Uso
+                {t("footer.terms")}
               </Link>
             </li>
             <li>
               <Link to="/privacidade" className="hover:text-white">
-                Política de Privacidade (LGPD)
+                {t("footer.privacy")}
               </Link>
             </li>
             <li>
               <a href="mailto:privacidade@kmkzstream.lovable.app" className="hover:text-white">
-                Encarregado (DPO)
+                {t("footer.dpo")}
               </a>
             </li>
           </ul>
           <p className="mt-4 font-body-b text-[12px] leading-relaxed text-white/40">
-            KMKZ atua como intermediadora tecnológica. O catálogo pode variar
-            conforme decisões de licenciantes e titulares de direitos.
+            {t("footer.intermediary")}
           </p>
         </div>
 
         <div className="col-span-12 mt-4 border-t border-white/10 pt-6">
           <p className="font-body-b text-[12px] leading-relaxed text-white/40">
-            <strong className="text-white/60">Aviso legal:</strong> os planos
-            comercializados dão acesso a conteúdo digital licenciado e/ou
-            disponibilizado por terceiros. É vedada a redistribuição,
-            regravação, revenda ou uso comercial não autorizado. Marcas
-            citadas (TV Stick, Mi TV Stick e outras) pertencem aos seus
-            respectivos titulares e são mencionadas apenas para fins
-            descritivos de prêmios do programa de fidelidade, sem qualquer
-            vínculo, patrocínio ou endosso.
+            <strong className="text-white/60">{t("footer.disclaimerLabel")}</strong>{" "}
+            {t("footer.disclaimer")}
           </p>
           <div className="mt-6 flex flex-col items-start justify-between gap-3 sm:flex-row sm:items-center">
             <p className="font-mono-b text-[10px] uppercase tracking-[0.22em] text-white/40">
-              © {new Date().getFullYear()} KMKZ Streaming · Todos os direitos reservados
+              © {new Date().getFullYear()} KMKZ Streaming · {t("footer.rights")}
             </p>
             <div className="flex gap-4 font-mono-b text-[10px] uppercase tracking-[0.22em] text-white/40">
-              <Link to="/termos" className="hover:text-white">Termos</Link>
-              <Link to="/privacidade" className="hover:text-white">Privacidade</Link>
+              <Link to="/termos" className="hover:text-white">{t("footer.termsShort")}</Link>
+              <Link to="/privacidade" className="hover:text-white">{t("footer.privacyShort")}</Link>
             </div>
           </div>
         </div>
@@ -739,6 +747,7 @@ function Footer() {
 /* --------------------------------- Page --------------------------------- */
 
 function LandingPage() {
+  const { t } = useI18n();
   const { data: plans } = useSuspenseQuery(plansQO);
   const { data: rewards } = useSuspenseQuery(rewardsQO);
   return (
@@ -747,7 +756,7 @@ function LandingPage() {
         href="#main"
         className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-sm focus:bg-[color:var(--color-tally)] focus:px-4 focus:py-2 focus:font-mono-b focus:text-xs focus:font-bold focus:uppercase focus:tracking-[0.2em] focus:text-white"
       >
-        Pular para o conteúdo
+        {t("common.skip")}
       </a>
       <Nav />
       <main id="main">
