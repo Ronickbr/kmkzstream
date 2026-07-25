@@ -1,13 +1,12 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useSuspenseQuery, queryOptions } from "@tanstack/react-query";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { getMyOverview, updateMyProfile } from "@/lib/user.functions";
+import { updateMyProfile } from "@/lib/user.functions";
+import { overviewQueryOptions as overviewQO } from "@/lib/queries";
 import { useState } from "react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { User, Mail, Phone, MessageCircle, MapPin, FileText, Image as ImageIcon, KeyRound, ShieldCheck, Copy, Calendar } from "lucide-react";
-
-const overviewQO = queryOptions({ queryKey: ["me", "overview"], queryFn: () => getMyOverview() });
 
 export const Route = createFileRoute("/_authenticated/minha-conta")({
   loader: ({ context }) => context.queryClient.ensureQueryData(overviewQO),
