@@ -1,7 +1,9 @@
 import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { subscribeToPlan } from "@/lib/subscriptions.functions";
+import { subscribeToPlan, getMyPaymentStatus } from "@/lib/subscriptions.functions";
+import { useQueryClient } from "@tanstack/react-query";
+
 import { plansQueryOptions as plansQO, overviewQueryOptions as overviewQO } from "@/lib/queries";
 import { useI18n } from "@/lib/i18n";
 import { useQuery } from "@tanstack/react-query";
