@@ -1,9 +1,8 @@
 import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
-import { useSuspenseQuery, queryOptions } from "@tanstack/react-query";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { listActivePlans } from "@/lib/plans.functions";
-import { getMyOverview } from "@/lib/user.functions";
 import { subscribeToPlan } from "@/lib/subscriptions.functions";
+import { plansQueryOptions as plansQO, overviewQueryOptions as overviewQO } from "@/lib/queries";
 import { formatCurrencyBRL, PLAN_PERIOD_LABEL, PLAN_ECONOMY_LABEL } from "@/lib/format";
 import { celebrate } from "@/lib/confetti";
 import { toast } from "sonner";
@@ -23,8 +22,6 @@ import {
   Clock,
 } from "lucide-react";
 
-const plansQO = queryOptions({ queryKey: ["public", "plans"], queryFn: () => listActivePlans() });
-const overviewQO = queryOptions({ queryKey: ["me", "overview"], queryFn: () => getMyOverview() });
 
 export const Route = createFileRoute("/_authenticated/checkout/$planId")({
   loader: ({ context }) =>

@@ -1,14 +1,11 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useSuspenseQuery, queryOptions } from "@tanstack/react-query";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { useEffect, useRef, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { listActivePlans, listActiveRewards } from "@/lib/plans.functions";
+import { plansQueryOptions as plansQO, rewardsQueryOptions as rewardsQO } from "@/lib/queries";
 import { formatCurrencyBRL, formatPoints } from "@/lib/format";
 import broadcastWall from "@/assets/broadcast-wall.jpg";
 import { ArrowUpRight, Check, Menu, X, Plus, ChevronDown } from "lucide-react";
-
-const plansQO = queryOptions({ queryKey: ["public", "plans"], queryFn: () => listActivePlans() });
-const rewardsQO = queryOptions({ queryKey: ["public", "rewards"], queryFn: () => listActiveRewards() });
 
 export const Route = createFileRoute("/")({
   loader: async ({ context }) => {

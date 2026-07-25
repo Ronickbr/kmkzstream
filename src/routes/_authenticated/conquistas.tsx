@@ -1,7 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { queryOptions, useSuspenseQuery, useQueryClient } from "@tanstack/react-query";
+import { useSuspenseQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { getAchievements, checkAchievements, type Achievement } from "@/lib/achievements.functions";
+import { checkAchievements, type Achievement } from "@/lib/achievements.functions";
+import { achievementsQueryOptions as qo } from "@/lib/queries";
 import { formatPoints, formatDateBR } from "@/lib/format";
 import { celebrate } from "@/lib/confetti";
 import { useEffect, useMemo, useState } from "react";
@@ -19,8 +20,6 @@ import {
   RefreshCw,
   Filter,
 } from "lucide-react";
-
-const qo = queryOptions({ queryKey: ["me", "achievements"], queryFn: () => getAchievements() });
 
 export const Route = createFileRoute("/_authenticated/conquistas")({
   loader: ({ context }) => context.queryClient.ensureQueryData(qo),

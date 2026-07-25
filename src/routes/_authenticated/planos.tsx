@@ -1,12 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useSuspenseQuery, queryOptions } from "@tanstack/react-query";
-import { listActivePlans } from "@/lib/plans.functions";
-import { getMyOverview } from "@/lib/user.functions";
+import { useSuspenseQuery } from "@tanstack/react-query";
+import { plansQueryOptions as plansQO, overviewQueryOptions as overviewQO } from "@/lib/queries";
 import { formatCurrencyBRL, formatDateBR, PLAN_ECONOMY_LABEL, PLAN_PERIOD_SHORT } from "@/lib/format";
 import { Check, Sparkles, CalendarClock, CheckCircle2, ArrowRight, Zap } from "lucide-react";
-
-const plansQO = queryOptions({ queryKey: ["public", "plans"], queryFn: () => listActivePlans() });
-const overviewQO = queryOptions({ queryKey: ["me", "overview"], queryFn: () => getMyOverview() });
 
 export const Route = createFileRoute("/_authenticated/planos")({
   head: () => ({ meta: [{ title: "Planos — KMKZ Streaming" }] }),

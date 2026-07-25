@@ -1,14 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useSuspenseQuery, queryOptions } from "@tanstack/react-query";
-import { getLeaderboard } from "@/lib/points.functions";
-import { getMyOverview } from "@/lib/user.functions";
+import { useSuspenseQuery } from "@tanstack/react-query";
+import { overviewQueryOptions as meQO, leaderboardQueryOptions as boardQO } from "@/lib/queries";
 import { getVipLevel, maskName } from "@/lib/vip";
 import { Sparkles, Trophy, Crown, Medal } from "lucide-react";
 import { useState } from "react";
-
-const meQO = queryOptions({ queryKey: ["me", "overview"], queryFn: () => getMyOverview() });
-const boardQO = (period: "week" | "month" | "all") =>
-  queryOptions({ queryKey: ["leaderboard", period], queryFn: () => getLeaderboard({ data: { period } }) });
 
 export const Route = createFileRoute("/_authenticated/ranking")({
   loader: ({ context }) =>

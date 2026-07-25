@@ -1,19 +1,15 @@
 import { confirmAction } from "@/lib/confirm";
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useSuspenseQuery, queryOptions } from "@tanstack/react-query";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { getMyOverview } from "@/lib/user.functions";
 import { cancelMySubscription } from "@/lib/subscriptions.functions";
-import { getMyPointsHistory } from "@/lib/points.functions";
+import { overviewQueryOptions as overviewQO, pointsHistoryQueryOptions as historyQO } from "@/lib/queries";
 import { formatCurrencyBRL, formatDateBR, formatPoints, PLAN_PERIOD_LABEL } from "@/lib/format";
 import { toast } from "sonner";
 import { Sparkles, Users, Gift, CreditCard, History, TrendingUp, TrendingDown, Trophy } from "lucide-react";
 import { getVipLevel } from "@/lib/vip";
 import { WelcomeTour } from "@/components/welcome-tour";
 import { useState, useEffect } from "react";
-
-const overviewQO = queryOptions({ queryKey: ["me", "overview"], queryFn: () => getMyOverview() });
-const historyQO = queryOptions({ queryKey: ["me", "points-history"], queryFn: () => getMyPointsHistory() });
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
   loader: ({ context }) =>
