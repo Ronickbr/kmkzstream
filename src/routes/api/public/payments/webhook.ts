@@ -73,8 +73,13 @@ async function handleWebhook(request: Request): Promise<Response> {
         }
         if (!data) return new Response("Unknown reference", { status: 404 });
 
-        return Response.json({ ok: true });
-      },
+  return Response.json({ ok: true });
+}
+
+export const Route = createFileRoute("/api/public/payments/webhook")({
+  server: {
+    handlers: {
+      POST: ({ request }: { request: Request }) => handleWebhook(request),
     },
   },
-});
+} as never);
