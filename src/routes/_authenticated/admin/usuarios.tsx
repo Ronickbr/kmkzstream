@@ -546,10 +546,10 @@ function UserModal({
       aria-modal="true"
     >
       <div
-        className="max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-2xl border border-surface-200 bg-card shadow-xl"
+        className="flex max-h-[85vh] w-full max-w-2xl flex-col overflow-hidden rounded-2xl border border-surface-200 bg-card shadow-xl"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex items-center justify-between border-b border-surface-200 px-6 py-4">
+        <div className="flex shrink-0 items-center justify-between border-b border-surface-200 px-6 py-4">
           <h2 className="font-display text-xl font-bold">
             {mode === "view" ? "Detalhes do usuário" : "Editar usuário"}
           </h2>
@@ -562,7 +562,8 @@ function UserModal({
           </button>
         </div>
 
-        <div className="p-6">
+        <div className="flex-1 overflow-y-auto p-6">
+
           {isLoading || !data ? (
             <p className="text-sm text-surface-900/60">Carregando...</p>
           ) : mode === "view" ? (
