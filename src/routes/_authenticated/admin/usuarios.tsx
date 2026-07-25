@@ -269,10 +269,10 @@ function UserModal({
           </h2>
           <button
             onClick={onClose}
-            className="rounded-lg px-2 py-1 text-surface-900/60 hover:bg-surface-100"
+            className="rounded-lg p-1.5 text-surface-900/60 hover:bg-surface-100"
             aria-label="Fechar"
           >
-            ✕
+            <X size={18} />
           </button>
         </div>
 
