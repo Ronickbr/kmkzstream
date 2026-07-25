@@ -4,7 +4,7 @@ import { useSuspenseQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { cancelMySubscription } from "@/lib/subscriptions.functions";
 import { overviewQueryOptions as overviewQO, pointsHistoryQueryOptions as historyQO } from "@/lib/queries";
-import { formatCurrencyBRL, formatDateBR, formatPoints, PLAN_PERIOD_LABEL } from "@/lib/format";
+import { formatDateBR, formatPoints, PLAN_PERIOD_LABEL } from "@/lib/format";
 import { toast } from "sonner";
 import { Sparkles, Users, Gift, CreditCard, History, TrendingUp, TrendingDown, Trophy } from "lucide-react";
 import { getVipLevel } from "@/lib/vip";
@@ -158,7 +158,7 @@ function DashboardPage() {
                   </span>
                 </div>
                 <p className="mt-1 text-sm text-muted-foreground">
-                  {formatCurrencyBRL(activeSub.plan.price_cents)} · {PLAN_PERIOD_LABEL[activeSub.plan.period]}
+                  {planPrice(activeSub.plan)} · {PLAN_PERIOD_LABEL[activeSub.plan.period]}
                 </p>
                 <p className="mt-2 text-xs text-muted-foreground">
                   Renova em {formatDateBR(activeSub.ends_at)}

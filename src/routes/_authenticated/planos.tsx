@@ -1,7 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { plansQueryOptions as plansQO, overviewQueryOptions as overviewQO } from "@/lib/queries";
-import { formatCurrencyBRL, formatDateBR, PLAN_ECONOMY_LABEL, PLAN_PERIOD_SHORT } from "@/lib/format";
+import { formatDateBR, PLAN_ECONOMY_LABEL, PLAN_PERIOD_SHORT } from "@/lib/format";
+import { useI18n } from "@/lib/i18n";
 import { Check, Sparkles, CalendarClock, CheckCircle2, ArrowRight, Zap } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/planos")({
@@ -14,6 +15,7 @@ export const Route = createFileRoute("/_authenticated/planos")({
 });
 
 function PlanosPage() {
+  const { planPrice } = useI18n();
   const { data: plans } = useSuspenseQuery(plansQO);
   const { data: overview } = useSuspenseQuery(overviewQO);
   const sub = overview.subscription;
@@ -111,7 +113,7 @@ function PlanosPage() {
               <h3 className="text-xs font-bold uppercase tracking-widest text-muted-foreground">{p.name}</h3>
               <div className="mt-3 flex items-baseline gap-1">
                 <span className="text-2xl font-bold tracking-tight text-foreground sm:text-[1.75rem]">
-                  {formatCurrencyBRL(p.price_cents)}
+                  {planPrice(p)}
                 </span>
                 <span className="text-xs text-muted-foreground">{PLAN_PERIOD_SHORT[p.period]}</span>
               </div>
