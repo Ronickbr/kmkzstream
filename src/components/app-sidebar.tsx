@@ -9,6 +9,7 @@ import {
   ShieldCheck,
   Package,
   Ticket,
+  Settings,
   BarChart3,
   Sparkles,
   Trophy,
