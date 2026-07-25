@@ -127,9 +127,9 @@ function MinhaContaPage() {
               <span className="inline-flex items-center gap-1 rounded-full bg-brand/15 px-2.5 py-1 text-xs font-semibold text-brand">
                 {data.points} pontos
               </span>
-              {(p as any)?.created_at && (
+              {p?.created_at && (
                 <span className="inline-flex items-center gap-1 rounded-full bg-muted px-2.5 py-1 text-xs text-muted-foreground">
-                  <Calendar className="h-3 w-3" /> Membro desde {new Date((p as any).created_at).toLocaleDateString("pt-BR")}
+                  <Calendar className="h-3 w-3" /> Membro desde {new Date(p.created_at).toLocaleDateString("pt-BR")}
                 </span>
               )}
             </div>
