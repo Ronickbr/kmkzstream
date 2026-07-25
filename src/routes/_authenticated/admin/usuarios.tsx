@@ -404,6 +404,52 @@ function AdminUsersPage() {
         </table>
       </div>
 
+      <div className="mt-4 flex flex-col items-center justify-between gap-3 text-xs text-surface-900/70 sm:flex-row">
+        <div>
+          Mostrando{" "}
+          <strong>
+            {filtered.length === 0 ? 0 : pageStart + 1}–
+            {Math.min(pageStart + pageSize, filtered.length)}
+          </strong>{" "}
+          de <strong>{filtered.length}</strong>
+          {search && ` (filtrado de ${users.length})`}
+        </div>
+        <div className="flex items-center gap-2">
+          <label className="flex items-center gap-1">
+            Por página
+            <select
+              value={pageSize}
+              onChange={(e) => setPageSize(Number(e.target.value))}
+              className="rounded-lg border border-surface-200 bg-card px-2 py-1"
+            >
+              {[10, 20, 50, 100].map((n) => (
+                <option key={n} value={n}>
+                  {n}
+                </option>
+              ))}
+            </select>
+          </label>
+          <button
+            onClick={() => setPage((p) => Math.max(1, p - 1))}
+            disabled={page <= 1}
+            className="rounded-lg border border-surface-200 px-2 py-1 font-semibold hover:bg-surface-50 disabled:opacity-40"
+          >
+            ← Anterior
+          </button>
+          <span className="font-mono">
+            {page}/{totalPages}
+          </span>
+          <button
+            onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+            disabled={page >= totalPages}
+            className="rounded-lg border border-surface-200 px-2 py-1 font-semibold hover:bg-surface-50 disabled:opacity-40"
+          >
+            Próxima →
+          </button>
+        </div>
+      </div>
+
+
       {selectedId && mode && (
         <UserModal
           userId={selectedId}
