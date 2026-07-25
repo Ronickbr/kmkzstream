@@ -11,7 +11,7 @@ import {
 } from "@/lib/admin.functions";
 import { formatDateBR } from "@/lib/format";
 import { toast } from "sonner";
-import { confirmDialog } from "@/lib/confirm";
+import { confirmAction } from "@/lib/confirm";
 
 const usersQO = queryOptions({ queryKey: ["admin", "users"], queryFn: () => adminListUsers() });
 
