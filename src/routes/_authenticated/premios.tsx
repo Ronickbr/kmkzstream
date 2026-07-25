@@ -1,10 +1,10 @@
 import { confirmAction } from "@/lib/confirm";
 import { createFileRoute } from "@tanstack/react-router";
-import { useSuspenseQuery, queryOptions } from "@tanstack/react-query";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { getMyOverview } from "@/lib/user.functions";
 import { listActiveRewards } from "@/lib/plans.functions";
 import { redeemReward, type ShippingInput } from "@/lib/redemptions.functions";
+import { overviewQueryOptions as overviewQO, rewardsQueryOptions as rewardsQO } from "@/lib/queries";
 import { formatPoints, formatDateBR } from "@/lib/format";
 import { Gift, Sparkles, Package, CalendarPlus, Truck, CheckCircle2, Clock } from "lucide-react";
 import { toast } from "sonner";
@@ -20,9 +20,6 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-
-const overviewQO = queryOptions({ queryKey: ["me", "overview"], queryFn: () => getMyOverview() });
-const rewardsQO = queryOptions({ queryKey: ["public", "rewards"], queryFn: () => listActiveRewards() });
 
 export const Route = createFileRoute("/_authenticated/premios")({
   loader: ({ context }) =>
