@@ -22,8 +22,6 @@ import {
   Clock,
 } from "lucide-react";
 
-const plansQO = queryOptions({ queryKey: ["public", "plans"], queryFn: () => listActivePlans() });
-const overviewQO = queryOptions({ queryKey: ["me", "overview"], queryFn: () => getMyOverview() });
 
 export const Route = createFileRoute("/_authenticated/checkout/$planId")({
   loader: ({ context }) =>
