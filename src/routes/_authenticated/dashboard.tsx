@@ -251,7 +251,7 @@ function DashboardPage() {
               <ul className="mt-4 divide-y divide-border/70">
                 {data.redemptions.slice(0, 5).map((r) => (
                   <li key={r.id} className="flex items-center justify-between py-3 text-sm">
-                    <span className="truncate font-medium">{(r.reward as any)?.name ?? "Prêmio"}</span>
+                    <span className="truncate font-medium">{r.reward?.name ?? "Prêmio"}</span>
                     <div className="flex shrink-0 items-center gap-3">
                       <span className="rounded-full bg-accent/15 px-2 py-0.5 text-[10px] font-bold text-accent ring-1 ring-inset ring-accent/30">
                         −{r.points_spent} pts
