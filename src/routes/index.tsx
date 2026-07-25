@@ -32,19 +32,29 @@ function TallyDot({ label = "AO VIVO" }: { label?: string }) {
 }
 
 function TimecodeBar({ ch, label }: { ch: string; label: string }) {
-  const [tc, setTc] = useState("00:00:00:00");
+  const tcRef = useRef<HTMLSpanElement>(null);
   useEffect(() => {
-    const start = Date.now();
-    const t = setInterval(() => {
-      const ms = Date.now() - start;
-      const h = Math.floor(ms / 3_600_000) % 24;
-      const m = Math.floor(ms / 60_000) % 60;
-      const s = Math.floor(ms / 1000) % 60;
-      const f = Math.floor((ms % 1000) / 40); // 25 fps feel
-      const pad = (n: number) => String(n).padStart(2, "0");
-      setTc(`${pad(h)}:${pad(m)}:${pad(s)}:${pad(f)}`);
-    }, 40);
-    return () => clearInterval(t);
+    const start = performance.now();
+    let raf = 0;
+    let last = 0;
+    const pad = (n: number) => (n < 10 ? "0" + n : "" + n);
+    const tick = (now: number) => {
+      // Atualiza no máximo 10x/s — imperceptível ao olho, elimina 60% do custo
+      if (now - last >= 100) {
+        const ms = now - start;
+        const h = Math.floor(ms / 3_600_000) % 24;
+        const m = Math.floor(ms / 60_000) % 60;
+        const s = Math.floor(ms / 1000) % 60;
+        const f = Math.floor((ms % 1000) / 40);
+        if (tcRef.current) {
+          tcRef.current.textContent = `${pad(h)}:${pad(m)}:${pad(s)}:${pad(f)}`;
+        }
+        last = now;
+      }
+      raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
   }, []);
   return (
     <div className="inline-flex items-center gap-3 rounded-sm border border-white/10 bg-black/50 px-3 py-1.5 font-mono-b text-[11px] uppercase tracking-[0.18em] text-white/70 backdrop-blur">
@@ -54,7 +64,7 @@ function TimecodeBar({ ch, label }: { ch: string; label: string }) {
       <span className="text-white/40">·</span>
       <span>{label}</span>
       <span className="text-white/40">·</span>
-      <span className="tabular-nums">{tc}</span>
+      <span ref={tcRef} className="tabular-nums">00:00:00:00</span>
     </div>
   );
 }
