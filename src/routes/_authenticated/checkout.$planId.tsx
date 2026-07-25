@@ -470,7 +470,7 @@ function PixPreview({ plan }: { plan: any }) {
   };
 
   return (
-    <div className="mt-6 grid gap-6 rounded-2xl border border-border bg-background/40 p-6 sm:grid-cols-[auto_1fr]">
+    <div className="mt-6 grid gap-4 sm:p-6 rounded-2xl border border-border bg-background/40 p-6 sm:grid-cols-[auto_1fr]">
       <div className="grid place-items-center">
         <div className="rounded-2xl bg-white p-3 shadow-glow">
           <FakeQR />
