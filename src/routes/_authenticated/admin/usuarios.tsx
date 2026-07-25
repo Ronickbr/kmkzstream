@@ -301,12 +301,12 @@ function AdminUsersPage() {
               <th className="w-10 px-4 py-3">
                 <input
                   type="checkbox"
-                  aria-label="Selecionar todos"
-                  checked={allFilteredSelected}
+                  aria-label="Selecionar página"
+                  checked={allPageSelected}
                   ref={(el) => {
-                    if (el) el.indeterminate = someFilteredSelected;
+                    if (el) el.indeterminate = somePageSelected;
                   }}
-                  onChange={toggleAllFiltered}
+                  onChange={togglePage}
                   className="h-4 w-4 cursor-pointer accent-brand"
                 />
               </th>
