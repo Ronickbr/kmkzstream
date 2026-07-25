@@ -31,6 +31,8 @@ function AdminUsersPage() {
   const [search, setSearch] = useState("");
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [mode, setMode] = useState<Mode>(null);
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+  const [bulkRunning, setBulkRunning] = useState(false);
 
   const filtered = users.filter((u: any) => {
     const q = search.trim().toLowerCase();
@@ -40,6 +42,37 @@ function AdminUsersPage() {
       (u.referral_code ?? "").toLowerCase().includes(q)
     );
   });
+
+  const filteredIds = filtered.map((u: any) => u.id);
+  const allFilteredSelected =
+    filteredIds.length > 0 && filteredIds.every((id) => selectedIds.has(id));
+  const someFilteredSelected =
+    filteredIds.some((id) => selectedIds.has(id)) && !allFilteredSelected;
+
+  const toggleOne = (id: string) => {
+    setSelectedIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  };
+
+  const toggleAllFiltered = () => {
+    setSelectedIds((prev) => {
+      const next = new Set(prev);
+      if (allFilteredSelected) filteredIds.forEach((id) => next.delete(id));
+      else filteredIds.forEach((id) => next.add(id));
+      return next;
+    });
+  };
+
+  const clearSelection = () => setSelectedIds(new Set());
+
+  const selectedUsers = users.filter((u: any) => selectedIds.has(u.id));
+  const selectedAdminsCount = selectedUsers.filter((u: any) =>
+    (u.roles as string[]).includes("admin"),
+  ).length;
 
   const toggle = async (userId: string, isAdmin: boolean) => {
     try {
@@ -66,6 +99,110 @@ function AdminUsersPage() {
     }
   };
 
+  const runBulk = async (
+    label: string,
+    action: (u: any) => Promise<unknown>,
+    successMsg: (ok: number, fail: number) => string,
+  ) => {
+    setBulkRunning(true);
+    let ok = 0;
+    let fail = 0;
+    for (const u of selectedUsers) {
+      try {
+        await action(u);
+        ok += 1;
+      } catch (e: any) {
+        fail += 1;
+        console.error(`[bulk ${label}]`, u.id, e);
+      }
+    }
+    setBulkRunning(false);
+    clearSelection();
+    refetch();
+    if (fail === 0) toast.success(successMsg(ok, fail));
+    else toast.error(successMsg(ok, fail));
+  };
+
+  const bulkDelete = async () => {
+    const names = selectedUsers.slice(0, 3).map((u: any) => u.display_name ?? "usuário").join(", ");
+    const extra = selectedUsers.length > 3 ? ` e mais ${selectedUsers.length - 3}` : "";
+    const ok = await confirmAction(
+      `Excluir ${selectedUsers.length} usuário(s): ${names}${extra}? Ação irreversível.`,
+      { confirmLabel: `Excluir ${selectedUsers.length}`, danger: true },
+    );
+    if (!ok) return;
+    await runBulk(
+      "delete",
+      (u) => deleteFn({ data: { userId: u.id } }),
+      (ok, fail) =>
+        fail === 0
+          ? `${ok} usuário(s) excluído(s)`
+          : `${ok} excluído(s), ${fail} falha(s)`,
+    );
+  };
+
+  const bulkPromote = async () => {
+    const toPromote = selectedUsers.filter(
+      (u: any) => !(u.roles as string[]).includes("admin"),
+    );
+    if (toPromote.length === 0) {
+      toast.info("Todos os selecionados já são admin");
+      return;
+    }
+    const ok = await confirmAction(
+      `Conceder admin para ${toPromote.length} usuário(s)?`,
+      { confirmLabel: "Conceder" },
+    );
+    if (!ok) return;
+    setBulkRunning(true);
+    let done = 0;
+    let fail = 0;
+    for (const u of toPromote) {
+      try {
+        await setRoleFn({ data: { userId: u.id, makeAdmin: true } });
+        done += 1;
+      } catch {
+        fail += 1;
+      }
+    }
+    setBulkRunning(false);
+    clearSelection();
+    refetch();
+    if (fail === 0) toast.success(`${done} usuário(s) promovido(s)`);
+    else toast.error(`${done} promovido(s), ${fail} falha(s)`);
+  };
+
+  const bulkDemote = async () => {
+    const toDemote = selectedUsers.filter((u: any) =>
+      (u.roles as string[]).includes("admin"),
+    );
+    if (toDemote.length === 0) {
+      toast.info("Nenhum admin selecionado");
+      return;
+    }
+    const ok = await confirmAction(
+      `Remover admin de ${toDemote.length} usuário(s)?`,
+      { confirmLabel: "Remover", danger: true },
+    );
+    if (!ok) return;
+    setBulkRunning(true);
+    let done = 0;
+    let fail = 0;
+    for (const u of toDemote) {
+      try {
+        await setRoleFn({ data: { userId: u.id, makeAdmin: false } });
+        done += 1;
+      } catch {
+        fail += 1;
+      }
+    }
+    setBulkRunning(false);
+    clearSelection();
+    refetch();
+    if (fail === 0) toast.success(`${done} admin(s) removido(s)`);
+    else toast.error(`${done} removido(s), ${fail} falha(s)`);
+  };
+
   const open = (id: string, m: Mode) => {
     setSelectedId(id);
     setMode(m);
@@ -74,6 +211,7 @@ function AdminUsersPage() {
     setSelectedId(null);
     setMode(null);
   };
+
 
   return (
     <div role="main" id="main" className="mx-auto max-w-7xl px-4 py-6 sm:px-6 sm:py-10">
@@ -91,10 +229,62 @@ function AdminUsersPage() {
         />
       </div>
 
-      <div className="mt-8 overflow-x-auto rounded-3xl border border-surface-200 bg-card">
-        <table className="w-full min-w-[820px] text-sm">
+      {selectedIds.size > 0 && (
+        <div className="mt-6 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-brand/40 bg-brand/5 px-4 py-3">
+          <div className="text-sm">
+            <span className="font-bold text-brand">{selectedIds.size}</span>{" "}
+            selecionado(s) · {selectedAdminsCount} admin(s) ·{" "}
+            {selectedIds.size - selectedAdminsCount} usuário(s) comum
+          </div>
+          <div className="flex flex-wrap gap-2">
+            <button
+              onClick={clearSelection}
+              disabled={bulkRunning}
+              className="rounded-lg border border-surface-200 px-3 py-1.5 text-xs font-semibold hover:bg-surface-50 disabled:opacity-50"
+            >
+              Limpar
+            </button>
+            <button
+              onClick={bulkPromote}
+              disabled={bulkRunning}
+              className="inline-flex items-center gap-1 rounded-lg border border-surface-200 px-3 py-1.5 text-xs font-semibold hover:bg-surface-50 disabled:opacity-50"
+            >
+              <Shield size={14} /> Tornar admin
+            </button>
+            <button
+              onClick={bulkDemote}
+              disabled={bulkRunning}
+              className="inline-flex items-center gap-1 rounded-lg border border-surface-200 px-3 py-1.5 text-xs font-semibold hover:bg-surface-50 disabled:opacity-50"
+            >
+              <ShieldOff size={14} /> Remover admin
+            </button>
+            <button
+              onClick={bulkDelete}
+              disabled={bulkRunning}
+              className="inline-flex items-center gap-1 rounded-lg border border-red-500/30 px-3 py-1.5 text-xs font-semibold text-red-500 hover:bg-red-500/10 disabled:opacity-50"
+            >
+              <Trash2 size={14} /> Excluir
+            </button>
+          </div>
+        </div>
+      )}
+
+      <div className="mt-6 overflow-x-auto rounded-3xl border border-surface-200 bg-card">
+        <table className="w-full min-w-[880px] text-sm">
           <thead className="bg-surface-50 text-xs font-bold uppercase tracking-wider text-surface-900/60">
             <tr>
+              <th className="w-10 px-4 py-3">
+                <input
+                  type="checkbox"
+                  aria-label="Selecionar todos"
+                  checked={allFilteredSelected}
+                  ref={(el) => {
+                    if (el) el.indeterminate = someFilteredSelected;
+                  }}
+                  onChange={toggleAllFiltered}
+                  className="h-4 w-4 cursor-pointer accent-brand"
+                />
+              </th>
               <th className="px-4 py-3 text-left">Usuário</th>
               <th className="px-4 py-3 text-left">Plano</th>
               <th className="px-4 py-3 text-right">Indicações</th>
@@ -106,8 +296,18 @@ function AdminUsersPage() {
           <tbody>
             {filtered.map((u: any) => {
               const isAdmin = (u.roles as string[]).includes("admin");
+              const checked = selectedIds.has(u.id);
               return (
-                <tr key={u.id} className="border-t border-surface-100">
+                <tr key={u.id} className={`border-t border-surface-100 ${checked ? "bg-brand/5" : ""}`}>
+                  <td className="px-4 py-3">
+                    <input
+                      type="checkbox"
+                      aria-label={`Selecionar ${u.display_name ?? "usuário"}`}
+                      checked={checked}
+                      onChange={() => toggleOne(u.id)}
+                      className="h-4 w-4 cursor-pointer accent-brand"
+                    />
+                  </td>
                   <td className="px-4 py-3">
                     <div className="flex items-center gap-2">
                       <div>
@@ -170,7 +370,7 @@ function AdminUsersPage() {
             })}
             {filtered.length === 0 && (
               <tr>
-                <td colSpan={6} className="px-4 py-10 text-center text-sm text-surface-900/50">
+                <td colSpan={7} className="px-4 py-10 text-center text-sm text-surface-900/50">
                   Nenhum usuário encontrado.
                 </td>
               </tr>
