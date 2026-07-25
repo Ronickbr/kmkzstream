@@ -8,7 +8,7 @@ import {
   UserCircle,
   ShieldCheck,
   Package,
-  Ticket,
+  Settings,
   BarChart3,
   Sparkles,
   Trophy,
@@ -45,7 +45,8 @@ const adminItems = [
   { to: "/admin/pontos", label: "Regras de pontos", icon: Sparkles },
   { to: "/admin/usuarios", label: "Usuários", icon: Users },
   { to: "/admin/resgates", label: "Resgates", icon: Package },
-  { to: "/admin/resgates", label: "Resgates", icon: Ticket, hidden: true },
+  { to: "/admin/configuracoes", label: "Configurações", icon: Settings },
+
 ];
 
 export function AppSidebar({ isAdmin }: { isAdmin: boolean }) {
@@ -106,8 +107,8 @@ export function AppSidebar({ isAdmin }: { isAdmin: boolean }) {
             <SidebarGroupContent>
               <SidebarMenu>
                 {adminItems
-                  .filter((i) => !i.hidden)
                   .map((it) => {
+
                     const active = isActive(it.to, it.exact);
                     return (
                       <SidebarMenuItem key={it.to}>
