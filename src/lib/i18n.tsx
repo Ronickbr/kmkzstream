@@ -1,5 +1,5 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
-import { DICTIONARIES, LOCALES, LOCALE_META, USD_PRICE_CENTS, type Locale } from "./i18n-dict";
+import { CONTENT, DICTIONARIES, LOCALES, LOCALE_META, USD_PRICE_CENTS, type Locale } from "./i18n-dict";
 
 export { LOCALES, LOCALE_META, USD_PRICE_CENTS };
 export type { Locale };
@@ -12,6 +12,8 @@ type I18nValue = {
   locale: Locale;
   setLocale: (l: Locale) => void;
   t: (key: string, vars?: Record<string, string | number>) => string;
+  /** Traduz conteúdo dinâmico vindo do banco (nomes de planos, prêmios, benefícios). */
+  tc: (text?: string | null) => string;
   currency: "BRL" | "USD";
   /** Formata um valor em centavos na moeda do idioma atual (converte de BRL quando necessário). */
   money: (brlCents: number) => string;
@@ -78,10 +80,17 @@ export function I18nProvider({ children }: { children: ReactNode }) {
       return mapped ?? Math.round(plan.price_cents / BRL_TO_USD);
     };
 
+    const tc = (text?: string | null) => {
+      if (!text) return "";
+      if (locale === "pt") return text;
+      return CONTENT[locale][text] ?? text;
+    };
+
     return {
       locale,
       setLocale,
       t,
+      tc,
       currency: meta.currency,
       money: (brlCents: number) => fmt(meta.currency === "BRL" ? brlCents : Math.round(brlCents / BRL_TO_USD)),
       planPrice: (plan) => fmt(toCents(plan)),

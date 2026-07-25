@@ -440,3 +440,60 @@ const es: Dict = {
 };
 
 export const DICTIONARIES: Record<Locale, Dict> = { pt, en, es };
+
+/**
+ * Traduções de conteúdo vindo do banco (nomes de planos, benefícios e prêmios).
+ * Chave = texto original em português; fallback = o próprio texto.
+ */
+export const CONTENT: Record<Exclude<Locale, "pt">, Record<string, string>> = {
+  en: {
+    Mensal: "Monthly",
+    Trimestral: "Quarterly",
+    Semestral: "Semiannual",
+    Anual: "Annual",
+    "Acesso completo à plataforma": "Full platform access",
+    "Bônus de indicação padrão": "Standard referral bonus",
+    "Suporte prioritário 24/7": "Priority 24/7 support",
+    "Acesso a prêmios VIP": "Access to VIP rewards",
+    "1 Mês Grátis": "1 Free Month",
+    "3 Meses Grátis": "3 Free Months",
+    "6 Meses Grátis": "6 Free Months",
+    "1 Ano Grátis": "1 Free Year",
+    "Mi TV Stick": "Mi TV Stick",
+    "Estenda sua assinatura atual por mais 30 dias, sem cobrança.":
+      "Extend your current subscription by 30 more days, free of charge.",
+    "Adicione 90 dias de acesso completo ao seu plano atual.":
+      "Add 90 days of full access to your current plan.",
+    "Ganhe 6 meses adicionados à sua assinatura ativa.":
+      "Get 6 months added to your active subscription.",
+    "Ganhe 12 meses adicionados à sua assinatura ativa.":
+      "Get 12 months added to your active subscription.",
+    "Xiaomi Mi TV Stick — transforme sua TV em Smart TV com Android TV. Full HD, Chromecast integrado.":
+      "Xiaomi Mi TV Stick — turn your TV into a Smart TV with Android TV. Full HD, built-in Chromecast.",
+  },
+  es: {
+    Mensal: "Mensual",
+    Trimestral: "Trimestral",
+    Semestral: "Semestral",
+    Anual: "Anual",
+    "Acesso completo à plataforma": "Acceso completo a la plataforma",
+    "Bônus de indicação padrão": "Bono de referidos estándar",
+    "Suporte prioritário 24/7": "Soporte prioritario 24/7",
+    "Acesso a prêmios VIP": "Acceso a premios VIP",
+    "1 Mês Grátis": "1 Mes Gratis",
+    "3 Meses Grátis": "3 Meses Gratis",
+    "6 Meses Grátis": "6 Meses Gratis",
+    "1 Ano Grátis": "1 Año Gratis",
+    "Mi TV Stick": "Mi TV Stick",
+    "Estenda sua assinatura atual por mais 30 dias, sem cobrança.":
+      "Extiende tu suscripción actual por 30 días más, sin cargo.",
+    "Adicione 90 dias de acesso completo ao seu plano atual.":
+      "Suma 90 días de acceso completo a tu plan actual.",
+    "Ganhe 6 meses adicionados à sua assinatura ativa.":
+      "Gana 6 meses añadidos a tu suscripción activa.",
+    "Ganhe 12 meses adicionados à sua assinatura ativa.":
+      "Gana 12 meses añadidos a tu suscripción activa.",
+    "Xiaomi Mi TV Stick — transforme sua TV em Smart TV com Android TV. Full HD, Chromecast integrado.":
+      "Xiaomi Mi TV Stick — convierte tu TV en Smart TV con Android TV. Full HD, Chromecast integrado.",
+  },
+};

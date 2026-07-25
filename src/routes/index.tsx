@@ -374,7 +374,7 @@ function Grade() {
 /* ---------------------------- Recompensas ---------------------------- */
 
 function Recompensas({ rewards }: { rewards: any[] }) {
-  const { t } = useI18n();
+  const { t, tc } = useI18n();
   const items = rewards.slice(0, 6);
   return (
     <section id="recompensas" className="relative border-b border-white/[0.06] py-24 sm:py-32">
@@ -415,8 +415,8 @@ function Recompensas({ rewards }: { rewards: any[] }) {
                   RW.{String(i + 1).padStart(3, "0")}
                 </span>
                 <div className="col-span-7">
-                  <p className="font-broadcast text-2xl leading-tight text-white sm:text-3xl">{r.name}</p>
-                  <p className="mt-1 font-body-b text-[13px] text-white/50">{r.description}</p>
+                  <p className="font-broadcast text-2xl leading-tight text-white sm:text-3xl">{tc(r.name)}</p>
+                  <p className="mt-1 font-body-b text-[13px] text-white/50">{tc(r.description)}</p>
                 </div>
                 <div className="col-span-3 text-right">
                   <p className="font-broadcast text-3xl leading-none text-[color:var(--color-tally)] sm:text-4xl">
@@ -437,7 +437,7 @@ function Recompensas({ rewards }: { rewards: any[] }) {
 /* -------------------------------- Planos ------------------------------- */
 
 function Planos({ plans }: { plans: any[] }) {
-  const { t, planPrice, money, currency } = useI18n();
+  const { t, tc, planPrice, planPriceCents, currency, money } = useI18n();
   return (
     <section id="planos" className="relative border-b border-white/[0.06] py-24 sm:py-32">
       <div className="mx-auto max-w-[1400px] px-4 sm:px-8">
@@ -457,7 +457,8 @@ function Planos({ plans }: { plans: any[] }) {
 
         <div className="mt-14 grid gap-px overflow-hidden rounded-sm border border-white/[0.08] bg-white/[0.06] sm:grid-cols-2 xl:grid-cols-4">
           {plans.map((plan, i) => {
-            const monthly = plan.price_cents / Math.max(1, Math.round(plan.duration_days / 30));
+            const months = Math.max(1, Math.round(plan.duration_days / 30));
+            const monthly = planPriceCents(plan) / months;
             const isMonthly = plan.period === "monthly";
             return (
               <article
@@ -479,7 +480,7 @@ function Planos({ plans }: { plans: any[] }) {
                   </span>
                 </div>
 
-                <h3 className="mt-5 font-broadcast text-4xl leading-none text-white sm:text-5xl">{plan.name}</h3>
+                <h3 className="mt-5 font-broadcast text-4xl leading-none text-white sm:text-5xl">{tc(plan.name)}</h3>
 
                 <div className="mt-8 border-t border-white/10 pt-6">
                   <div className="flex items-baseline gap-2">
@@ -489,7 +490,7 @@ function Planos({ plans }: { plans: any[] }) {
                     <span className="font-mono-b text-[11px] uppercase tracking-[0.2em] text-white/40">{currency}</span>
                   </div>
                   <p className="mt-2 font-mono-b text-[11px] uppercase tracking-[0.18em] text-white/40">
-                    {isMonthly ? "\u00A0" : `${money(monthly)}${t("common.perMonth")}`}
+                    {isMonthly ? "\u00A0" : `${moneyRaw(monthly)}${t("common.perMonth")}`}
                   </p>
                 </div>
 
@@ -497,7 +498,7 @@ function Planos({ plans }: { plans: any[] }) {
                   {(plan.features ?? []).map((f: string) => (
                     <li key={f} className="flex items-start gap-2 font-body-b text-[14px] text-white/75">
                       <Check className="mt-0.5 size-4 shrink-0 text-[color:var(--color-tally)]" />
-                      {f}
+                      {tc(f)}
                     </li>
                   ))}
                 </ul>
@@ -506,7 +507,7 @@ function Planos({ plans }: { plans: any[] }) {
                   to="/auth"
                   className="group mt-8 inline-flex items-center justify-between rounded-sm border border-white/15 bg-white/[0.03] px-5 py-4 font-mono-b text-[11px] font-bold uppercase tracking-[0.22em] text-white transition hover:border-[color:var(--color-tally)] hover:bg-[color:var(--color-tally)]"
                 >
-                  {t("plans.cta")} {plan.name}
+                  {t("plans.cta")} {tc(plan.name)}
                   <ArrowUpRight className="size-4 transition group-hover:rotate-45" />
                 </Link>
               </article>
