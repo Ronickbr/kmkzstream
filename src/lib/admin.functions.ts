@@ -232,7 +232,7 @@ export const adminUpdateUser = createServerFn({ method: "POST" })
     );
 
     if (Object.keys(cleanPatch).length > 0) {
-      const { error } = await supabaseAdmin.from("profiles").update(cleanPatch).eq("id", targetId);
+      const { error } = await supabaseAdmin.from("profiles").update(cleanPatch as any).eq("id", targetId);
       if (error) throw new Error(error.message);
     }
 
