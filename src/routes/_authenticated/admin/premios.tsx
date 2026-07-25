@@ -1,3 +1,4 @@
+import { confirmAction } from "@/lib/confirm";
 import { createFileRoute } from "@tanstack/react-router";
 import { useSuspenseQuery, queryOptions } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
@@ -66,7 +67,7 @@ function AdminRewardsPage() {
   };
 
   const remove = async (id: string) => {
-    if (!confirm("Excluir este prêmio?")) return;
+    if (!(await confirmAction("Excluir este prêmio?", { danger: true }))) return;
     try {
       await deleteFn({ data: { id } });
       toast.success("Excluído");

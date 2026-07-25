@@ -589,8 +589,8 @@ function StepConfirm({
           className="mt-0.5 size-4 rounded border-border text-brand focus:ring-brand/30"
         />
         <span className="text-sm text-foreground/90">
-          Li e aceito os <a href="#" className="font-semibold text-accent hover:underline">Termos de uso</a> e a{" "}
-          <a href="#" className="font-semibold text-accent hover:underline">Política de privacidade</a>.
+          Li e aceito os <Link to="/termos" target="_blank" className="font-semibold text-accent hover:underline">Termos de uso</Link> e a{" "}
+          <Link to="/privacidade" target="_blank" className="font-semibold text-accent hover:underline">Política de privacidade</Link>.
         </span>
       </label>
     </div>

@@ -18,9 +18,17 @@ export const Route = createFileRoute("/auth")({
   component: AuthPage,
 });
 
+function safeRedirect(path?: string): string {
+  if (!path) return "/dashboard";
+  // only allow same-origin absolute paths, block protocol-relative and external URLs
+  if (!path.startsWith("/") || path.startsWith("//") || path.startsWith("/\\")) return "/dashboard";
+  return path;
+}
+
 function AuthPage() {
   const search = Route.useSearch();
   const navigate = useNavigate();
+  const redirectTo = safeRedirect(search.redirect);
   const [mode, setMode] = useState<"signin" | "signup">(search.mode ?? "signin");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -44,7 +52,7 @@ function AuthPage() {
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
-      if (data.session) navigate({ to: search.redirect ?? "/dashboard", replace: true });
+      if (data.session) navigate({ to: redirectTo, replace: true });
     });
   }, [navigate, search.redirect]);
 
@@ -72,7 +80,7 @@ function AuthPage() {
         if (error) throw error;
         toast.success("Login realizado");
       }
-      navigate({ to: search.redirect ?? "/dashboard", replace: true });
+      navigate({ to: redirectTo, replace: true });
     } catch (err: any) {
       toast.error(err?.message ?? "Erro na autenticação");
     } finally {
@@ -88,7 +96,7 @@ function AuthPage() {
       });
       if (result.error) throw result.error;
       if (result.redirected) return;
-      navigate({ to: search.redirect ?? "/dashboard", replace: true });
+      navigate({ to: redirectTo, replace: true });
     } catch (err: any) {
       toast.error(err?.message ?? "Erro no login com Google");
       setLoading(false);

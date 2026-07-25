@@ -1,3 +1,4 @@
+import { confirmAction } from "@/lib/confirm";
 import { createFileRoute } from "@tanstack/react-router";
 import { useSuspenseQuery, queryOptions, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
@@ -54,7 +55,7 @@ function PointRulesPage() {
   };
 
   const del = async (id: string) => {
-    if (!confirm("Remover esta regra?")) return;
+    if (!(await confirmAction("Remover esta regra?", { danger: true }))) return;
     try {
       await remove({ data: { id } });
       toast.success("Regra removida");
