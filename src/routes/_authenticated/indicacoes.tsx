@@ -1,13 +1,10 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useSuspenseQuery, queryOptions } from "@tanstack/react-query";
-import { getMyOverview } from "@/lib/user.functions";
+import { useSuspenseQuery } from "@tanstack/react-query";
+import { overviewQueryOptions as overviewQO } from "@/lib/queries";
 import { formatDateBR, formatPoints } from "@/lib/format";
 import { Copy, Share2, Users, Check, Link2, Gift, Clock, CheckCircle2, TrendingUp, MessageCircle } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
-
-
-const overviewQO = queryOptions({ queryKey: ["me", "overview"], queryFn: () => getMyOverview() });
 
 export const Route = createFileRoute("/_authenticated/indicacoes")({
   loader: ({ context }) => context.queryClient.ensureQueryData(overviewQO),
