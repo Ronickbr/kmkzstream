@@ -1,8 +1,5 @@
 import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
-import { getMyOverview } from "@/lib/user.functions";
-import { queryOptions } from "@tanstack/react-query";
-
-const overviewQO = queryOptions({ queryKey: ["me", "overview"], queryFn: () => getMyOverview() });
+import { overviewQueryOptions as overviewQO } from "@/lib/queries";
 
 export const Route = createFileRoute("/_authenticated/admin")({
   loader: async ({ context }) => {
