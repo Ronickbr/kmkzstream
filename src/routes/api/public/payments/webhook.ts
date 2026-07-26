@@ -159,7 +159,7 @@ async function handleWebhook(request: Request): Promise<Response> {
     return new Response("Unknown reference", { status: 404 });
   }
 
-  await finalize(approved ? "confirmed" : "failed");
+  await finalize(approved ? "confirmed" : chargeback ? "chargeback" : "failed");
   return Response.json({ ok: true });
 }
 
