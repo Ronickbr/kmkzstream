@@ -18,7 +18,7 @@ export const redeemReward = createServerFn({ method: "POST" })
     const { supabase } = context;
     const { data: redemptionId, error } = await supabase.rpc("redeem_reward", {
       _reward_id: data.rewardId,
-      _shipping: (data.shipping as unknown as Record<string, unknown>) ?? null,
+      _shipping: (data.shipping ?? null) as never,
     });
     if (error) {
       const map: Record<string, string> = {

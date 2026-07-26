@@ -677,9 +677,10 @@ export type Database = {
         Args: { _subscription_id: string }
         Returns: boolean
       }
-      redeem_reward:
-        | { Args: { _reward_id: string }; Returns: string }
-        | { Args: { _reward_id: string; _shipping?: Json }; Returns: string }
+      redeem_reward: {
+        Args: { _reward_id: string; _shipping?: Json }
+        Returns: string
+      }
       referral_code_exists: { Args: { _code: string }; Returns: boolean }
       run_expiry_reminders: { Args: never; Returns: number }
       write_audit_log: {
