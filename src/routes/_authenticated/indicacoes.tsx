@@ -332,9 +332,17 @@ function StatusBadge({ status }: { status: string }) {
       </span>
     );
   }
+  if (status === "canceled") {
+    return (
+      <span className="inline-flex rounded-full bg-rose-500/15 px-2 py-0.5 text-[10px] font-bold text-rose-300">
+        CANCELADA
+      </span>
+    );
+  }
   return (
     <span className="inline-flex rounded-full bg-amber-500/15 px-2 py-0.5 text-[10px] font-bold text-amber-300">
       PENDENTE
     </span>
   );
 }
+
