@@ -6,6 +6,7 @@ import { toast } from "sonner";
 import { Loader2, Check, X, AlertCircle } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { updateMyProfile } from "@/lib/user.functions";
+import { checkReferralCode } from "@/lib/referral.functions";
 import { plansQueryOptions } from "@/lib/queries";
 import { useI18n } from "@/lib/i18n";
 import { LanguageSwitcher } from "@/components/language-switcher";
