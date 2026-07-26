@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { useState } from "react";
+import { Fragment, useState } from "react";
 import { adminListAuditLogs } from "@/lib/admin.functions";
 import { formatDateBR } from "@/lib/format";
 
@@ -99,8 +99,8 @@ function AdminAuditPage() {
               </tr>
             )}
             {rows.map((r) => (
-              <>
-                <tr key={r.id} className="border-t border-surface-100">
+              <Fragment key={r.id}>
+                <tr className="border-t border-surface-100">
                   <td className="whitespace-nowrap px-4 py-3 font-mono text-xs">
                     {formatDateBR(r.created_at)}
                   </td>
@@ -126,7 +126,7 @@ function AdminAuditPage() {
                   </td>
                 </tr>
                 {openId === r.id && (
-                  <tr key={`${r.id}-d`} className="border-t border-surface-100 bg-surface-50/60">
+                  <tr className="border-t border-surface-100 bg-surface-50/60">
                     <td colSpan={6} className="px-4 py-3">
                       <pre className="max-h-64 overflow-auto whitespace-pre-wrap break-all text-[11px] leading-relaxed">
                         {JSON.stringify({ old: r.old_data, new: r.new_data, metadata: r.metadata }, null, 2)}
@@ -134,7 +134,7 @@ function AdminAuditPage() {
                     </td>
                   </tr>
                 )}
-              </>
+              </Fragment>
             ))}
           </tbody>
         </table>
