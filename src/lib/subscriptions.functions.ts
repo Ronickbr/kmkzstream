@@ -34,11 +34,13 @@ export const subscribeToPlan = createServerFn({ method: "POST" })
 
     // Escrita privilegiada: o cliente não pode inserir assinaturas diretamente (RLS bloqueia).
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    const paymentRef =
-      typeof data.paymentRef === "string" && /^[A-Za-z0-9._:-]{4,200}$/.test(data.paymentRef)
-        ? data.paymentRef
-        : null;
-    const provider = data.provider === "infinitepay" || data.provider === "stripe" ? data.provider : null;
+
+    // A referência de pagamento é SEMPRE gerada no servidor: o cliente não pode
+    // escolhê-la nem omiti-la para tentar liberar acesso sem pagar.
+    const provider = data.provider === "stripe" ? "stripe" : "infinitepay";
+    const paymentRef = `kmkz-${plan.id.slice(0, 8)}-${Date.now().toString(36)}-${crypto
+      .randomUUID()
+      .slice(0, 8)}`;
 
     const { data: sub, error } = await supabaseAdmin
       .from("subscriptions")
@@ -50,14 +52,14 @@ export const subscribeToPlan = createServerFn({ method: "POST" })
         ends_at: endsAt.toISOString(),
         payment_ref: paymentRef,
         payment_provider: provider,
-        // Quando há cobrança em gateway, o acesso só é liberado pelo webhook.
-        ...(paymentRef
-          ? { payment_status: "pending", payment_confirmed_at: null }
-          : { payment_status: "confirmed", payment_confirmed_at: startsAt.toISOString() }),
+        // O acesso só é liberado quando o gateway confirmar via webhook.
+        payment_status: "pending",
+        payment_confirmed_at: null,
       } as never)
       .select("id")
       .single();
     if (error) throw new Error(error.message);
+
 
     return { id: (sub as { id: string }).id };
   });
