@@ -211,6 +211,7 @@ function CheckoutPage() {
       setPayState("verifying");
 
     } catch (e) {
+      gatewayTab?.close();
       const msg = e instanceof Error ? e.message : "Não foi possível processar o pagamento.";
       setPayError(msg);
       setPayState("failed");
