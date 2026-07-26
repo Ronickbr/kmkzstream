@@ -130,9 +130,14 @@ function CadastroPage() {
     setRefStatus("checking");
     let active = true;
     const timer = setTimeout(async () => {
-      const { data, error } = await supabase.rpc("referral_code_exists", { _code: code });
-      if (!active) return;
-      setRefStatus(error ? "idle" : data ? "valid" : "invalid");
+      try {
+        const res = await checkReferralCode({ data: { code } });
+        if (!active) return;
+        setRefStatus(res.exists ? "valid" : "invalid");
+      } catch {
+        if (!active) return;
+        setRefStatus("idle");
+      }
     }, 450);
     return () => {
       active = false;
