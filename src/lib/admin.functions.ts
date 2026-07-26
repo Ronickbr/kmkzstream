@@ -364,3 +364,40 @@ export const getAdminAnalytics = createServerFn({ method: "GET" })
       active_users_30d: number;
     };
   });
+
+export const adminListAuditLogs = createServerFn({ method: "POST" })
+  .validator((d: { entity?: string; search?: string; limit?: number } | undefined) => d ?? {})
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ data, context }) => {
+    const { supabase, userId } = context;
+    await assertAdmin(supabase, userId);
+    const limit = Math.min(Math.max(data.limit ?? 100, 1), 200);
+    let q = supabase
+      .from("audit_logs")
+      .select("id, actor_id, actor_is_admin, action, entity, entity_id, target_user_id, old_data, new_data, metadata, created_at")
+      .order("created_at", { ascending: false })
+      .limit(limit);
+    if (data.entity && /^[a-z_]+$/.test(data.entity)) q = q.eq("entity", data.entity);
+    const { data: rows, error } = await q;
+    if (error) throw new Error(error.message);
+
+    const ids = Array.from(
+      new Set([...(rows ?? []).map((r: any) => r.actor_id), ...(rows ?? []).map((r: any) => r.target_user_id)].filter(Boolean)),
+    );
+    const names: Record<string, string> = {};
+    if (ids.length) {
+      const { data: profs } = await supabase.from("profiles").select("id, display_name").in("id", ids);
+      for (const p of profs ?? []) names[(p as any).id] = (p as any).display_name ?? "—";
+    }
+    const term = (data.search ?? "").trim().toLowerCase();
+    const mapped = (rows ?? []).map((r: any) => ({
+      ...r,
+      actor_name: r.actor_id ? (names[r.actor_id] ?? "—") : "Sistema",
+      target_name: r.target_user_id ? (names[r.target_user_id] ?? "—") : null,
+    }));
+    return term
+      ? mapped.filter((r) =>
+          [r.action, r.entity, r.entity_id, r.actor_name, r.target_name].join(" ").toLowerCase().includes(term),
+        )
+      : mapped;
+  });

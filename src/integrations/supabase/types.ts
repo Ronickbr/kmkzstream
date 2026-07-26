@@ -71,6 +71,48 @@ export type Database = {
         }
         Relationships: []
       }
+      audit_logs: {
+        Row: {
+          action: string
+          actor_id: string | null
+          actor_is_admin: boolean
+          created_at: string
+          entity: string
+          entity_id: string | null
+          id: string
+          metadata: Json
+          new_data: Json | null
+          old_data: Json | null
+          target_user_id: string | null
+        }
+        Insert: {
+          action: string
+          actor_id?: string | null
+          actor_is_admin?: boolean
+          created_at?: string
+          entity: string
+          entity_id?: string | null
+          id?: string
+          metadata?: Json
+          new_data?: Json | null
+          old_data?: Json | null
+          target_user_id?: string | null
+        }
+        Update: {
+          action?: string
+          actor_id?: string | null
+          actor_is_admin?: boolean
+          created_at?: string
+          entity?: string
+          entity_id?: string | null
+          id?: string
+          metadata?: Json
+          new_data?: Json | null
+          old_data?: Json | null
+          target_user_id?: string | null
+        }
+        Relationships: []
+      }
       notifications: {
         Row: {
           body: string | null
@@ -104,6 +146,42 @@ export type Database = {
           title?: string
           type?: string
           user_id?: string
+        }
+        Relationships: []
+      }
+      payment_webhook_events: {
+        Row: {
+          body_hash: string
+          created_at: string
+          event_id: string | null
+          event_key: string
+          id: string
+          payment_ref: string
+          provider: string | null
+          result: string | null
+          status: string
+        }
+        Insert: {
+          body_hash: string
+          created_at?: string
+          event_id?: string | null
+          event_key: string
+          id?: string
+          payment_ref: string
+          provider?: string | null
+          result?: string | null
+          status: string
+        }
+        Update: {
+          body_hash?: string
+          created_at?: string
+          event_id?: string | null
+          event_key?: string
+          id?: string
+          payment_ref?: string
+          provider?: string | null
+          result?: string | null
+          status?: string
         }
         Relationships: []
       }
@@ -604,6 +682,18 @@ export type Database = {
         | { Args: { _reward_id: string; _shipping?: Json }; Returns: string }
       referral_code_exists: { Args: { _code: string }; Returns: boolean }
       run_expiry_reminders: { Args: never; Returns: number }
+      write_audit_log: {
+        Args: {
+          _action: string
+          _entity: string
+          _entity_id: string
+          _metadata?: Json
+          _new: Json
+          _old: Json
+          _target_user_id: string
+        }
+        Returns: string
+      }
     }
     Enums: {
       app_role: "admin" | "user"
