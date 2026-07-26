@@ -15,10 +15,31 @@ import { z } from "zod";
  */
 const payloadSchema = z.object({
   payment_ref: z.string().min(4).max(200),
-  status: z.enum(["confirmed", "paid", "failed", "refused", "refunded", "canceled"]),
-  provider: z.enum(["infinitepay", "stripe"]).optional(),
+  status: z.enum([
+    // aprovados (InfinityPay / Stripe / Mercado Pago / manual)
+    "confirmed",
+    "paid",
+    "succeeded",
+    "approved",
+    // negados / encerrados sem pagamento → indicação permanece PENDENTE
+    "failed",
+    "refused",
+    "rejected",
+    "refunded",
+    "canceled",
+    "cancelled",
+    "expired",
+    // disputa → indicação vira CANCELADA
+    "chargeback",
+    "disputed",
+  ]),
+  provider: z.enum(["infinitepay", "stripe", "mercadopago"]).optional(),
   event_id: z.string().min(1).max(200).optional(),
 });
+
+const APPROVED = new Set(["confirmed", "paid", "succeeded", "approved"]);
+const CHARGEBACK = new Set(["chargeback", "disputed"]);
+
 
 const REPLAY_WINDOW_SECONDS = 300;
 
@@ -89,7 +110,8 @@ async function handleWebhook(request: Request): Promise<Response> {
     return new Response("Dedupe failed", { status: 500 });
   }
 
-  const approved = parsed.status === "confirmed" || parsed.status === "paid";
+  const approved = APPROVED.has(parsed.status);
+  const chargeback = CHARGEBACK.has(parsed.status);
 
   const patch: Record<string, unknown> = approved
     ? {
@@ -97,11 +119,20 @@ async function handleWebhook(request: Request): Promise<Response> {
         payment_confirmed_at: new Date().toISOString(),
         status: "active",
       }
-    : {
-        payment_status: "failed",
-        payment_confirmed_at: null,
-        status: "canceled",
-      };
+    : chargeback
+      ? {
+          // dispara o cancelamento da indicação e o estorno dos pontos
+          payment_status: "chargeback",
+          payment_confirmed_at: null,
+          status: "canceled",
+        }
+      : {
+          // cancelado/expirado/recusado/estornado: indicação segue PENDENTE
+          payment_status: "failed",
+          payment_confirmed_at: null,
+          status: "canceled",
+        };
+
   if (parsed.provider) patch.payment_provider = parsed.provider;
 
   const { data, error } = await supabaseAdmin
@@ -128,7 +159,7 @@ async function handleWebhook(request: Request): Promise<Response> {
     return new Response("Unknown reference", { status: 404 });
   }
 
-  await finalize(approved ? "confirmed" : "failed");
+  await finalize(approved ? "confirmed" : chargeback ? "chargeback" : "failed");
   return Response.json({ ok: true });
 }
 

@@ -352,9 +352,11 @@ export type Database = {
       }
       referrals: {
         Row: {
+          canceled_at: string | null
           confirmed_at: string | null
           created_at: string
           id: string
+          payment_id: string | null
           points_awarded: number
           referred_id: string
           referrer_id: string
@@ -362,9 +364,11 @@ export type Database = {
           updated_at: string
         }
         Insert: {
+          canceled_at?: string | null
           confirmed_at?: string | null
           created_at?: string
           id?: string
+          payment_id?: string | null
           points_awarded?: number
           referred_id: string
           referrer_id: string
@@ -372,9 +376,11 @@ export type Database = {
           updated_at?: string
         }
         Update: {
+          canceled_at?: string | null
           confirmed_at?: string | null
           created_at?: string
           id?: string
+          payment_id?: string | null
           points_awarded?: number
           referred_id?: string
           referrer_id?: string
@@ -700,7 +706,7 @@ export type Database = {
       app_role: "admin" | "user"
       plan_period: "monthly" | "quarterly" | "semiannual" | "annual"
       redemption_status: "pending" | "delivered" | "canceled"
-      referral_status: "pending" | "confirmed"
+      referral_status: "pending" | "confirmed" | "canceled"
       subscription_status: "active" | "canceled" | "expired"
     }
     CompositeTypes: {
@@ -832,7 +838,7 @@ export const Constants = {
       app_role: ["admin", "user"],
       plan_period: ["monthly", "quarterly", "semiannual", "annual"],
       redemption_status: ["pending", "delivered", "canceled"],
-      referral_status: ["pending", "confirmed"],
+      referral_status: ["pending", "confirmed", "canceled"],
       subscription_status: ["active", "canceled", "expired"],
     },
   },
