@@ -180,31 +180,36 @@ function CheckoutPage() {
     if (!accept) return;
     setBusy(true);
     setPayError(null);
+    // Abre a aba antes do await para não ser bloqueada pelo navegador.
+    const gatewayTab = method === "gateway" ? window.open("", "_blank", "noopener,noreferrer") : null;
     try {
-      let paymentRef: string | undefined;
+      // A referência de pagamento é gerada no servidor e devolvida aqui.
+      const created = await subscribeFn({
+        data: { planId: plan.id, provider: method === "gateway" ? gateway : undefined },
+      });
+
       if (method === "gateway") {
-        paymentRef = `kmkz-${plan.id.slice(0, 8)}-${Date.now()}`;
         const url = checkoutUrl({
           gateway,
           settings: paySettings,
           planId: plan.id,
           planName: plan.name,
           priceCentsBRL: plan.price_cents,
-          orderRef: paymentRef,
+          orderRef: created.paymentRef,
         });
         if (!url) {
+          gatewayTab?.close();
           toast.error(`${GATEWAY_LABEL[gateway]} ainda não está configurado. Escolha outro método.`);
           setBusy(false);
           return;
         }
-        window.open(url, "_blank", "noopener,noreferrer");
+        if (gatewayTab) gatewayTab.location.href = url;
+        else window.open(url, "_blank", "noopener,noreferrer");
       }
-      await subscribeFn({
-        data: { planId: plan.id, paymentRef, provider: paymentRef ? gateway : undefined },
-      });
       // A liberação do acesso só acontece quando a verificação automática confirmar o pagamento.
       setAttempts((n) => n + 1);
       setPayState("verifying");
+
     } catch (e) {
       const msg = e instanceof Error ? e.message : "Não foi possível processar o pagamento.";
       setPayError(msg);
