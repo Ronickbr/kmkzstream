@@ -6,6 +6,7 @@ import { toast } from "sonner";
 import { Loader2, Check, X, AlertCircle } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { updateMyProfile } from "@/lib/user.functions";
+import { checkReferralCode } from "@/lib/referral.functions";
 import { plansQueryOptions } from "@/lib/queries";
 import { useI18n } from "@/lib/i18n";
 import { LanguageSwitcher } from "@/components/language-switcher";
@@ -129,9 +130,14 @@ function CadastroPage() {
     setRefStatus("checking");
     let active = true;
     const timer = setTimeout(async () => {
-      const { data, error } = await supabase.rpc("referral_code_exists", { _code: code });
-      if (!active) return;
-      setRefStatus(error ? "idle" : data ? "valid" : "invalid");
+      try {
+        const res = await checkReferralCode({ data: { code } });
+        if (!active) return;
+        setRefStatus(res.exists ? "valid" : "invalid");
+      } catch {
+        if (!active) return;
+        setRefStatus("idle");
+      }
     }, 450);
     return () => {
       active = false;
