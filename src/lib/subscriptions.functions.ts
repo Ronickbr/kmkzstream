@@ -32,7 +32,15 @@ export const subscribeToPlan = createServerFn({ method: "POST" })
     const startsAt = new Date();
     const endsAt = new Date(startsAt.getTime() + plan.duration_days * 86400_000);
 
-    const { data: sub, error } = await supabase
+    // Escrita privilegiada: o cliente não pode inserir assinaturas diretamente (RLS bloqueia).
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const paymentRef =
+      typeof data.paymentRef === "string" && /^[A-Za-z0-9._:-]{4,200}$/.test(data.paymentRef)
+        ? data.paymentRef
+        : null;
+    const provider = data.provider === "infinitepay" || data.provider === "stripe" ? data.provider : null;
+
+    const { data: sub, error } = await supabaseAdmin
       .from("subscriptions")
       .insert({
         user_id: userId,
@@ -40,10 +48,10 @@ export const subscribeToPlan = createServerFn({ method: "POST" })
         status: "active",
         starts_at: startsAt.toISOString(),
         ends_at: endsAt.toISOString(),
-        payment_ref: data.paymentRef ?? null,
-        payment_provider: data.provider ?? null,
+        payment_ref: paymentRef,
+        payment_provider: provider,
         // Quando há cobrança em gateway, o acesso só é liberado pelo webhook.
-        ...(data.paymentRef
+        ...(paymentRef
           ? { payment_status: "pending", payment_confirmed_at: null }
           : { payment_status: "confirmed", payment_confirmed_at: startsAt.toISOString() }),
       } as never)
@@ -51,16 +59,17 @@ export const subscribeToPlan = createServerFn({ method: "POST" })
       .single();
     if (error) throw new Error(error.message);
 
-    return { id: sub.id };
+    return { id: (sub as { id: string }).id };
   });
 
 export const cancelMySubscription = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
-    const { supabase, userId } = context;
-    const { error } = await supabase
+    const { userId } = context;
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { error } = await supabaseAdmin
       .from("subscriptions")
-      .update({ status: "canceled" })
+      .update({ status: "canceled" } as never)
       .eq("user_id", userId)
       .eq("status", "active");
     if (error) throw new Error(error.message);
