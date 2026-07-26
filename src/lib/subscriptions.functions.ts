@@ -60,8 +60,7 @@ export const subscribeToPlan = createServerFn({ method: "POST" })
       .single();
     if (error) throw new Error(error.message);
 
-
-    return { id: (sub as { id: string }).id };
+    return { id: (sub as { id: string }).id, paymentRef, provider };
   });
 
 export const cancelMySubscription = createServerFn({ method: "POST" })
