@@ -110,7 +110,8 @@ async function handleWebhook(request: Request): Promise<Response> {
     return new Response("Dedupe failed", { status: 500 });
   }
 
-  const approved = parsed.status === "confirmed" || parsed.status === "paid";
+  const approved = APPROVED.has(parsed.status);
+  const chargeback = CHARGEBACK.has(parsed.status);
 
   const patch: Record<string, unknown> = approved
     ? {
@@ -118,11 +119,20 @@ async function handleWebhook(request: Request): Promise<Response> {
         payment_confirmed_at: new Date().toISOString(),
         status: "active",
       }
-    : {
-        payment_status: "failed",
-        payment_confirmed_at: null,
-        status: "canceled",
-      };
+    : chargeback
+      ? {
+          // dispara o cancelamento da indicação e o estorno dos pontos
+          payment_status: "chargeback",
+          payment_confirmed_at: null,
+          status: "canceled",
+        }
+      : {
+          // cancelado/expirado/recusado/estornado: indicação segue PENDENTE
+          payment_status: "failed",
+          payment_confirmed_at: null,
+          status: "canceled",
+        };
+
   if (parsed.provider) patch.payment_provider = parsed.provider;
 
   const { data, error } = await supabaseAdmin
