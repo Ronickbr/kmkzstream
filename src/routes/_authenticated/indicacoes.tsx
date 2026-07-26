@@ -66,7 +66,8 @@ function IndicacoesPage() {
 
 
   const confirmed = data.referrals.filter((r) => r.status === "confirmed");
-  const pending = data.referrals.filter((r) => r.status !== "confirmed");
+  const pending = data.referrals.filter((r) => r.status === "pending");
+
   const totalPoints = confirmed.reduce((s, r) => s + (r.points_awarded ?? 0), 0);
 
   return (
