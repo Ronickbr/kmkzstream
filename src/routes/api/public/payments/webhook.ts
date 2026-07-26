@@ -15,10 +15,31 @@ import { z } from "zod";
  */
 const payloadSchema = z.object({
   payment_ref: z.string().min(4).max(200),
-  status: z.enum(["confirmed", "paid", "failed", "refused", "refunded", "canceled"]),
-  provider: z.enum(["infinitepay", "stripe"]).optional(),
+  status: z.enum([
+    // aprovados (InfinityPay / Stripe / Mercado Pago / manual)
+    "confirmed",
+    "paid",
+    "succeeded",
+    "approved",
+    // negados / encerrados sem pagamento → indicação permanece PENDENTE
+    "failed",
+    "refused",
+    "rejected",
+    "refunded",
+    "canceled",
+    "cancelled",
+    "expired",
+    // disputa → indicação vira CANCELADA
+    "chargeback",
+    "disputed",
+  ]),
+  provider: z.enum(["infinitepay", "stripe", "mercadopago"]).optional(),
   event_id: z.string().min(1).max(200).optional(),
 });
+
+const APPROVED = new Set(["confirmed", "paid", "succeeded", "approved"]);
+const CHARGEBACK = new Set(["chargeback", "disputed"]);
+
 
 const REPLAY_WINDOW_SECONDS = 300;
 
