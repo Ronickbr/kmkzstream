@@ -24,9 +24,7 @@ import {
   QrCode,
   ShieldCheck,
   Sparkles,
-  Copy,
   Wallet,
-  Clock,
   Globe,
   Loader2,
   XCircle,
@@ -47,13 +45,10 @@ export const Route = createFileRoute("/_authenticated/checkout/$planId")({
 
 type Step = 1 | 2 | 3;
 type PayState = "idle" | "verifying" | "confirmed" | "failed";
-type PayMethod = "card" | "pix" | "mercadopago" | "gateway";
+type PayMethod = "gateway";
 
 const METHOD_LABEL: Record<PayMethod, string> = {
-  card: "Cartão de crédito",
-  pix: "Pix",
-  mercadopago: "Mercado Pago",
-  gateway: "Gateway online",
+  gateway: "Pagamento online",
 };
 
 function CheckoutPage() {
@@ -74,9 +69,8 @@ function CheckoutPage() {
   const queryClient = useQueryClient();
 
   const [step, setStep] = useState<Step>(1);
-  const [method, setMethod] = useState<PayMethod>(locale === "pt" ? "pix" : "gateway");
+  const [method, setMethod] = useState<PayMethod>("gateway");
   const [busy, setBusy] = useState(false);
-  const [card, setCard] = useState({ number: "", name: "", exp: "", cvc: "" });
   const [accept, setAccept] = useState(false);
   const [payState, setPayState] = useState<PayState>("idle");
   const [payError, setPayError] = useState<string | null>(null);
@@ -151,14 +145,6 @@ function CheckoutPage() {
     return () => clearTimeout(timeout);
   }, [payState, attempts]);
 
-  const cardValid = useMemo(
-    () =>
-      card.number.replace(/\s/g, "").length >= 13 &&
-      card.name.trim().length >= 3 &&
-      /^\d{2}\/\d{2}$/.test(card.exp) &&
-      /^\d{3,4}$/.test(card.cvc),
-    [card],
-  );
 
 
   if (!plan) {
@@ -174,21 +160,21 @@ function CheckoutPage() {
     );
   }
 
-  const canAdvance = step === 1 ? true : step === 2 ? (method !== "card" ? true : cardValid) : accept;
+  const canAdvance = step === 3 ? accept : true;
 
   const handleConfirm = async () => {
     if (!accept) return;
     setBusy(true);
     setPayError(null);
     // Abre a aba antes do await para não ser bloqueada pelo navegador.
-    const gatewayTab = method === "gateway" ? window.open("", "_blank", "noopener,noreferrer") : null;
+    const gatewayTab = window.open("", "_blank", "noopener,noreferrer");
     try {
       // A referência de pagamento é gerada no servidor e devolvida aqui.
       const created = await subscribeFn({
-        data: { planId: plan.id, provider: method === "gateway" ? gateway : undefined },
+        data: { planId: plan.id, provider: gateway },
       });
 
-      if (method === "gateway") {
+      {
         const url = checkoutUrl({
           gateway,
           settings: paySettings,
@@ -196,10 +182,11 @@ function CheckoutPage() {
           planName: plan.name,
           priceCentsBRL: plan.price_cents,
           orderRef: created.paymentRef,
+          fallbackRedirectUrl: window.location.href,
         });
         if (!url) {
           gatewayTab?.close();
-          toast.error(`${GATEWAY_LABEL[gateway]} ainda não está configurado. Escolha outro método.`);
+          toast.error(`${GATEWAY_LABEL[gateway]} ainda não está configurado. Fale com o suporte.`);
           setBusy(false);
           return;
         }
@@ -277,8 +264,6 @@ function CheckoutPage() {
               <StepPayment
                 method={method}
                 setMethod={setMethod}
-                card={card}
-                setCard={setCard}
                 plan={plan}
                 gateway={gateway}
                 gatewayReady={
@@ -455,8 +440,6 @@ function StepReview({ plan }: { plan: any }) {
 function StepPayment({
   method,
   setMethod,
-  card,
-  setCard,
   plan,
   gateway,
   gatewayReady,
@@ -464,8 +447,6 @@ function StepPayment({
 }: {
   method: PayMethod;
   setMethod: (m: PayMethod) => void;
-  card: { number: string; name: string; exp: string; cvc: string };
-  setCard: (c: { number: string; name: string; exp: string; cvc: string }) => void;
   plan: any;
   gateway: Gateway;
   gatewayReady: boolean;
@@ -485,7 +466,9 @@ function StepPayment({
   return (
     <div>
       <h2 className="font-display text-xl font-black">Método de pagamento</h2>
-      <p className="mt-1 text-sm text-muted-foreground">Ambiente de demonstração — nenhum valor será cobrado.</p>
+      <p className="mt-1 text-sm text-muted-foreground">
+        Você será redirecionado para o ambiente seguro do {GATEWAY_LABEL[gateway]} para concluir o pagamento.
+      </p>
 
       <div className="mt-5 grid gap-3 sm:grid-cols-2">
         <PayOption
@@ -499,102 +482,38 @@ function StepPayment({
         />
       </div>
 
+      {!gatewayReady && (
+        <p className="mt-3 rounded-xl border border-destructive/40 bg-destructive/10 p-3 text-xs text-destructive-foreground">
+          O {GATEWAY_LABEL[gateway]} ainda não foi configurado no painel de administração. Fale com o suporte.
+        </p>
+      )}
+
       {!isBR && (
         <p className="mt-3 text-xs text-muted-foreground">
           International payments are processed by {GATEWAY_LABEL[gateway]} in US dollars.
         </p>
       )}
 
-      <div className="mt-5 grid gap-3 sm:grid-cols-3">
-        <PayOption id="pix" current={method} onClick={() => setMethod("pix")} icon={QrCode} title="Pix" hint="Aprovação imediata" recommended />
-        <PayOption id="card" current={method} onClick={() => setMethod("card")} icon={CreditCard} title="Cartão" hint="Visa, Master, Elo" />
-        <PayOption id="mercadopago" current={method} onClick={() => setMethod("mercadopago")} icon={Wallet} title="Mercado Pago" hint="Saldo ou boleto" />
+      <div className="mt-6 rounded-2xl border border-border bg-background/40 p-5">
+        <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground">
+          Formas aceitas no {GATEWAY_LABEL[gateway]}
+        </p>
+        <div className="mt-3 flex flex-wrap gap-2">
+          <span className="inline-flex items-center gap-1.5 rounded-full border border-border bg-background/60 px-3 py-1.5 text-xs font-semibold">
+            <QrCode className="size-3.5 text-brand" aria-hidden="true" /> Pix
+          </span>
+          <span className="inline-flex items-center gap-1.5 rounded-full border border-border bg-background/60 px-3 py-1.5 text-xs font-semibold">
+            <CreditCard className="size-3.5 text-brand" aria-hidden="true" /> Cartão de crédito
+          </span>
+          <span className="inline-flex items-center gap-1.5 rounded-full border border-border bg-background/60 px-3 py-1.5 text-xs font-semibold">
+            <Wallet className="size-3.5 text-brand" aria-hidden="true" /> Débito / carteira
+          </span>
+        </div>
+        <p className="mt-4 flex items-center gap-1.5 text-xs text-muted-foreground">
+          <ShieldCheck className="size-3.5 text-emerald-400" aria-hidden="true" />
+          A escolha da forma de pagamento acontece na página do {GATEWAY_LABEL[gateway]}. A ativação é automática após a confirmação.
+        </p>
       </div>
-
-      {method === "card" && (
-        <div className="mt-6 grid gap-4 sm:grid-cols-2">
-          <div className="sm:col-span-2">
-            <label htmlFor={numId} className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-muted-foreground">
-              Número do cartão
-            </label>
-            <input
-              id={numId}
-              inputMode="numeric"
-              autoComplete="cc-number"
-              placeholder="0000 0000 0000 0000"
-              value={card.number}
-              onChange={(e) => setCard({ ...card, number: formatCardNumber(e.target.value) })}
-              className="w-full rounded-xl border border-border bg-background/60 px-4 py-3 text-sm font-mono tracking-widest focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/30"
-            />
-          </div>
-          <div className="sm:col-span-2">
-            <label htmlFor={nameId} className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-muted-foreground">
-              Nome impresso
-            </label>
-            <input
-              id={nameId}
-              autoComplete="cc-name"
-              placeholder="COMO ESTÁ NO CARTÃO"
-              value={card.name}
-              onChange={(e) => setCard({ ...card, name: e.target.value.toUpperCase() })}
-              className="w-full rounded-xl border border-border bg-background/60 px-4 py-3 text-sm uppercase focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/30"
-            />
-          </div>
-          <div>
-            <label htmlFor={expId} className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-muted-foreground">
-              Validade
-            </label>
-            <input
-              id={expId}
-              inputMode="numeric"
-              autoComplete="cc-exp"
-              placeholder="MM/AA"
-              value={card.exp}
-              onChange={(e) => setCard({ ...card, exp: formatExp(e.target.value) })}
-              className="w-full rounded-xl border border-border bg-background/60 px-4 py-3 text-sm font-mono focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/30"
-            />
-          </div>
-          <div>
-            <label htmlFor={cvcId} className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-muted-foreground">
-              CVC
-            </label>
-            <input
-              id={cvcId}
-              inputMode="numeric"
-              autoComplete="cc-csc"
-              placeholder="123"
-              maxLength={4}
-              value={card.cvc}
-              onChange={(e) => setCard({ ...card, cvc: e.target.value.replace(/\D/g, "").slice(0, 4) })}
-              className="w-full rounded-xl border border-border bg-background/60 px-4 py-3 text-sm font-mono focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/30"
-            />
-          </div>
-          <p className="sm:col-span-2 flex items-center gap-2 text-xs text-muted-foreground">
-            <Lock className="size-3.5" aria-hidden="true" />
-            Seus dados são criptografados. Nenhum número é armazenado nesta demonstração.
-          </p>
-        </div>
-      )}
-
-      {method === "pix" && <PixPreview plan={plan} />}
-
-      {method === "mercadopago" && (
-        <div className="mt-6 rounded-2xl border border-border bg-background/40 p-6">
-          <div className="flex items-center gap-3">
-            <div className="grid size-12 place-items-center rounded-xl bg-sky-500/15 text-sky-400">
-              <Wallet className="size-6" aria-hidden="true" />
-            </div>
-            <div>
-              <p className="font-bold">Mercado Pago</p>
-              <p className="text-xs text-muted-foreground">Você será redirecionado para concluir o pagamento com saldo, cartão ou boleto.</p>
-            </div>
-          </div>
-          <p className="mt-4 text-xs text-muted-foreground">
-            <Sparkles className="mr-1 inline size-3.5 align-[-2px] text-accent" />
-            Simulação: no próximo passo confirmamos a ativação sem cobrança real.
-          </p>
-        </div>
-      )}
     </div>
   );
 }
@@ -640,101 +559,6 @@ function PayOption({
   );
 }
 
-function PixPreview({ plan }: { plan: any }) {
-  const { planPrice } = useI18n();
-  const [copied, setCopied] = useState(false);
-  const [seconds, setSeconds] = useState(15 * 60);
-  const code = useMemo(
-    () =>
-      `00020126580014BR.GOV.BCB.PIX0136kmkz-${plan.id.slice(0, 8)}-${Date.now().toString(36)}5204000053039865802BR5910KMKZ Streaming6009SAO PAULO62070503***6304ABCD`,
-    [plan.id],
-  );
-
-  useEffect(() => {
-    const t = setInterval(() => setSeconds((s) => Math.max(0, s - 1)), 1000);
-    return () => clearInterval(t);
-  }, []);
-
-  const mm = String(Math.floor(seconds / 60)).padStart(2, "0");
-  const ss = String(seconds % 60).padStart(2, "0");
-
-  const copyCode = async () => {
-    try {
-      await navigator.clipboard.writeText(code);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-      toast.success("Código Pix copiado!");
-    } catch {
-      toast.error("Falha ao copiar");
-    }
-  };
-
-  return (
-    <div className="mt-6 grid gap-6 rounded-2xl border border-border bg-background/40 p-4 sm:grid-cols-[auto_1fr] sm:p-6">
-      <div className="grid place-items-center">
-        <div className="rounded-2xl bg-white p-3 shadow-glow">
-          <FakeQR />
-        </div>
-      </div>
-      <div className="min-w-0">
-        <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-accent">
-          <Clock className="size-3.5" /> Expira em {mm}:{ss}
-        </div>
-        <p className="mt-2 font-display text-xl font-black">{planPrice(plan)}</p>
-        <p className="mt-1 text-xs text-muted-foreground">
-          Escaneie o QR Code no seu app do banco ou copie o código abaixo.
-        </p>
-        <div className="mt-4">
-          <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Pix copia e cola</label>
-          <div className="mt-2 flex gap-2">
-            <input
-              readOnly
-              value={code}
-              onFocus={(e) => e.currentTarget.select()}
-              className="w-full min-w-0 truncate rounded-xl border border-border bg-background/60 px-3 py-2 font-mono text-xs"
-            />
-            <button
-              type="button"
-              onClick={copyCode}
-              className="inline-flex shrink-0 items-center gap-1.5 rounded-xl bg-gradient-brand px-3 py-2 text-xs font-bold text-white shadow-glow"
-            >
-              {copied ? <Check className="size-3.5" /> : <Copy className="size-3.5" />}
-              {copied ? "Copiado" : "Copiar"}
-            </button>
-          </div>
-        </div>
-        <p className="mt-4 flex items-center gap-1.5 text-xs text-muted-foreground">
-          <ShieldCheck className="size-3.5 text-emerald-400" /> Confirmação em segundos. Sua assinatura é ativada automaticamente.
-        </p>
-      </div>
-    </div>
-  );
-}
-
-function FakeQR() {
-  const cells = 25;
-  const seed = 42;
-  const rand = (i: number, j: number) => ((i * 73 + j * 191 + seed) * 2654435761) % 100 > 55;
-  return (
-    <svg width="180" height="180" viewBox={`0 0 ${cells} ${cells}`} aria-label="QR code de demonstração">
-      <rect width={cells} height={cells} fill="#fff" />
-      {Array.from({ length: cells }).map((_, i) =>
-        Array.from({ length: cells }).map((__, j) => {
-          const isCorner = (i < 7 && j < 7) || (i < 7 && j >= cells - 7) || (i >= cells - 7 && j < 7);
-          if (isCorner) return null;
-          return rand(i, j) ? <rect key={`${i}-${j}`} x={j} y={i} width={1} height={1} fill="#0b0518" /> : null;
-        }),
-      )}
-      {[[0, 0], [0, cells - 7], [cells - 7, 0]].map(([x, y]) => (
-        <g key={`${x}-${y}`}>
-          <rect x={y} y={x} width={7} height={7} fill="#0b0518" />
-          <rect x={y + 1} y={x + 1} width={5} height={5} fill="#fff" />
-          <rect x={y + 2} y={x + 2} width={3} height={3} fill="#9333ea" />
-        </g>
-      ))}
-    </svg>
-  );
-}
 
 function StepConfirm({
   plan,
