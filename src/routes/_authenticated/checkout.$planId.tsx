@@ -453,8 +453,6 @@ function StepReview({ plan }: { plan: any }) {
 function StepPayment({
   method,
   setMethod,
-  card,
-  setCard,
   plan,
   gateway,
   gatewayReady,
@@ -462,8 +460,6 @@ function StepPayment({
 }: {
   method: PayMethod;
   setMethod: (m: PayMethod) => void;
-  card: { number: string; name: string; exp: string; cvc: string };
-  setCard: (c: { number: string; name: string; exp: string; cvc: string }) => void;
   plan: any;
   gateway: Gateway;
   gatewayReady: boolean;
