@@ -182,7 +182,11 @@ function CheckoutPage() {
           planName: plan.name,
           priceCentsBRL: plan.price_cents,
           orderRef: created.paymentRef,
-          fallbackRedirectUrl: window.location.href,
+          fallbackRedirectUrl:
+            gateway === "infinitepay"
+              ? `${window.location.origin}/api/public/payments/infinitepay/retorno?plan=${encodeURIComponent(plan.id)}`
+              : window.location.href,
+
         });
         if (!url) {
           gatewayTab?.close();
