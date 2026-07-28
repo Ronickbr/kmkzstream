@@ -47,13 +47,10 @@ export const Route = createFileRoute("/_authenticated/checkout/$planId")({
 
 type Step = 1 | 2 | 3;
 type PayState = "idle" | "verifying" | "confirmed" | "failed";
-type PayMethod = "card" | "pix" | "mercadopago" | "gateway";
+type PayMethod = "gateway";
 
 const METHOD_LABEL: Record<PayMethod, string> = {
-  card: "Cartão de crédito",
-  pix: "Pix",
-  mercadopago: "Mercado Pago",
-  gateway: "Gateway online",
+  gateway: "Pagamento online",
 };
 
 function CheckoutPage() {
