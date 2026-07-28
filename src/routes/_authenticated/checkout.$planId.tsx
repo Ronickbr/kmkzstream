@@ -485,7 +485,9 @@ function StepPayment({
   return (
     <div>
       <h2 className="font-display text-xl font-black">Método de pagamento</h2>
-      <p className="mt-1 text-sm text-muted-foreground">Ambiente de demonstração — nenhum valor será cobrado.</p>
+      <p className="mt-1 text-sm text-muted-foreground">
+        Você será redirecionado para o ambiente seguro do {GATEWAY_LABEL[gateway]} para concluir o pagamento.
+      </p>
 
       <div className="mt-5 grid gap-3 sm:grid-cols-2">
         <PayOption
@@ -499,102 +501,38 @@ function StepPayment({
         />
       </div>
 
+      {!gatewayReady && (
+        <p className="mt-3 rounded-xl border border-destructive/40 bg-destructive/10 p-3 text-xs text-destructive-foreground">
+          O {GATEWAY_LABEL[gateway]} ainda não foi configurado no painel de administração. Fale com o suporte.
+        </p>
+      )}
+
       {!isBR && (
         <p className="mt-3 text-xs text-muted-foreground">
           International payments are processed by {GATEWAY_LABEL[gateway]} in US dollars.
         </p>
       )}
 
-      <div className="mt-5 grid gap-3 sm:grid-cols-3">
-        <PayOption id="pix" current={method} onClick={() => setMethod("pix")} icon={QrCode} title="Pix" hint="Aprovação imediata" recommended />
-        <PayOption id="card" current={method} onClick={() => setMethod("card")} icon={CreditCard} title="Cartão" hint="Visa, Master, Elo" />
-        <PayOption id="mercadopago" current={method} onClick={() => setMethod("mercadopago")} icon={Wallet} title="Mercado Pago" hint="Saldo ou boleto" />
+      <div className="mt-6 rounded-2xl border border-border bg-background/40 p-5">
+        <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground">
+          Formas aceitas no {GATEWAY_LABEL[gateway]}
+        </p>
+        <div className="mt-3 flex flex-wrap gap-2">
+          <span className="inline-flex items-center gap-1.5 rounded-full border border-border bg-background/60 px-3 py-1.5 text-xs font-semibold">
+            <QrCode className="size-3.5 text-brand" aria-hidden="true" /> Pix
+          </span>
+          <span className="inline-flex items-center gap-1.5 rounded-full border border-border bg-background/60 px-3 py-1.5 text-xs font-semibold">
+            <CreditCard className="size-3.5 text-brand" aria-hidden="true" /> Cartão de crédito
+          </span>
+          <span className="inline-flex items-center gap-1.5 rounded-full border border-border bg-background/60 px-3 py-1.5 text-xs font-semibold">
+            <Wallet className="size-3.5 text-brand" aria-hidden="true" /> Débito / carteira
+          </span>
+        </div>
+        <p className="mt-4 flex items-center gap-1.5 text-xs text-muted-foreground">
+          <ShieldCheck className="size-3.5 text-emerald-400" aria-hidden="true" />
+          A escolha da forma de pagamento acontece na página do {GATEWAY_LABEL[gateway]}. A ativação é automática após a confirmação.
+        </p>
       </div>
-
-      {method === "card" && (
-        <div className="mt-6 grid gap-4 sm:grid-cols-2">
-          <div className="sm:col-span-2">
-            <label htmlFor={numId} className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-muted-foreground">
-              Número do cartão
-            </label>
-            <input
-              id={numId}
-              inputMode="numeric"
-              autoComplete="cc-number"
-              placeholder="0000 0000 0000 0000"
-              value={card.number}
-              onChange={(e) => setCard({ ...card, number: formatCardNumber(e.target.value) })}
-              className="w-full rounded-xl border border-border bg-background/60 px-4 py-3 text-sm font-mono tracking-widest focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/30"
-            />
-          </div>
-          <div className="sm:col-span-2">
-            <label htmlFor={nameId} className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-muted-foreground">
-              Nome impresso
-            </label>
-            <input
-              id={nameId}
-              autoComplete="cc-name"
-              placeholder="COMO ESTÁ NO CARTÃO"
-              value={card.name}
-              onChange={(e) => setCard({ ...card, name: e.target.value.toUpperCase() })}
-              className="w-full rounded-xl border border-border bg-background/60 px-4 py-3 text-sm uppercase focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/30"
-            />
-          </div>
-          <div>
-            <label htmlFor={expId} className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-muted-foreground">
-              Validade
-            </label>
-            <input
-              id={expId}
-              inputMode="numeric"
-              autoComplete="cc-exp"
-              placeholder="MM/AA"
-              value={card.exp}
-              onChange={(e) => setCard({ ...card, exp: formatExp(e.target.value) })}
-              className="w-full rounded-xl border border-border bg-background/60 px-4 py-3 text-sm font-mono focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/30"
-            />
-          </div>
-          <div>
-            <label htmlFor={cvcId} className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-muted-foreground">
-              CVC
-            </label>
-            <input
-              id={cvcId}
-              inputMode="numeric"
-              autoComplete="cc-csc"
-              placeholder="123"
-              maxLength={4}
-              value={card.cvc}
-              onChange={(e) => setCard({ ...card, cvc: e.target.value.replace(/\D/g, "").slice(0, 4) })}
-              className="w-full rounded-xl border border-border bg-background/60 px-4 py-3 text-sm font-mono focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/30"
-            />
-          </div>
-          <p className="sm:col-span-2 flex items-center gap-2 text-xs text-muted-foreground">
-            <Lock className="size-3.5" aria-hidden="true" />
-            Seus dados são criptografados. Nenhum número é armazenado nesta demonstração.
-          </p>
-        </div>
-      )}
-
-      {method === "pix" && <PixPreview plan={plan} />}
-
-      {method === "mercadopago" && (
-        <div className="mt-6 rounded-2xl border border-border bg-background/40 p-6">
-          <div className="flex items-center gap-3">
-            <div className="grid size-12 place-items-center rounded-xl bg-sky-500/15 text-sky-400">
-              <Wallet className="size-6" aria-hidden="true" />
-            </div>
-            <div>
-              <p className="font-bold">Mercado Pago</p>
-              <p className="text-xs text-muted-foreground">Você será redirecionado para concluir o pagamento com saldo, cartão ou boleto.</p>
-            </div>
-          </div>
-          <p className="mt-4 text-xs text-muted-foreground">
-            <Sparkles className="mr-1 inline size-3.5 align-[-2px] text-accent" />
-            Simulação: no próximo passo confirmamos a ativação sem cobrança real.
-          </p>
-        </div>
-      )}
     </div>
   );
 }
