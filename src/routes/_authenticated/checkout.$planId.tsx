@@ -71,7 +71,7 @@ function CheckoutPage() {
   const queryClient = useQueryClient();
 
   const [step, setStep] = useState<Step>(1);
-  const [method, setMethod] = useState<PayMethod>(locale === "pt" ? "pix" : "gateway");
+  const [method, setMethod] = useState<PayMethod>("gateway");
   const [busy, setBusy] = useState(false);
   const [card, setCard] = useState({ number: "", name: "", exp: "", cvc: "" });
   const [accept, setAccept] = useState(false);
