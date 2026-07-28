@@ -73,7 +73,6 @@ function CheckoutPage() {
   const [step, setStep] = useState<Step>(1);
   const [method, setMethod] = useState<PayMethod>("gateway");
   const [busy, setBusy] = useState(false);
-  const [card, setCard] = useState({ number: "", name: "", exp: "", cvc: "" });
   const [accept, setAccept] = useState(false);
   const [payState, setPayState] = useState<PayState>("idle");
   const [payError, setPayError] = useState<string | null>(null);
@@ -148,14 +147,6 @@ function CheckoutPage() {
     return () => clearTimeout(timeout);
   }, [payState, attempts]);
 
-  const cardValid = useMemo(
-    () =>
-      card.number.replace(/\s/g, "").length >= 13 &&
-      card.name.trim().length >= 3 &&
-      /^\d{2}\/\d{2}$/.test(card.exp) &&
-      /^\d{3,4}$/.test(card.cvc),
-    [card],
-  );
 
 
   if (!plan) {
@@ -275,8 +266,6 @@ function CheckoutPage() {
               <StepPayment
                 method={method}
                 setMethod={setMethod}
-                card={card}
-                setCard={setCard}
                 plan={plan}
                 gateway={gateway}
                 gatewayReady={
