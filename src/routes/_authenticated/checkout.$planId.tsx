@@ -178,14 +178,14 @@ function CheckoutPage() {
     setBusy(true);
     setPayError(null);
     // Abre a aba antes do await para não ser bloqueada pelo navegador.
-    const gatewayTab = method === "gateway" ? window.open("", "_blank", "noopener,noreferrer") : null;
+    const gatewayTab = window.open("", "_blank", "noopener,noreferrer");
     try {
       // A referência de pagamento é gerada no servidor e devolvida aqui.
       const created = await subscribeFn({
-        data: { planId: plan.id, provider: method === "gateway" ? gateway : undefined },
+        data: { planId: plan.id, provider: gateway },
       });
 
-      if (method === "gateway") {
+      {
         const url = checkoutUrl({
           gateway,
           settings: paySettings,
@@ -193,10 +193,11 @@ function CheckoutPage() {
           planName: plan.name,
           priceCentsBRL: plan.price_cents,
           orderRef: created.paymentRef,
+          fallbackRedirectUrl: window.location.href,
         });
         if (!url) {
           gatewayTab?.close();
-          toast.error(`${GATEWAY_LABEL[gateway]} ainda não está configurado. Escolha outro método.`);
+          toast.error(`${GATEWAY_LABEL[gateway]} ainda não está configurado. Fale com o suporte.`);
           setBusy(false);
           return;
         }
