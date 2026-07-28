@@ -88,6 +88,22 @@ function CheckoutPage() {
     staleTime: 0,
   });
 
+  // Retorno da InfinityPay: /checkout/:planId?pay=ok|pending|failed
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const pay = params.get("pay");
+    if (!pay) return;
+    window.history.replaceState({}, "", window.location.pathname);
+    if (pay === "failed") {
+      setPayError("O pagamento não foi confirmado pela InfinityPay. Seu cadastro está salvo — tente novamente.");
+      setPayState("failed");
+      return;
+    }
+    setAttempts((n) => n + 1);
+    setPayState("verifying");
+  }, []);
+
+
   // Realtime: o webhook atualiza a assinatura no banco e recebemos o evento na hora.
   useEffect(() => {
     if (payState !== "verifying") return;
@@ -182,7 +198,11 @@ function CheckoutPage() {
           planName: plan.name,
           priceCentsBRL: plan.price_cents,
           orderRef: created.paymentRef,
-          fallbackRedirectUrl: window.location.href,
+          fallbackRedirectUrl:
+            gateway === "infinitepay"
+              ? `${window.location.origin}/api/public/payments/infinitepay/retorno?plan=${encodeURIComponent(plan.id)}`
+              : window.location.href,
+
         });
         if (!url) {
           gatewayTab?.close();

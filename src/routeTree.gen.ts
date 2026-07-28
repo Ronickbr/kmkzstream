@@ -35,6 +35,8 @@ import { Route as AuthenticatedAdminCrescimentoRouteImport } from './routes/_aut
 import { Route as AuthenticatedAdminConfiguracoesRouteImport } from './routes/_authenticated/admin/configuracoes'
 import { Route as AuthenticatedAdminAuditoriaRouteImport } from './routes/_authenticated/admin/auditoria'
 import { Route as ApiPublicPaymentsWebhookRouteImport } from './routes/api/public/payments/webhook'
+import { Route as ApiPublicPaymentsInfinitepayWebhookRouteImport } from './routes/api/public/payments/infinitepay/webhook'
+import { Route as ApiPublicPaymentsInfinitepayRetornoRouteImport } from './routes/api/public/payments/infinitepay/retorno'
 
 const TermosRoute = TermosRouteImport.update({
   id: '/termos',
@@ -175,6 +177,18 @@ const ApiPublicPaymentsWebhookRoute =
     path: '/api/public/payments/webhook',
     getParentRoute: () => rootRouteImport,
   } as any)
+const ApiPublicPaymentsInfinitepayWebhookRoute =
+  ApiPublicPaymentsInfinitepayWebhookRouteImport.update({
+    id: '/api/public/payments/infinitepay/webhook',
+    path: '/api/public/payments/infinitepay/webhook',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ApiPublicPaymentsInfinitepayRetornoRoute =
+  ApiPublicPaymentsInfinitepayRetornoRouteImport.update({
+    id: '/api/public/payments/infinitepay/retorno',
+    path: '/api/public/payments/infinitepay/retorno',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -202,6 +216,8 @@ export interface FileRoutesByFullPath {
   '/checkout/$planId': typeof AuthenticatedCheckoutPlanIdRoute
   '/admin/': typeof AuthenticatedAdminIndexRoute
   '/api/public/payments/webhook': typeof ApiPublicPaymentsWebhookRoute
+  '/api/public/payments/infinitepay/retorno': typeof ApiPublicPaymentsInfinitepayRetornoRoute
+  '/api/public/payments/infinitepay/webhook': typeof ApiPublicPaymentsInfinitepayWebhookRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -228,6 +244,8 @@ export interface FileRoutesByTo {
   '/checkout/$planId': typeof AuthenticatedCheckoutPlanIdRoute
   '/admin': typeof AuthenticatedAdminIndexRoute
   '/api/public/payments/webhook': typeof ApiPublicPaymentsWebhookRoute
+  '/api/public/payments/infinitepay/retorno': typeof ApiPublicPaymentsInfinitepayRetornoRoute
+  '/api/public/payments/infinitepay/webhook': typeof ApiPublicPaymentsInfinitepayWebhookRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -257,6 +275,8 @@ export interface FileRoutesById {
   '/_authenticated/checkout/$planId': typeof AuthenticatedCheckoutPlanIdRoute
   '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
   '/api/public/payments/webhook': typeof ApiPublicPaymentsWebhookRoute
+  '/api/public/payments/infinitepay/retorno': typeof ApiPublicPaymentsInfinitepayRetornoRoute
+  '/api/public/payments/infinitepay/webhook': typeof ApiPublicPaymentsInfinitepayWebhookRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -286,6 +306,8 @@ export interface FileRouteTypes {
     | '/checkout/$planId'
     | '/admin/'
     | '/api/public/payments/webhook'
+    | '/api/public/payments/infinitepay/retorno'
+    | '/api/public/payments/infinitepay/webhook'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -312,6 +334,8 @@ export interface FileRouteTypes {
     | '/checkout/$planId'
     | '/admin'
     | '/api/public/payments/webhook'
+    | '/api/public/payments/infinitepay/retorno'
+    | '/api/public/payments/infinitepay/webhook'
   id:
     | '__root__'
     | '/'
@@ -340,6 +364,8 @@ export interface FileRouteTypes {
     | '/_authenticated/checkout/$planId'
     | '/_authenticated/admin/'
     | '/api/public/payments/webhook'
+    | '/api/public/payments/infinitepay/retorno'
+    | '/api/public/payments/infinitepay/webhook'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -350,6 +376,8 @@ export interface RootRouteChildren {
   PrivacidadeRoute: typeof PrivacidadeRoute
   TermosRoute: typeof TermosRoute
   ApiPublicPaymentsWebhookRoute: typeof ApiPublicPaymentsWebhookRoute
+  ApiPublicPaymentsInfinitepayRetornoRoute: typeof ApiPublicPaymentsInfinitepayRetornoRoute
+  ApiPublicPaymentsInfinitepayWebhookRoute: typeof ApiPublicPaymentsInfinitepayWebhookRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -536,6 +564,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicPaymentsWebhookRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/payments/infinitepay/webhook': {
+      id: '/api/public/payments/infinitepay/webhook'
+      path: '/api/public/payments/infinitepay/webhook'
+      fullPath: '/api/public/payments/infinitepay/webhook'
+      preLoaderRoute: typeof ApiPublicPaymentsInfinitepayWebhookRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/payments/infinitepay/retorno': {
+      id: '/api/public/payments/infinitepay/retorno'
+      path: '/api/public/payments/infinitepay/retorno'
+      fullPath: '/api/public/payments/infinitepay/retorno'
+      preLoaderRoute: typeof ApiPublicPaymentsInfinitepayRetornoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -606,6 +648,10 @@ const rootRouteChildren: RootRouteChildren = {
   PrivacidadeRoute: PrivacidadeRoute,
   TermosRoute: TermosRoute,
   ApiPublicPaymentsWebhookRoute: ApiPublicPaymentsWebhookRoute,
+  ApiPublicPaymentsInfinitepayRetornoRoute:
+    ApiPublicPaymentsInfinitepayRetornoRoute,
+  ApiPublicPaymentsInfinitepayWebhookRoute:
+    ApiPublicPaymentsInfinitepayWebhookRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
