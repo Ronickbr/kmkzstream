@@ -171,7 +171,7 @@ function CheckoutPage() {
     );
   }
 
-  const canAdvance = step === 1 ? true : step === 2 ? (method !== "card" ? true : cardValid) : accept;
+  const canAdvance = step === 3 ? accept : true;
 
   const handleConfirm = async () => {
     if (!accept) return;
