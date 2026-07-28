@@ -56,6 +56,8 @@ export function checkoutUrl(opts: {
   planName: string;
   priceCentsBRL: number;
   orderRef: string;
+  /** Usado quando o admin não configurou uma URL de retorno. */
+  fallbackRedirectUrl?: string;
 }): string | null {
   if (opts.gateway === "stripe") return stripeLinkForPlan(opts.settings, opts.planId);
   return buildInfinitePayUrl({
@@ -63,7 +65,7 @@ export function checkoutUrl(opts: {
     planName: opts.planName,
     priceCents: opts.priceCentsBRL,
     orderRef: opts.orderRef,
-    redirectUrl: opts.settings?.infinitepay?.redirect_url || undefined,
+    redirectUrl: opts.settings?.infinitepay?.redirect_url || opts.fallbackRedirectUrl || undefined,
   });
 }
 
